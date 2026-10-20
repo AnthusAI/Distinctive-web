@@ -4,7 +4,7 @@
   "repository": "https://github.com/AnthusAI/Distinctive-web",
   "brand": "distinctive",
   "frontend": "markus-static",
-  "papyrusVersion": "3.2.0",
+  "papyrusVersion": "4.0.0",
   "cms": {
     "staging": false,
     "cognitoDomainPrefix": "papyrus-distinctive-cms",
