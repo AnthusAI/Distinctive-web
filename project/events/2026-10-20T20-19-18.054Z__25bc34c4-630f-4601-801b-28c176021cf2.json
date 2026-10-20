@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "25bc34c4-630f-4601-801b-28c176021cf2",
+  "issue_id": "dist-036860d5-c0bd-4b8c-ab36-a98349a33912",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-20T20:19:18.054Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Sign in to the newsroom and add editors to the admin group",
+    "description": "Owner signs in with Google at https://distinctive-mark.com/newsroom, then adds the account to the Cognito admin group of the distinctive backend user pool. Not yet verified that the sign-in round trip returns to /newsroom.",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-38d589b6-f91d-4473-8ec5-8a7b2c61f260",
+    "labels": []
+  }
+}
