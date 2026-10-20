@@ -21,7 +21,6 @@ from distinctive_content import (
     format_short_date_with_year,
 )
 
-SEARCH_ICON_UNUSED = None
 CHECK_ICON_SVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 12 10 17 19 7"></polyline></svg>'
 CLOSE_ICON_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></svg>'
 HEADSHOT_PLACEHOLDER_SVG = '<svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path></svg>'
@@ -311,10 +310,11 @@ def newsletter_band(settings: SiteSettings) -> str:
         "<p>Every Friday: the week's precedential TTAB decisions, briefly explained, plus the trademark news worth your time.</p>"
         "</div>"
         f'<form {signup_form_attributes(settings)}><div class="ds-newsletter-band__form">'
-        f'{email_field("newsletter-band-email", True, "ds-field-label", "ds-email-input ds-email-input--outlined")}'
-        '<div class="ds-field-row"><span class="ds-field-row__grow"></span></div>'
+        '<label class="ds-field-label" for="newsletter-band-email">Email address</label>'
+        '<div class="ds-field-row">'
+        '<input class="ds-email-input ds-email-input--outlined" id="newsletter-band-email" name="email" type="email" autocomplete="email" placeholder="you@firm.com" required>'
         '<button class="ds-solid-button ds-solid-button--mono" type="submit">Subscribe</button>'
-        "</div></form>"
+        "</div></div></form>"
         "</div></section>"
     )
 
@@ -572,7 +572,7 @@ def filter_buttons(group_label: str, filter_name: str, labels: list[str], label_
     )
     return (
         f'<div class="ds-filter-group" role="group" aria-label="{escaped(group_label)}">'
-        f'<span class="ds-filter-group__label">{escaped(label_column)}</span>{buttons}</div>'
+        f'{f"<span class=ds-filter-group__label>{escaped(label_column)}</span>" if label_column else ""}{buttons}</div>'
     )
 
 
@@ -611,7 +611,7 @@ def ruling_rows_with_sponsors(settings: SiteSettings, rulings: list[Ruling]) -> 
 
 
 def rulings_page_body(settings: SiteSettings, content: SiteContent) -> str:
-    notable = content.notable_rulings[:3]
+    notable = sorted(content.notable_rulings, key=lambda ruling: (ruling.notability, ruling.sort_key), reverse=True)[:3]
     notable_section = ""
     if notable:
         secondary = "".join(notable_ruling_card(ruling) for ruling in notable[1:])
@@ -708,7 +708,7 @@ def wire_page_body(settings: SiteSettings, content: SiteContent) -> str:
         "</div></section>"
         '<main class="ds-container ds-two-column ds-two-column--wire">'
         '<div class="ds-two-column__main ds-stack ds-stack--tight" data-ds-wire-list="">'
-        f'{source_filter.replace("ds-filter-group__label", "ds-visually-hidden")}'
+        f"{source_filter}"
         f'<div class="ds-wire-list">{rows_html}</div>'
         f'<p class="ds-empty-state" data-ds-empty="" hidden="">Nothing from this source yet.</p>'
         "</div>"
@@ -753,7 +753,7 @@ def subscribe_page_body(settings: SiteSettings, content: SiteContent) -> str:
     preview_notable = ""
     if preview_ruling:
         preview_notable = (
-            '<span class="ds-preview-card__eyebrow ds-preview-card__eyebrow--accent">Notable this week</span>'
+            '<span class="ds-preview-card__eyebrow ds-preview-card__eyebrow--accent">Latest notable ruling</span>'
             f'<span class="ds-preview-card__headline">{escaped(preview_ruling.headline)}</span>'
             f'<span class="ds-preview-card__dek">{escaped(preview_ruling.one_line_summary or preview_ruling.dek)}</span>'
             '<div class="ds-preview-card__rule"></div>'
@@ -764,7 +764,7 @@ def subscribe_page_body(settings: SiteSettings, content: SiteContent) -> str:
         f'<div class="ds-preview-card__header">{wordmark("ds-wordmark ds-wordmark--preview")}'
         f'<span class="ds-mono-meta ds-mono-meta--small">{escaped(newsletter["name"])} · {escaped(newsletter["cadence"])}</span></div>'
         f'<div class="ds-preview-card__body">{preview_notable}'
-        '<span class="ds-preview-card__eyebrow">Every decision this week</span>'
+        '<span class="ds-preview-card__eyebrow">Latest decisions</span>'
         f'<div class="ds-preview-card__lines">{preview_lines}</div></div>'
         '<div class="ds-preview-card__footer"><span>Presented by</span>'
         f'<span class="ds-preview-card__sponsor">{escaped(settings.sponsor["name"])}, {escaped(settings.sponsor["credential"])}</span></div>'
@@ -909,7 +909,7 @@ def story_page_body(settings: SiteSettings, content: SiteContent, entry: Comment
     if is_ruling:
         breadcrumb = (
             '<a href="/rulings/">TTAB Rulings</a><span aria-hidden="true">/</span>'
-            f'<span class="ds-breadcrumb__current">{escaped(entry.issue_label or entry.issue)}</span>'
+            f'<span class="ds-breadcrumb__current">{escaped(entry.issue or entry.issue_label)}</span>'
             f'<span aria-hidden="true">/</span><span>{escaped(entry.status_label)}</span>'
         )
         figure = marks_figure(entry, "article")

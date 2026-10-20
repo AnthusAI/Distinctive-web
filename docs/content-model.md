@@ -1,0 +1,64 @@
+# Content model
+
+Every item is written in the newsroom as YAML front matter plus a Markus body. The item's **section** decides what it is. Listings read only front matter, so fill in the fields below; the body is rendered on the item's own page.
+
+## Commentary (section `commentary`)
+
+Page: `/commentary/<slug>/`.
+
+| Field | Meaning |
+| --- | --- |
+| `title` | Headline |
+| `dek` | One- or two-sentence standfirst |
+| `kicker` | Topic label, e.g. `Doctrine · Failure to function` |
+| `author` | Byline |
+| `date` | Publication date (falls back to the publish time) |
+| `readMinutes` | Reading time |
+| `tags` | Topics; drive "Filed under" and "More on …" |
+| `lead` | `true` to lead the front page |
+
+## TTAB rulings (section `rulings`)
+
+Page: `/rulings/<slug>/`. Every ruling appears in the tracker; rulings with `notability` 4 or 5 are "notable" and get the analysis treatment.
+
+| Field | Meaning |
+| --- | --- |
+| `caption` | `In re [Applicant]` or `[Opposer] v. [Applicant]` |
+| `title` | Headline for analysis pieces (defaults to the caption) |
+| `dek` | Standfirst for analysis pieces |
+| `summary` | One-line summary shown in every listing |
+| `proceeding`, `proceedingNumber` | e.g. `Ex parte appeal`, `Serial No. 00000000` |
+| `issue` | Short issue used by filters, e.g. `§2(d)`, `Genericness` |
+| `issueLabel` | Long form, e.g. `Likelihood of confusion, §2(d)` |
+| `outcome` | e.g. `Refusal affirmed`, `Opposition sustained` |
+| `precedential` | `true` or `false` |
+| `notability` | 1 to 5 |
+| `date` | Decision date |
+| `panel` | Judges and author of the opinion |
+| `opinionUrl` | Link to the opinion on TTABVUE |
+| `whyNotable` | List of reasons, shown on the tracker's lead card |
+| `marks` | `applicant` and `cited`, each with `mark`, `number`, `goods` and optional `label` |
+| `author`, `readMinutes`, `tags`, `lead` | As for commentary |
+
+The newsletter signup box is placed before the body's second `##` section.
+
+## The Wire (section `wire`)
+
+No page here: each item links to its source.
+
+| Field | Meaning |
+| --- | --- |
+| `title` | Headline |
+| `source` | `USPTO`, `Courts`, `International` or `Press` (the filters; set in `web/site-config.json`) |
+| `sourceUrl` | Link to the source |
+| `outlet` | Shown as "via …" |
+| `take` | Our one-line take |
+| `date` | Date of the news |
+
+## Standing pages (no section, type `page`)
+
+Page: `/<slug>/`. `title` plus a Markus body. About, Editorial policy, Sponsorship and similar pages; each one that exists is linked from the footer.
+
+## Aliases
+
+Any item's `aliases` become 301 redirects to its page.

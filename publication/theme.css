@@ -1,0 +1,3 @@
+/* Distinctive newsroom: the stock Papyrus theme pack and the newspaper-gothic Kanbus theme, unchanged.
+   The public site's look lives in web/css/site-theme.css; this file only retunes the CMS. Override a token here,
+   scoped like `:root[data-site-brand="distinctive"] [data-kanbus-theme] { --kb-theme-accent: ... }`. */

@@ -1,4 +1,4 @@
-# Anth.us infrastructure
+# Distinctive infrastructure
 
 `site.json` configures the Papyrus Amplify app-shell stack (the CMS app) for this publication. `package.json` pins `@anthusai/papyrus`, which supplies the template.
 
@@ -11,6 +11,4 @@ Synthesis only prints and writes `cdk.out/`. Deploying is a separate, reviewed s
 
 ## No reader app
 
-anth.us is served from the S3 projection through the `papyrus-edge-anth-us` CloudFront stack (template in the Papyrus repo, `infra/edge/anth-us-s3.yaml`). `site.json` has no `reader`, so the stack creates no Amplify reader app. The 402 legacy redirects that used to be `reader.redirects` live in the redirect key-value store the projection writes.
-
-`cms.stagingPreview` is the build the CMS `staging` branch runs to preview drafts. It was `reader.buildCommand` and `reader.baseDirectory` before the reader app was removed, and generates the same staging build spec.
+The public site is the S3 projection that the CMS backend creates (`backend.publication` in `../papyrus.config.ts`), served by the CloudFront distribution the backend creates with it (`distribution: { create: true }`). `site.json` has no `reader`, so the stack creates no Amplify reader app. Until a domain is chosen the site answers on the distribution's `*.cloudfront.net` name; adding a domain means adding `aliases` and `acm` to `distribution`.

@@ -1,0 +1,32 @@
+import type { SiteBrand } from "@anthusai/papyrus/lib/site-brand";
+import { DEFAULT_THEME_PACK_TOKENS } from "@anthusai/papyrus/lib/site-stack";
+
+export const distinctiveBrand: SiteBrand = {
+  id: "distinctive",
+  appTitle: "Distinctive",
+  appDescription: "Distinctive™ — Trademark News & Analysis. Commentary on TTAB decisions, USPTO practice, and the business of marks.",
+  mastheadTitle: "Distinctive",
+  mastheadSubtitle: "Trademark News & Analysis",
+  backToHomeLabel: "Back to Distinctive",
+  articleTitleSuffix: "Distinctive",
+  placeholderByline: "Distinctive",
+  defaultPresentation: "blog",
+  textFont: '"Inter", system-ui, sans-serif',
+  mastheadWordSplit: false,
+  mastheadDateFormat: "formatted",
+  mastheadSource: "brand",
+  sectionLinkStrategy: "route",
+  kanbusTheme: "newspaper-gothic",
+  themePack: "papyrus",
+  themeTokens: DEFAULT_THEME_PACK_TOKENS,
+  renderer: { kind: "markus" },
+  hosting: { kind: "amplify-ssr" },
+  rootRoute: { kind: "newsroom" },
+  newsroomBasePath: "",
+  opsChrome: "app",
+  corpusKey: "distinctive",
+  steeringConfigPath: "corpora/distinctive-steering.yml",
+  newsroomSectionsConfigPath: "corpora/distinctive-newsroom-sections.yml",
+  analysisProfilesPath: "corpora/distinctive-analysis-profiles.yml",
+  publicationName: "Distinctive",
+};

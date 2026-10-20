@@ -1,12 +1,12 @@
 {
-  "name": "anth-us-infra",
+  "name": "distinctive-infra",
   "private": true,
   "type": "module",
   "scripts": {
     "synth": "papyrus-infra synth --site site.json"
   },
   "dependencies": {
-    "@anthusai/papyrus": "3.1.0",
+    "@anthusai/papyrus": "3.2.0",
     "aws-cdk-lib": "^2.257.0",
     "constructs": "^10.4.2"
   }
