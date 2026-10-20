@@ -31,6 +31,7 @@ export default defineSite({
       projector: "web/projector.py",
       staticDir: "web",
       reprojectOnDeploy: true,
+      edgeDistributionArn: "arn:aws:cloudfront::712236451410:distribution/EHJUVNTK7AFXH",
     },
     stagingBuild: { enabled: false },
     features: {
