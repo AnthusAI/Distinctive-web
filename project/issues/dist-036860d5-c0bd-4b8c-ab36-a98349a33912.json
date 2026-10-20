@@ -3,17 +3,25 @@
   "title": "Sign in to the newsroom and add editors to the admin group",
   "description": "Owner signs in with Google at https://distinctive-mark.com/newsroom, then adds the account to the Cognito admin group of the distinctive backend user pool. Not yet verified that the sign-in round trip returns to /newsroom.",
   "type": "task",
-  "status": "open",
+  "status": "closed",
   "priority": 1,
   "assignee": null,
   "creator": null,
   "parent": "dist-38d589b6-f91d-4473-8ec5-8a7b2c61f260",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "41fade80-e6cf-403b-912f-9a7e648c9550",
+      "author": "home",
+      "text": "Google sign-in works (consent screen switched to External). ryan@anth.us (google_101686548942916378620) added to the admin group of user pool us-east-1_bJW5j9xAh. Newsroom themed to the public site (c4608a4).",
+      "created_at": "2026-10-20T20:56:43.206900Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-20T20:19:18.054224Z",
-  "updated_at": "2026-10-20T20:19:18.054245Z",
-  "closed_at": null,
+  "updated_at": "2026-10-20T20:56:43.213535Z",
+  "closed_at": "2026-10-20T20:56:43.213511Z",
   "right_now_summary": null,
   "right_now_updated_at": null,
   "custom": {}
