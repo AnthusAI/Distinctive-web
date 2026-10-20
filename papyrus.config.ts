@@ -2,7 +2,7 @@ import { defineSite } from "@anthusai/papyrus/define-site";
 import { distinctiveBrand } from "./publication/brand";
 
 const defaultCognitoDomainPrefix = "papyrus-distinctive-cms";
-const defaultRedirectUrls = ["http://localhost:3001/"];
+const defaultRedirectUrls = ["http://localhost:3001/", "https://distinctive-mark.com/"];
 
 function readNonEmptyEnvironmentValue(name: string): string | undefined {
   const value = process.env[name]?.trim();
@@ -14,7 +14,7 @@ const redirectUrlsFromEnvironment = readNonEmptyEnvironmentValue("PAPYRUS_OAUTH_
 
 export const resolvedAuthConfiguration = {
   cognitoDomainPrefix: cognitoDomainPrefixFromEnvironment ?? defaultCognitoDomainPrefix,
-  applyCognitoDomainPrefix: readNonEmptyEnvironmentValue("PAPYRUS_APPLY_COGNITO_DOMAIN_PREFIX") === "true",
+  applyCognitoDomainPrefix: readNonEmptyEnvironmentValue("PAPYRUS_APPLY_COGNITO_DOMAIN_PREFIX") !== "false",
   redirectUrls: redirectUrlsFromEnvironment
     ? redirectUrlsFromEnvironment.split(",").map((url) => url.trim()).filter((url) => url.length > 0)
     : defaultRedirectUrls,
@@ -30,10 +30,9 @@ export default defineSite({
       kind: "s3-projection",
       projector: "web/projector.py",
       staticDir: "web",
-      distribution: { create: true },
       reprojectOnDeploy: true,
     },
-    stagingBuild: { enabled: true },
+    stagingBuild: { enabled: false },
     features: {
       consoleResponder: false,
       inboundEmail: false,
