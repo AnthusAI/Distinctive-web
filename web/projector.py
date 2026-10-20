@@ -1,9 +1,9 @@
-"""Distinctive as a Papyrus SiteProjector: render every page from stored item data, in process.
+"""Distinctive Mark as a Papyrus SiteProjector: render every page from stored item data, in process.
 
 Pages:
 
 * item pages: each commentary article, each TTAB ruling and each standing page (About, ...),
-  with its body converted by Markus and wrapped in the Distinctive chrome;
+  with its body converted by Markus and wrapped in the Distinctive Mark chrome;
 * listing pages: the front page, the rulings tracker, the Wire, the commentary index,
   the subscribe page, the RSS feed and the sitemap;
 * static files: the stylesheet, the client script, the icon, robots.txt and 404.html.
@@ -110,17 +110,18 @@ class DistinctiveProjector:
     def _chrome(self, page_path: str, description: str, extra_head_html: str = "") -> SiteChrome:
         canonical_url = self._settings.absolute_url(page_path)
         canonical = f'<link rel="canonical" href="{markup.escaped(canonical_url)}">' if canonical_url else ""
+        publication_name = markup.escaped(self._settings.publication["name"])
         head_html = (
             '<link rel="preconnect" href="https://fonts.googleapis.com">'
             '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
             f'<link rel="stylesheet" href="{markup.escaped(GOOGLE_FONTS_STYLESHEET)}">'
             f'<link rel="icon" href="/{ICON_KEY}" type="image/svg+xml">'
-            '<link rel="alternate" type="application/rss+xml" title="Distinctive" href="/feed.xml">'
+            f'<link rel="alternate" type="application/rss+xml" title="{publication_name}" href="/feed.xml">'
             f'<meta name="description" content="{markup.escaped(description)}">'
-            f'<meta property="og:site_name" content="Distinctive">{canonical}{extra_head_html}'
+            f'<meta property="og:site_name" content="{publication_name}">{canonical}{extra_head_html}'
         )
         return SiteChrome(
-            site_name="Distinctive",
+            site_name=self._settings.publication["name"],
             body_class="ds-body",
             stylesheets=(STYLESHEET_KEY,),
             scripts=(CLIENT_SCRIPT_KEY,),
@@ -160,7 +161,7 @@ class DistinctiveProjector:
             "@type": "NewsArticle" if isinstance(entry, Ruling) else "Article",
             "headline": entry.title,
             "description": entry.dek,
-            "publisher": {"@type": "Organization", "name": "Distinctive"},
+            "publisher": {"@type": "Organization", "name": self._settings.publication["name"]},
         }
         if entry.date:
             structured["datePublished"] = entry.date.isoformat()
@@ -216,7 +217,7 @@ class DistinctiveProjector:
         description = settings.publication["description"]
         return {
             HOME_PAGE_KEY: lambda: self._render(
-                title="Distinctive",
+                title=settings.publication["name"],
                 page_path="/",
                 description=description,
                 body_html=(
@@ -344,7 +345,7 @@ class DistinctiveProjector:
         publication = self._settings.publication
         return (
             '<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel>'
-            f"<title>Distinctive — {xml_escape(publication['tagline'])}</title>"
+            f"<title>{xml_escape(publication['name'])} — {xml_escape(publication['tagline'])}</title>"
             f"<link>{xml_escape(site_url + '/')}</link>"
             f"<description>{xml_escape(publication['description'])}</description>"
             f"{items}</channel></rss>\n"

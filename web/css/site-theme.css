@@ -1,4 +1,4 @@
-/* Distinctive™ — Trademark News & Analysis. Public site stylesheet. */
+/* Distinctive Mark™ — Trademark News & Analysis. Public site stylesheet. */
 
 :root {
   --ds-paper: #f7f8fa;
@@ -232,10 +232,28 @@ img {
   letter-spacing: -0.03em;
 }
 
+.ds-wordmark__distinctive,
+.ds-wordmark__mark {
+  white-space: nowrap;
+}
+
+.ds-wordmark__mark {
+  color: var(--ds-accent);
+}
+
 .ds-wordmark--display {
-  font-size: clamp(48px, 7.5vw, 112px);
+  font-size: clamp(40px, 6.4vw, 92px);
   line-height: 0.95;
   letter-spacing: -0.045em;
+}
+
+@media (max-width: 560px) {
+  .ds-wordmark--display {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(44px, 14vw, 64px);
+    line-height: 0.9;
+  }
 }
 
 .ds-wordmark--preview {
@@ -262,7 +280,7 @@ img {
 }
 
 .ds-tagline--display {
-  font-size: clamp(20px, 2.4vw, 32px);
+  font-size: clamp(17px, 1.8vw, 24px);
   line-height: 1.1;
   letter-spacing: -0.01em;
 }
@@ -899,7 +917,7 @@ img {
 }
 
 .ds-home-masthead {
-  padding-top: 40px;
+  padding-top: 24px;
 }
 
 .ds-home-masthead__row {
@@ -909,7 +927,7 @@ img {
   justify-content: space-between;
   gap: 16px 48px;
   border-bottom: 2px solid var(--ds-ink);
-  padding-bottom: 22px;
+  padding-bottom: 16px;
 }
 
 .ds-home-masthead__lockup {
@@ -917,7 +935,7 @@ img {
   color: var(--ds-ink);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
 }
 
 .ds-home-masthead__lockup:hover {
@@ -2836,5 +2854,27 @@ img {
 
   .ds-prose blockquote {
     font-size: 26px;
+  }
+}
+
+.ds-spaced-unit:empty,
+.ds-home-top__sponsor:empty,
+.ds-story-layout__sponsor:empty,
+.ds-story-layout__banner:empty {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .ds-section-nav,
+  .ds-filed-under {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    white-space: nowrap;
+  }
+
+  .ds-section-nav > *,
+  .ds-filed-under > * {
+    flex: 0 0 auto;
   }
 }

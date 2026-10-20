@@ -99,3 +99,4 @@ next-env.d.ts
 
 # Kanbus local overlay
 project/.overlay/
+.venv/

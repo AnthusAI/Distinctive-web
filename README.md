@@ -1,4 +1,4 @@
-# Distinctive™ — Trademark News & Analysis
+# Distinctive Mark™ — Trademark News & Analysis
 
 Commentary on TTAB decisions, USPTO practice, and the business of marks.
 
@@ -11,7 +11,7 @@ The design is the "Distinctive™ — Trademark News & Analysis" canvas: home, r
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements-publication.txt
-.venv/bin/python bin/build_local_site.py          # sample-content -> web/dist-local
+.venv/bin/python bin/build_local_site.py          # tests/fixtures/sample-content -> web/dist-local
 python3 -m http.server --directory web/dist-local 8080
 .venv/bin/python -m unittest discover -s tests
 

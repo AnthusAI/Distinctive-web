@@ -1,6 +1,6 @@
-# Distinctive publication
+# Distinctive Mark publication
 
-This repository holds only what is specific to Distinctive™. The newsroom application, the Amplify Gen 2 backend, the S3 projection engine and the deployment constructs come from the pinned `@anthusai/papyrus` npm package and the `papyrus-newsroom` Python package. Do not copy Papyrus code into this repository. Fix Papyrus in the Papyrus repository and bump the pins.
+This repository holds only what is specific to Distinctive Mark™ (distinctive-mark.com). The newsroom application, the Amplify Gen 2 backend, the S3 projection engine and the deployment constructs come from the pinned `@anthusai/papyrus` npm package and the `papyrus-newsroom` Python package. Do not copy Papyrus code into this repository. Fix Papyrus in the Papyrus repository and bump the pins.
 
 ## Layout
 
@@ -11,13 +11,13 @@ This repository holds only what is specific to Distinctive™. The newsroom appl
 - `web/distinctive_markup.py`: the page chrome, listing pages, sponsor units and signup units, as HTML.
 - `web/css/site-theme.css`, `web/assets/`: the public site's look, client script (filters, signup forms, sticky bar, exit-intent slide-in) and icon.
 - `web/site-config.json`: publication identity, issue filters, Wire sources, newsletter and sponsor settings.
-- `sample-content/`: placeholder items in the CMS layout, used by `bin/build_local_site.py` and the tests. Not deployed.
+- `tests/fixtures/sample-content/`: placeholder items in the CMS layout, used only by `bin/build_local_site.py` and the tests. Never import them into the CMS: the live site is rendered from CMS items alone.
 - `corpora/`: newsroom section definitions.
 - `amplify/`, `amplify.yml`, `infra/`: the CMS app and backend, as for every Papyrus site.
 
 ## Workflow
 
-1. Public site: `pip install -r requirements-publication.txt`, then `python3 bin/build_local_site.py` and serve `web/dist-local`.
+1. Public site: `pip install -r requirements-publication.txt`, then `python3 bin/build_local_site.py` (add `--as-deployed` to hide the placeholder sponsor as the live site does) and serve `web/dist-local`.
 2. Tests: `python3 -m unittest discover -s tests`.
 3. CMS: `npm ci` then `npm run dev` (runs `papyrus-app sync`, which writes gitignored route shims). It needs a backend's `amplify_outputs.json` (gitignored).
 4. Changing the Papyrus version: edit the exact pin in `package.json`, `infra/package.json`, `infra/site.json` and `requirements-publication.txt` together.

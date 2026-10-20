@@ -1,11 +1,11 @@
 {
   "publication": {
-    "name": "Distinctive",
+    "name": "Distinctive Mark",
     "tagline": "Trademark News & Analysis",
     "description": "Commentary on TTAB decisions, USPTO practice, and the business of marks.",
-    "publisher": "[Publisher Name]",
+    "publisher": null,
     "copyrightYear": 2026,
-    "siteUrl": null,
+    "siteUrl": "https://distinctive-mark.com",
     "legalNotice": "Commentary on this site is general information, not legal advice, and reading it does not create an attorney–client relationship. TTAB decisions are summarized from the public record; read the opinion before relying on it."
   },
   "issueFilters": ["§2(d)", "§2(e)(1)", "§2(e)(4)", "Failure to function", "Genericness", "Fraud", "Abandonment"],
@@ -33,6 +33,7 @@
   },
   "sponsor": {
     "isPlaceholder": true,
+    "showWhilePlaceholder": false,
     "name": "John Doe",
     "credential": "Attorney at Law",
     "initials": "JD",

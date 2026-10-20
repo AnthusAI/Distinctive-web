@@ -3,13 +3,13 @@ import { DEFAULT_THEME_PACK_TOKENS } from "@anthusai/papyrus/lib/site-stack";
 
 export const distinctiveBrand: SiteBrand = {
   id: "distinctive",
-  appTitle: "Distinctive",
-  appDescription: "Distinctive™ — Trademark News & Analysis. Commentary on TTAB decisions, USPTO practice, and the business of marks.",
-  mastheadTitle: "Distinctive",
+  appTitle: "Distinctive Mark",
+  appDescription: "Distinctive Mark™ — Trademark News & Analysis. Commentary on TTAB decisions, USPTO practice, and the business of marks.",
+  mastheadTitle: "Distinctive Mark",
   mastheadSubtitle: "Trademark News & Analysis",
-  backToHomeLabel: "Back to Distinctive",
-  articleTitleSuffix: "Distinctive",
-  placeholderByline: "Distinctive",
+  backToHomeLabel: "Back to Distinctive Mark",
+  articleTitleSuffix: "Distinctive Mark",
+  placeholderByline: "Distinctive Mark",
   defaultPresentation: "blog",
   textFont: '"Inter", system-ui, sans-serif',
   mastheadWordSplit: false,
@@ -28,5 +28,5 @@ export const distinctiveBrand: SiteBrand = {
   steeringConfigPath: "corpora/distinctive-steering.yml",
   newsroomSectionsConfigPath: "corpora/distinctive-newsroom-sections.yml",
   analysisProfilesPath: "corpora/distinctive-analysis-profiles.yml",
-  publicationName: "Distinctive",
+  publicationName: "Distinctive Mark",
 };

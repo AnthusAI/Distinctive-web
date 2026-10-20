@@ -16,7 +16,7 @@ import build_local_site  # noqa: E402
 import projector as distinctive_projector  # noqa: E402
 from papyrus_content.projection.model import SiteIndex  # noqa: E402
 
-SAMPLE_CONTENT = REPOSITORY / "sample-content"
+SAMPLE_CONTENT = REPOSITORY / "tests" / "fixtures" / "sample-content"
 
 
 def sample_site():
@@ -133,6 +133,21 @@ class DependencyRuleTests(unittest.TestCase):
             load_item=self.site.load_item,
         )
         self.assertEqual(self.projector.redirects(aliased_site), {"/old-ruling-address/": "/rulings/in-re-applicant-a/"})
+
+
+class DeployedSiteTests(unittest.TestCase):
+    def test_placeholder_sponsor_is_hidden_on_the_deployed_site(self):
+        files = build_local_site.render_site(SAMPLE_CONTENT, show_placeholder_sponsor=False)
+        for key in ("index.html", "rulings/index.html", "rulings/in-re-applicant-e/index.html", "wire/index.html", "subscribe/index.html"):
+            page = files[key].decode("utf-8")
+            self.assertNotIn("ds-sponsor", page, key)
+            self.assertNotIn("John Doe", page, key)
+
+    def test_masthead_names_the_publication_in_two_words_with_the_trademark_sign(self):
+        home = build_local_site.render_site(SAMPLE_CONTENT)["index.html"].decode("utf-8")
+        self.assertIn('<span class="ds-wordmark__distinctive">Distinctive</span>', home)
+        self.assertIn('<span class="ds-wordmark__mark">Mark<span class="ds-trademark-sign">™</span></span>', home)
+        self.assertIn("<title>Distinctive Mark™", home)
 
 
 class EscapingTests(unittest.TestCase):
