@@ -1,3 +1,76 @@
-/* Distinctive newsroom: the stock Papyrus theme pack and the newspaper-gothic Kanbus theme, unchanged.
-   The public site's look lives in web/css/site-theme.css; this file only retunes the CMS. Override a token here,
-   scoped like `:root[data-site-brand="distinctive"] [data-kanbus-theme] { --kb-theme-accent: ... }`. */
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
+/* Distinctive Mark newsroom: the newspaper-gothic Kanbus theme retuned to the public site
+   (web/css/site-theme.css): its paper, ink and accent blue, Inter Tight titles, Inter controls,
+   IBM Plex Mono ids, and the Inter Tight wordmark. Only --kb-theme-* tokens and the wordmark
+   handle are overridden, scoped to this brand. */
+
+:root[data-site-brand="distinctive"] {
+  --font-wordmark: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+}
+
+:root[data-site-brand="distinctive"] body {
+  --font-wordmark: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+}
+
+:root[data-site-brand="distinctive"] [data-kanbus-theme] {
+  --kb-theme-paper: #f7f8fa;
+  --kb-theme-panel: #ffffff;
+  --kb-theme-sidebar: #eef0f4;
+  --kb-theme-ink: #121417;
+  --kb-theme-muted: #4e545c;
+  --kb-theme-rule: #d4d6d2;
+  --kb-theme-accent: #1d3fd8;
+  --kb-theme-on-accent: #ffffff;
+  --kb-theme-title-font: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --kb-theme-ui-font: "Inter", system-ui, sans-serif;
+  --kb-theme-mono-font: "IBM Plex Mono", ui-monospace, monospace;
+  --kb-theme-title-tracking: -0.01em;
+  --kb-theme-heading-tracking: -0.025em;
+  --kb-theme-heading-weight: 800;
+}
+
+:root[data-site-brand="distinctive"] [data-kanbus-theme][data-color-mode="dark"],
+:root[data-site-brand="distinctive"].dark [data-kanbus-theme]:not([data-color-mode="light"]) {
+  --kb-theme-paper: #121417;
+  --kb-theme-panel: #1e2126;
+  --kb-theme-sidebar: #181b1f;
+  --kb-theme-ink: #f7f8fa;
+  --kb-theme-muted: #b7bcc3;
+  --kb-theme-rule: #4a5058;
+  --kb-theme-accent: #7d95ff;
+  --kb-theme-on-accent: #121417;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-site-brand="distinctive"] [data-kanbus-theme]:not([data-color-mode="light"]) {
+    --kb-theme-paper: #121417;
+    --kb-theme-panel: #1e2126;
+    --kb-theme-sidebar: #181b1f;
+    --kb-theme-ink: #f7f8fa;
+    --kb-theme-muted: #b7bcc3;
+    --kb-theme-rule: #4a5058;
+    --kb-theme-accent: #7d95ff;
+    --kb-theme-on-accent: #121417;
+  }
+}
+
+:root[data-site-brand="distinctive"] .organizer-brand {
+  font-weight: 800;
+  font-size: 25px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+:root[data-site-brand="distinctive"] .organizer-masthead {
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+
+:root[data-site-brand="distinctive"] .news-desk-access-panel__auth .reader-auth__button {
+  background: var(--kb-theme-accent, #1d3fd8);
+  border-color: var(--kb-theme-accent, #1d3fd8);
+  color: var(--kb-theme-on-accent, #ffffff);
+}
