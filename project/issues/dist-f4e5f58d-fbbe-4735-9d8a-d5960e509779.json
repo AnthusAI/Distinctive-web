@@ -10,16 +10,24 @@
   "parent": "dist-38d589b6-f91d-4473-8ec5-8a7b2c61f260",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "a84b877d-f3b6-46db-bb3a-8e7f830955f0",
+      "author": "home",
+      "text": "Blocked on Papyrus initiative PPY-31455f (Outbound newsletters), milestone M1 PPY-08dbd8: SES per site, double opt-in signup endpoint, subscriber records, one-click unsubscribe. Papyrus builds it; this site then sets newsletter.signupEndpoint.",
+      "created_at": "2026-10-20T22:13:13.915479Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-20T18:35:46.771178Z",
-  "updated_at": "2026-10-20T18:35:46.771441Z",
+  "updated_at": "2026-10-20T22:13:13.915492Z",
   "closed_at": null,
-  "right_now_summary": null,
-  "right_now_updated_at": null,
-  "custom": {},
   "agent": {
     "platform": "claude-code",
     "model": "claude-opus-5-5",
     "name": "Claude"
-  }
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
 }
