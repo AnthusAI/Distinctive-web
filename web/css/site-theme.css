@@ -224,12 +224,12 @@ img {
   font-weight: 800;
   font-size: 32px;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.02em;
 }
 
 .ds-lockup--stacked .ds-wordmark {
   font-size: 26px;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
 }
 
 .ds-wordmark__distinctive,
@@ -244,7 +244,7 @@ img {
 .ds-wordmark--display {
   font-size: clamp(40px, 6.4vw, 92px);
   line-height: 0.95;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.025em;
 }
 
 @media (max-width: 560px) {
@@ -258,7 +258,7 @@ img {
 
 .ds-wordmark--preview {
   font-size: 22px;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
 }
 
 .ds-trademark-sign {
