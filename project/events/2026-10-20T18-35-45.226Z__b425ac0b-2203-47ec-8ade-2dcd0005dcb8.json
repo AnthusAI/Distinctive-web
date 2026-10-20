@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "b425ac0b-2203-47ec-8ade-2dcd0005dcb8",
+  "issue_id": "dist-ca506914-dd60-49a8-9bd7-df87db736b63",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-20T18:35:45.226Z",
+  "actor_id": "unknown",
+  "payload": {
+    "title": "Create the CMS Amplify app and run the first backend deploy",
+    "description": "Synthesize and deploy `infra/site.json` (`papyrus-infra synth --site site.json`), connect the Amplify GitHub App to AnthusAI/Distinctive-web (console step; verify platform stays WEB_COMPUTE and the template service role is kept), build `main`. Then add the `test \"$AWS_APP_ID\" = \"<app id>\"` guard to `amplify.yml` like Anth.us, and record the app id and distribution in AGENTS.md.",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-38d589b6-f91d-4473-8ec5-8a7b2c61f260",
+    "labels": [],
+    "agent": {
+      "platform": "claude-code",
+      "model": "claude-opus-5-5",
+      "name": "Claude"
+    }
+  }
+}

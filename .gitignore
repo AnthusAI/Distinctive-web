@@ -96,3 +96,6 @@ next-env.d.ts
 /app/settings/page.tsx
 /.papyrus/
 # <<< papyrus-app sync
+
+# Kanbus local overlay
+project/.overlay/

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "6b69cd3a-5244-49dc-a845-752315aa8ad0",
+  "issue_id": "dist-fdab0b1c-e24a-4ff9-ab77-265478f4b920",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-20T18:35:47.749Z",
+  "actor_id": "unknown",
+  "payload": {
+    "title": "Replace the placeholder sponsor",
+    "description": "`sponsor` in `web/site-config.json` is the design's placeholder (John Doe, `isPlaceholder: true`, no consultation URL, phone or headshot). Fill in the real sponsor, headshot URL and links, and set `isPlaceholder: false`. Attorney-advertising labels stay.",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "dist-38d589b6-f91d-4473-8ec5-8a7b2c61f260",
+    "labels": [],
+    "agent": {
+      "platform": "claude-code",
+      "model": "claude-opus-5-5",
+      "name": "Claude"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "87b1e521-5e0e-4bd6-bb67-951f6ff3c1d2",
+  "issue_id": "dist-f43c73f6-b9cc-4f50-81fd-53f2ec47260e",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-20T18:35:49.263Z",
+  "actor_id": "unknown",
+  "payload": {
+    "title": "Search",
+    "description": "The design has a search button in the header; it was left out rather than shipped non-functional. Option: Papyrus `publicData` search index (as Anth.us has in projection.json) plus a small search page.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 3,
+    "assignee": null,
+    "parent": "dist-38d589b6-f91d-4473-8ec5-8a7b2c61f260",
+    "labels": [],
+    "agent": {
+      "platform": "claude-code",
+      "model": "claude-opus-5-5",
+      "name": "Claude"
+    }
+  }
+}

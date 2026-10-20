@@ -1,0 +1,25 @@
+{
+  "id": "dist-fe873de9-f730-40ca-89e5-84391fd1f43f",
+  "title": "Scaffold the publication repository in the Anth.us shape",
+  "description": "Next.js CMS app depending on @anthusai/papyrus 3.2.0 (generic `papyrus` theme pack, newspaper-gothic Kanbus theme), `papyrus.config.ts` with `backend.publication` = s3-projection (`web/projector.py`, staticDir `web`, CloudFront distribution created by the backend, reprojectOnDeploy), `amplify/` re-exports, `amplify.yml`, `infra/site.json` and `infra/package.json`, newsroom sections in `corpora/` (TTAB Rulings, Commentary, The Wire), package-lock. Typechecks against 3.2.0; the publication block passes Papyrus's `validatePublicationConfig`. Note: the zod override is pinned to `^3.25.76` instead of `$zod`, which npm could not resolve without an existing lockfile.",
+  "type": "task",
+  "status": "closed",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "dist-38d589b6-f91d-4473-8ec5-8a7b2c61f260",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-20T18:35:35.485933Z",
+  "updated_at": "2026-10-20T18:35:36.053480Z",
+  "closed_at": "2026-10-20T18:35:36.052838Z",
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {},
+  "agent": {
+    "platform": "claude-code",
+    "model": "claude-opus-5-5",
+    "name": "Claude"
+  }
+}

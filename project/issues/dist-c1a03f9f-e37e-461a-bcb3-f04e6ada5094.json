@@ -1,0 +1,25 @@
+{
+  "id": "dist-c1a03f9f-e37e-461a-bcb3-f04e6ada5094",
+  "title": "Subscribe page and signup touchpoints",
+  "description": "Subscribe page (list choices, topic chips, success state, preview card, Inside every issue, sponsor banner, FAQ); header Subscribe button, in-article box, end-of-article panel, sticky bar after half the article (dismissible, remembered), exit-intent slide-in once per visitor, confirmation toast. With no signup endpoint configured, forms route to /subscribe/ and the page says signups are not open yet; it never fakes success.",
+  "type": "story",
+  "status": "closed",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "dist-38d589b6-f91d-4473-8ec5-8a7b2c61f260",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-20T18:35:42.014110Z",
+  "updated_at": "2026-10-20T18:35:42.637268Z",
+  "closed_at": "2026-10-20T18:35:42.636423Z",
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {},
+  "agent": {
+    "platform": "claude-code",
+    "model": "claude-opus-5-5",
+    "name": "Claude"
+  }
+}

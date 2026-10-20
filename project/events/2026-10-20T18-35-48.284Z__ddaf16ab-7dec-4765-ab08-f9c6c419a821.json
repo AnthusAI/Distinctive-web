@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "ddaf16ab-7dec-4765-ab08-f9c6c419a821",
+  "issue_id": "dist-351a4a1c-0543-4b66-b7c9-7654a13b5644",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-20T18:35:48.284Z",
+  "actor_id": "unknown",
+  "payload": {
+    "title": "Fill in publisher identity",
+    "description": "`publication.publisher` is `[Publisher Name]` (footer copyright). Also review the legal notice text with counsel.",
+    "issue_type": "chore",
+    "status": "open",
+    "priority": 3,
+    "assignee": null,
+    "parent": "dist-38d589b6-f91d-4473-8ec5-8a7b2c61f260",
+    "labels": [],
+    "agent": {
+      "platform": "claude-code",
+      "model": "claude-opus-5-5",
+      "name": "Claude"
+    }
+  }
+}

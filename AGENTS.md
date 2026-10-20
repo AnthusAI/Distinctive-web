@@ -30,3 +30,4 @@ This repository holds only what is specific to Distinctive™. The newsroom appl
 - Keep listing pages renderable from item summaries alone, so the projection's dependency digests stay correct.
 - The newsletter signup forms post to `newsletter.signupEndpoint` in `web/site-config.json`. While it is `null`, forms send readers to `/subscribe/`, and the subscribe page says signups are not open yet. Never fake a successful signup.
 - The sponsor in `web/site-config.json` is a placeholder (`isPlaceholder: true`) until a real sponsor is signed.
+- Kanbus is the record of work (project key `dist`). Use the `kbs` CLI (`pip install kanbus`); never read or edit the `project/` directory directly. Without a realtime broker, run it with `KANBUS_NO_DAEMON=1 KANBUS_REALTIME_TRANSPORT=none KANBUS_REALTIME_BROKER=off KANBUS_REALTIME_AUTOSTART=false`. The launch epic lists what is built and what remains.

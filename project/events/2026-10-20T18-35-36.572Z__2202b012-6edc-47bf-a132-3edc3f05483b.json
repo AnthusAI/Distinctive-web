@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "2202b012-6edc-47bf-a132-3edc3f05483b",
+  "issue_id": "dist-2a4f8a78-5235-4868-be6a-4b9589698e21",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-20T18:35:36.572Z",
+  "actor_id": "unknown",
+  "payload": {
+    "title": "Distinctive projector and content model",
+    "description": "`web/projector.py` implements the Papyrus SiteProjector protocol: item pages for commentary, rulings and standing pages; listing pages (front page, tracker, Wire, commentary index, subscribe, 404, RSS, sitemap); static files; alias redirects. Listing digests are computed from item summaries so edits re-render only the pages that show them. Content model in `web/distinctive_content.py`, documented for editors in `docs/content-model.md`. Article bodies go through Markus with raw HTML off; all generated markup is escaped.",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "dist-38d589b6-f91d-4473-8ec5-8a7b2c61f260",
+    "labels": [],
+    "agent": {
+      "platform": "claude-code",
+      "model": "claude-opus-5-5",
+      "name": "Claude"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "event_id": "2e14e177-8b17-4b86-aa12-3fd8bcf5b162",
+  "issue_id": "dist-ca506914-dd60-49a8-9bd7-df87db736b63",
+  "event_type": "dependency_added",
+  "occurred_at": "2026-10-20T18:36:01.529Z",
+  "actor_id": "unknown",
+  "payload": {
+    "dependency_type": "blocked-by",
+    "target_id": "dist-6e0a539e-0f66-4b36-8d93-f443690f6ade"
+  }
+}
