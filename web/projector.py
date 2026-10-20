@@ -2,9 +2,10 @@
 
 Pages:
 
-* item pages: each commentary article, each TTAB ruling and each standing page (About, ...),
+* item pages: each commentary article, each TTAB ruling, each Before You File guide and each
+  standing page (About, ...),
   with its body converted by Markus and wrapped in the Distinctive Mark chrome;
-* listing pages: the front page, the rulings tracker, the Wire, the commentary index,
+* listing pages: the front page, the rulings tracker, the Wire, the commentary index, the guides index,
   the subscribe page, the RSS feed and the sitemap;
 * static files: the stylesheet, the client script, the icon, robots.txt and 404.html.
 
@@ -30,8 +31,10 @@ sys.path.insert(0, str(MODULE_DIRECTORY))
 import distinctive_markup as markup  # noqa: E402
 from distinctive_content import (  # noqa: E402
     COMMENTARY_SECTION,
+    GUIDES_SECTION,
     RULINGS_SECTION,
     Commentary,
+    Guide,
     Ruling,
     SiteContent,
     StandingPage,
@@ -50,6 +53,7 @@ HOME_PAGE_KEY = "index.html"
 RULINGS_PAGE_KEY = "rulings/index.html"
 WIRE_PAGE_KEY = "wire/index.html"
 COMMENTARY_PAGE_KEY = "commentary/index.html"
+GUIDES_PAGE_KEY = "guides/index.html"
 SUBSCRIBE_PAGE_KEY = "subscribe/index.html"
 NOT_FOUND_PAGE_KEY = "404.html"
 FEED_KEY = "feed.xml"
@@ -181,6 +185,8 @@ class DistinctiveProjector:
             return (f"{COMMENTARY_SECTION}/{summary.slug}/index.html",)
         if summary.section == RULINGS_SECTION:
             return (f"{RULINGS_SECTION}/{summary.slug}/index.html",)
+        if summary.section == GUIDES_SECTION:
+            return (f"{GUIDES_SECTION}/{summary.slug}/index.html",)
         if is_standing_page(summary):
             return (f"{summary.slug}/index.html",)
         return ()
@@ -196,6 +202,14 @@ class DistinctiveProjector:
         if isinstance(entry, StandingPage):
             body = self._inner_page(content, None, markup.standing_page_body(entry.title, article_html))
             return {page_key: self._render(title=entry.title, page_path=page_path, description=self._settings.publication["description"], body_html=body)}
+        if isinstance(entry, Guide):
+            body = self._inner_page(
+                content,
+                GUIDES_SECTION,
+                markup.guide_page_body(self._settings, content, entry, article_html),
+                notice="Guides are general information, not legal advice, and reading them does not create an attorney–client relationship. Fees, forms and deadlines change; check the cited source before relying on them.",
+            )
+            return {page_key: self._render(title=entry.title, page_path=page_path, description=entry.dek or self._settings.publication["description"], body_html=body)}
         section = RULINGS_SECTION if isinstance(entry, Ruling) else COMMENTARY_SECTION
         notice = None
         if isinstance(entry, Ruling):
@@ -255,6 +269,17 @@ class DistinctiveProjector:
                 description="Doctrine, practice and the business of marks.",
                 body_html=self._inner_page(content, COMMENTARY_SECTION, markup.commentary_index_body(settings, content)),
             ),
+            GUIDES_PAGE_KEY: lambda: self._render(
+                title="Before You File",
+                page_path="/guides/",
+                description="Plain-language guides for business owners choosing, filing and protecting a trademark in the United States.",
+                body_html=self._inner_page(
+                    content,
+                    GUIDES_SECTION,
+                    markup.guides_index_body(settings, content),
+                    notice="Guides are general information, not legal advice, and reading them does not create an attorney–client relationship.",
+                ),
+            ),
             SUBSCRIBE_PAGE_KEY: lambda: self._render(
                 title=f"Subscribe to {settings.newsletter['name']}",
                 page_path="/subscribe/",
@@ -272,7 +297,7 @@ class DistinctiveProjector:
         }
 
     def _listing_content_digests(self, content: SiteContent) -> dict[str, str]:
-        everything = digest_of([dataclasses.asdict(entry) for entry in [*content.commentary, *content.rulings, *content.wire_items, *content.standing_pages]])
+        everything = digest_of([dataclasses.asdict(entry) for entry in [*content.commentary, *content.rulings, *content.wire_items, *content.guides, *content.standing_pages]])
         rulings_only = digest_of([dataclasses.asdict(entry) for entry in content.rulings])
         footer = digest_of([dataclasses.asdict(page) for page in content.standing_pages])
         return {
@@ -280,10 +305,11 @@ class DistinctiveProjector:
             RULINGS_PAGE_KEY: digest_of([rulings_only, footer]),
             WIRE_PAGE_KEY: digest_of([[dataclasses.asdict(item) for item in content.wire_items], footer]),
             COMMENTARY_PAGE_KEY: digest_of([[dataclasses.asdict(entry) for entry in content.commentary], footer]),
+            GUIDES_PAGE_KEY: digest_of([[dataclasses.asdict(guide) for guide in content.guides], footer]),
             SUBSCRIBE_PAGE_KEY: digest_of([rulings_only, footer]),
             NOT_FOUND_PAGE_KEY: footer,
             FEED_KEY: digest_of([[dataclasses.asdict(entry) for entry in [*content.commentary, *content.rulings]], self._settings.site_url]),
-            SITEMAP_KEY: digest_of([[entry.href for entry in [*content.commentary, *content.rulings, *content.standing_pages]], self._settings.site_url]),
+            SITEMAP_KEY: digest_of([[entry.href for entry in [*content.commentary, *content.rulings, *content.guides, *content.standing_pages]], self._settings.site_url]),
         }
 
     def listing_inputs(self, site) -> dict[str, str]:
@@ -299,7 +325,7 @@ class DistinctiveProjector:
         content = self._content(site)
         return digest_of(
             [
-                [dataclasses.asdict(entry) for entry in [*content.commentary, *content.rulings, *content.standing_pages]],
+                [dataclasses.asdict(entry) for entry in [*content.commentary, *content.rulings, *content.guides, *content.standing_pages]],
                 self.version,
                 self._settings.site_url,
             ]
@@ -353,8 +379,8 @@ class DistinctiveProjector:
 
     def _sitemap_bytes(self, content: SiteContent) -> bytes:
         site_url = self._settings.site_url
-        paths = ["/", "/rulings/", "/wire/", "/commentary/", "/subscribe/"]
-        paths += [entry.href for entry in [*content.commentary, *content.rulings, *content.standing_pages]]
+        paths = ["/", "/rulings/", "/wire/", "/commentary/", "/guides/", "/subscribe/"]
+        paths += [entry.href for entry in [*content.commentary, *content.rulings, *content.guides, *content.standing_pages]]
         urls = "".join(f"<url><loc>{xml_escape((site_url or '') + path)}</loc></url>" for path in paths) if site_url else ""
         return (
             '<?xml version="1.0" encoding="UTF-8"?>\n'

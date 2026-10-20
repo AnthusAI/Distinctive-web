@@ -135,10 +135,43 @@ class DependencyRuleTests(unittest.TestCase):
         self.assertEqual(self.projector.redirects(aliased_site), {"/old-ruling-address/": "/rulings/in-re-applicant-a/"})
 
 
+class GuideTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.files = build_local_site.render_site(SAMPLE_CONTENT)
+
+    def page(self, key):
+        return self.files[key].decode("utf-8")
+
+    def test_guides_index_groups_guides_by_series_in_rank_order(self):
+        index = self.page("guides/index.html")
+        self.assertLess(index.index("Choosing a mark"), index.index("After you file"))
+        self.assertLess(index.index("Choosing a strong mark"), index.index("Searching before you file"))
+
+    def test_guide_page_shows_review_date_and_more_guides_in_its_series(self):
+        guide = self.page("guides/searching-before-you-file/index.html")
+        self.assertIn("Last reviewed October 1, 2026", guide)
+        self.assertIn('href="/guides/choosing-a-strong-mark/"', guide)
+        self.assertIn('href="/rulings/in-re-applicant-e/"', guide)
+
+    def test_story_with_owner_takeaway_links_its_guide(self):
+        ruling = self.page("rulings/in-re-applicant-e/index.html")
+        self.assertIn("ds-owner-takeaway", ruling)
+        self.assertIn("Read the guide: Searching before you file", ruling)
+
+    def test_navigation_home_and_sitemap_reach_the_guides(self):
+        self.assertIn('href="/guides/"', self.page("rulings/index.html"))
+        self.assertIn("ds-guides-band", self.page("index.html"))
+        self.assertIn("/guides/searching-before-you-file/", self.page("sitemap.xml"))
+
+    def test_practitioner_referral_note_appears_on_rulings(self):
+        self.assertIn("ds-sponsor-referral", self.page("rulings/in-re-applicant-e/index.html"))
+
+
 class DeployedSiteTests(unittest.TestCase):
     def test_placeholder_sponsor_is_hidden_on_the_deployed_site(self):
         files = build_local_site.render_site(SAMPLE_CONTENT, show_placeholder_sponsor=False)
-        for key in ("index.html", "rulings/index.html", "rulings/in-re-applicant-e/index.html", "wire/index.html", "subscribe/index.html"):
+        for key in ("index.html", "rulings/index.html", "rulings/in-re-applicant-e/index.html", "wire/index.html", "subscribe/index.html", "guides/index.html", "guides/searching-before-you-file/index.html"):
             page = files[key].decode("utf-8")
             self.assertNotIn("ds-sponsor", page, key)
             self.assertNotIn("John Doe", page, key)

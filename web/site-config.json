@@ -44,7 +44,8 @@
     "phoneLabel": "[Phone number]",
     "phoneUrl": null,
     "headshotUrl": null,
-    "sponsorshipInquiryUrl": "/sponsorship/"
+    "sponsorshipInquiryUrl": "/sponsorship/",
+    "referralUrl": null
   },
   "sponsorPitches": {
     "home-sidebar": "Received an Office action? Talk to a trademark attorney.",
@@ -56,9 +57,14 @@
     "commentary-banner": "Need help with a trademark application or a TTAB proceeding?",
     "rulings-banner": "Planning an opposition or a TTAB appeal? Get experienced counsel.",
     "rulings-feed": "Need a response to an Office action or a TTAB filing?",
-    "wire-sidebar": "Saw your brand in the news for the wrong reasons?",
+    "wire-sidebar": "Questions about protecting your brand? Talk to a trademark attorney.",
     "wire-feed": "Trademark news affecting your business? Get advice that fits your situation.",
     "commentary-index-feed": "Questions about your own mark? Ask an attorney.",
+    "guide-sidebar": "Ready to file? Talk to a trademark attorney first.",
+    "guide-banner": "Ready to take this step? A trademark attorney can handle it for you.",
+    "guides-index-banner": "Choosing, filing or protecting a mark? Talk to a trademark attorney.",
+    "ruling-referral": "For attorneys: our sponsor accepts referrals of trademark clearance, filing and Office action work.",
+    "commentary-referral": "For attorneys: our sponsor accepts referrals of trademark clearance, filing and Office action work.",
     "subscribe-banner": "The Docket is free thanks to our sponsor. Need trademark help? Start here."
   }
 }

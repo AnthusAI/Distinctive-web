@@ -5,6 +5,7 @@ Editors write each item in the Papyrus newsroom. The item's section decides what
 * ``commentary``: an article with a page of its own.
 * ``rulings``: one TTAB decision. Every ruling has a page; notable ones carry full analysis.
 * ``wire``: outside news. It links to the source and has no page here.
+* ``guides``: an evergreen Before You File guide for brand owners, grouped into series.
 * no section, type ``page``: a standing page such as About or Editorial policy.
 
 Card fields come from the item's front matter (``docs/content-model.md``), so every
@@ -19,6 +20,7 @@ from dataclasses import dataclass, field
 COMMENTARY_SECTION = "commentary"
 RULINGS_SECTION = "rulings"
 WIRE_SECTION = "wire"
+GUIDES_SECTION = "guides"
 NOTABLE_RULING_MINIMUM_NOTABILITY = 4
 MAXIMUM_NOTABILITY = 5
 
@@ -112,6 +114,8 @@ class PublishedEntry:
     read_minutes: int | None
     tags: tuple[str, ...]
     is_lead: bool
+    owner_takeaway: str
+    guide_slug: str
 
     @property
     def sort_key(self) -> tuple:
@@ -185,6 +189,32 @@ class WireItem:
 
 
 @dataclass(frozen=True)
+class Guide:
+    item_id: str
+    slug: str
+    title: str
+    dek: str
+    series: str
+    series_rank: int
+    series_order: int
+    last_reviewed: dt.date | None
+    read_minutes: int | None
+    tags: tuple[str, ...]
+
+    @property
+    def page_key(self) -> str:
+        return f"{GUIDES_SECTION}/{self.slug}/index.html"
+
+    @property
+    def href(self) -> str:
+        return f"/{GUIDES_SECTION}/{self.slug}/"
+
+    @property
+    def sort_key(self) -> tuple:
+        return (self.series_rank, self.series, self.series_order, self.title)
+
+
+@dataclass(frozen=True)
 class StandingPage:
     item_id: str
     slug: str
@@ -232,6 +262,8 @@ def shared_entry_fields(summary) -> dict:
         "read_minutes": read_positive_integer(front_matter, "readMinutes"),
         "tags": read_text_list(front_matter, "tags"),
         "is_lead": read_boolean(front_matter, "lead"),
+        "owner_takeaway": read_text(front_matter, "ownerTakeaway"),
+        "guide_slug": read_text(front_matter, "guide"),
     }
 
 
@@ -274,6 +306,22 @@ def wire_item_from_summary(summary) -> WireItem:
     )
 
 
+def guide_from_summary(summary) -> Guide:
+    front_matter = summary.front_matter
+    return Guide(
+        item_id=summary.item_id,
+        slug=summary.slug,
+        title=read_text(front_matter, "title") or summary.page_title or summary.title or summary.slug,
+        dek=read_text(front_matter, "dek", "description"),
+        series=read_text(front_matter, "series"),
+        series_rank=read_positive_integer(front_matter, "seriesRank") or 999,
+        series_order=read_positive_integer(front_matter, "seriesOrder") or 0,
+        last_reviewed=parse_calendar_date(front_matter.get("lastReviewed")) or item_calendar_date(summary),
+        read_minutes=read_positive_integer(front_matter, "readMinutes"),
+        tags=read_text_list(front_matter, "tags"),
+    )
+
+
 def is_standing_page(summary) -> bool:
     return summary.section is None and summary.type == "page" and summary.slug not in ("index", "")
 
@@ -285,6 +333,7 @@ class SiteContent:
     commentary: list[Commentary] = field(default_factory=list)
     rulings: list[Ruling] = field(default_factory=list)
     wire_items: list[WireItem] = field(default_factory=list)
+    guides: list[Guide] = field(default_factory=list)
     standing_pages: list[StandingPage] = field(default_factory=list)
 
     @classmethod
@@ -297,6 +346,8 @@ class SiteContent:
                 content.rulings.append(ruling_from_summary(summary))
             elif summary.section == WIRE_SECTION:
                 content.wire_items.append(wire_item_from_summary(summary))
+            elif summary.section == GUIDES_SECTION:
+                content.guides.append(guide_from_summary(summary))
             elif is_standing_page(summary):
                 content.standing_pages.append(
                     StandingPage(
@@ -308,8 +359,30 @@ class SiteContent:
         content.commentary.sort(key=lambda entry: entry.sort_key, reverse=True)
         content.rulings.sort(key=lambda entry: entry.sort_key, reverse=True)
         content.wire_items.sort(key=lambda entry: entry.sort_key, reverse=True)
+        content.guides.sort(key=lambda guide: guide.sort_key)
         content.standing_pages.sort(key=lambda page: page.slug)
         return content
+
+    @property
+    def guide_series(self) -> list[tuple[str, list[Guide]]]:
+        grouped: dict[str, list[Guide]] = {}
+        for guide in self.guides:
+            grouped.setdefault(guide.series, []).append(guide)
+        return list(grouped.items())
+
+    def guide_by_slug(self, slug: str) -> Guide | None:
+        return next((guide for guide in self.guides if guide.slug == slug), None)
+
+    def related_guides(self, guide: Guide, maximum_count: int = 3) -> list[Guide]:
+        same_series = [other for other in self.guides if other.series == guide.series and other.item_id != guide.item_id]
+        sharing_tags = [other for other in self.guides if other not in same_series and other.item_id != guide.item_id and set(other.tags) & set(guide.tags)]
+        return [*same_series, *sharing_tags][:maximum_count]
+
+    def entries_about_guide(self, guide: Guide, maximum_count: int = 3) -> list[Commentary | Ruling]:
+        linked = [entry for entry in [*self.rulings, *self.commentary] if entry.guide_slug == guide.slug]
+        topical = [entry for entry in [*self.rulings, *self.commentary] if entry not in linked and set(entry.tags) & set(guide.tags)]
+        ordered = sorted(linked, key=lambda entry: entry.sort_key, reverse=True) + sorted(topical, key=lambda entry: entry.sort_key, reverse=True)
+        return ordered[:maximum_count]
 
     @property
     def notable_rulings(self) -> list[Ruling]:
@@ -329,8 +402,8 @@ class SiteContent:
             return self.commentary[0]
         return self.rulings[0] if self.rulings else None
 
-    def entry_for_item(self, item_id: str) -> Commentary | Ruling | StandingPage | None:
-        for entry in [*self.commentary, *self.rulings, *self.standing_pages]:
+    def entry_for_item(self, item_id: str) -> Commentary | Ruling | Guide | StandingPage | None:
+        for entry in [*self.commentary, *self.rulings, *self.guides, *self.standing_pages]:
             if entry.item_id == item_id:
                 return entry
         return None

@@ -8,6 +8,8 @@ issue: §2(d)
 issueLabel: §2(d) likelihood of confusion; DuPont factor 6 (number and nature of similar marks)
 outcome: Refusal affirmed
 notability: 5
+ownerTakeaway: "[Two or three plain-language sentences on what this decision means for someone choosing or filing a mark.]"
+guide: searching-before-you-file
 lead: true
 summary: Third‑party registrations offered without evidence of use did not show the cited mark was weak or entitled to a narrow scope of protection.
 title: A crowded field, or just a few neighbors? The Board weighs third‑party registrations under §2(d)

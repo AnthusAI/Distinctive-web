@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from distinctive_content import (
     MAXIMUM_NOTABILITY,
     Commentary,
+    Guide,
     Ruling,
     SiteContent,
     WireItem,
@@ -76,6 +77,7 @@ SECTION_NAVIGATION = (
     ("TTAB Rulings", "/rulings/", "rulings"),
     ("Commentary", "/commentary/", "commentary"),
     ("The Wire", "/wire/", "wire"),
+    ("Before You File", "/guides/", "guides"),
 )
 
 
@@ -243,6 +245,24 @@ def sponsor_sidebar(settings: SiteSettings, placement: str) -> str:
         f'{sponsor_phone_link(settings, "ds-sponsor-button ds-sponsor-button--outline ds-sponsor-button--block")}'
         f'{sponsor_disclosure(settings, "ds-sponsor-disclosure", short=True)}'
         "</div></aside>"
+    )
+
+
+def sponsor_referral_href(settings: SiteSettings) -> str:
+    return settings.sponsor.get("referralUrl") or sponsor_consultation_href(settings)
+
+
+def sponsor_referral_note(settings: SiteSettings, placement: str) -> str:
+    if not settings.shows_sponsor_units or not settings.sponsor_pitch(placement):
+        return ""
+    sponsor = settings.sponsor
+    return (
+        '<aside class="ds-sponsor-referral" aria-label="Sponsor">'
+        '<span class="ds-sponsor-eyebrow">Sponsored · Attorney advertising</span>'
+        f'<p class="ds-sponsor-referral__pitch">{escaped(settings.sponsor_pitch(placement))}</p>'
+        f'<a class="ds-sponsor-referral__link" href="{escaped(sponsor_referral_href(settings))}">'
+        f'Refer a matter to {escaped(sponsor["name"])} →</a>'
+        "</aside>"
     )
 
 
@@ -470,6 +490,47 @@ def commentary_card(entry: Commentary, heading_level: str = "h3") -> str:
     )
 
 
+def guide_card(guide: Guide, heading_level: str = "h3") -> str:
+    reviewed = f"Last reviewed {format_long_date(guide.last_reviewed)}" if guide.last_reviewed else ""
+    meta = " · ".join(part for part in [reviewed, f"{guide.read_minutes} min read" if guide.read_minutes else ""] if part)
+    dek = f'<p class="ds-guide-card__dek">{escaped(guide.dek)}</p>' if guide.dek else ""
+    meta_html = f'<span class="ds-guide-card__meta">{escaped(meta)}</span>' if meta else ""
+    return (
+        '<article class="ds-guide-card">'
+        f'<{heading_level} class="ds-guide-card__headline"><a href="{guide.href}">{escaped(guide.title)}</a></{heading_level}>'
+        f"{dek}{meta_html}"
+        "</article>"
+    )
+
+
+def owner_takeaway_box(content: SiteContent, entry: Commentary | Ruling) -> str:
+    if not entry.owner_takeaway:
+        return ""
+    guide = content.guide_by_slug(entry.guide_slug) if entry.guide_slug else None
+    guide_link = f'<a class="ds-owner-takeaway__link" href="{guide.href}">Read the guide: {escaped(guide.title)} →</a>' if guide else ""
+    return (
+        '<aside class="ds-owner-takeaway" aria-label="For brand owners">'
+        '<span class="ds-owner-takeaway__label">For brand owners</span>'
+        f'<p class="ds-owner-takeaway__text">{escaped(entry.owner_takeaway)}</p>{guide_link}'
+        "</aside>"
+    )
+
+
+def home_guides_band(content: SiteContent) -> str:
+    if not content.guides:
+        return ""
+    cards = "".join(guide_card(guide) for guide in content.guides[:3])
+    return (
+        '<section class="ds-guides-band" aria-labelledby="guides-heading"><div class="ds-container ds-stack">'
+        '<div class="ds-section-heading"><div class="ds-guides-band__heading">'
+        '<h2 class="ds-section-heading__title" id="guides-heading">Before You File</h2>'
+        "<p>Choosing, filing or protecting a trademark? Start with these plain-language guides.</p></div>"
+        '<a class="ds-mono-link" href="/guides/">All guides →</a></div>'
+        f'<div class="ds-guide-grid">{cards}</div>'
+        "</div></section>"
+    )
+
+
 def section_heading_row(heading_id: str, heading: str, link_label: str | None, link_href: str | None) -> str:
     link = f'<a class="ds-mono-link" href="{link_href}">{escaped(link_label)}</a>' if link_label and link_href else ""
     return (
@@ -518,6 +579,7 @@ def home_page_body(settings: SiteSettings, content: SiteContent) -> str:
         f'<div class="ds-home-top__sponsor">{sponsor_sidebar(settings, "home-sidebar")}</div>'
         "</aside></section>"
         f'<div class="ds-container ds-spaced-unit">{sponsor_banner(settings, "home-banner")}</div>'
+        f"{home_guides_band(content)}"
         f"{wire_section}"
         f"{commentary_section}"
         f'<div class="ds-container ds-spaced-unit">{sponsor_feed_row(settings, "home-feed")}</div>'
@@ -753,6 +815,75 @@ def commentary_index_body(settings: SiteSettings, content: SiteContent) -> str:
     )
 
 
+def guides_index_body(settings: SiteSettings, content: SiteContent) -> str:
+    series_sections = "".join(
+        '<section class="ds-guide-series">'
+        + (f'<h2 class="ds-rule-heading">{escaped(series)}</h2>' if series else "")
+        + f'<div class="ds-guide-grid">{"".join(guide_card(guide) for guide in guides)}</div></section>'
+        for series, guides in content.guide_series
+    ) or empty_state("The first guides are on their way.")
+    return (
+        '<main class="ds-container ds-page-main">'
+        f'{page_title_band("Before You File", "Plain-language guides for business owners choosing, filing and protecting a trademark in the United States, at home or from abroad.")}'
+        f"{series_sections}"
+        f'<div class="ds-spaced-unit ds-spaced-unit--top">{sponsor_banner(settings, "guides-index-banner")}</div>'
+        "</main>"
+    )
+
+
+def guide_page_body(settings: SiteSettings, content: SiteContent, guide: Guide, article_html: str) -> str:
+    breadcrumb = '<a href="/guides/">Before You File</a>' + (
+        f'<span aria-hidden="true">/</span><span class="ds-breadcrumb__current">{escaped(guide.series)}</span>' if guide.series else ""
+    )
+    meta_parts = [f"Last reviewed {format_long_date(guide.last_reviewed)}" if guide.last_reviewed else "", f"{guide.read_minutes} min read" if guide.read_minutes else ""]
+    meta = "".join(f"<span>{escaped(part)}</span>" for part in meta_parts if part)
+    dek = f'<p class="ds-story-header__dek">{escaped(guide.dek)}</p>' if guide.dek else ""
+    related_guides = content.related_guides(guide)
+    series_list = ""
+    if related_guides:
+        series_list = (
+            '<nav class="ds-guide-series-list" aria-labelledby="more-guides-heading">'
+            '<h2 class="ds-rule-heading" id="more-guides-heading">More guides</h2><ul>'
+            + "".join(f'<li><a href="{other.href}">{escaped(other.title)}</a></li>' for other in related_guides)
+            + "</ul></nav>"
+        )
+    in_practice = content.entries_about_guide(guide)
+    in_practice_section = ""
+    if in_practice:
+        in_practice_section = (
+            '<section class="ds-white-band ds-white-band--related" aria-labelledby="practice-heading"><div class="ds-container ds-stack">'
+            '<h2 class="ds-section-heading__title" id="practice-heading">In practice</h2>'
+            f'<div class="ds-related-grid">{"".join(related_card(entry) for entry in in_practice)}</div></div></section>'
+        )
+    end_signup = dark_signup_panel(
+        settings,
+        "guide-end-email",
+        "Keep up with the rules that affect your mark.",
+        f"{settings.newsletter['name']}: what changed at the USPTO and the Board this week, in plain terms. Free, every Friday.",
+    )
+    return (
+        '<main><article class="ds-story ds-guide">'
+        '<div class="ds-container ds-story-header">'
+        f'<nav class="ds-breadcrumb" aria-label="Breadcrumb">{breadcrumb}</nav>'
+        f'<h1 class="ds-story-header__headline">{escaped(guide.title)}</h1>'
+        f"{dek}"
+        f'<div class="ds-byline">{meta}</div>'
+        "</div>"
+        '<div class="ds-container ds-story-layout">'
+        '<aside class="ds-story-layout__side" aria-label="About this guide">'
+        f"{series_list}"
+        f'<div class="ds-story-layout__sponsor">{sponsor_sidebar(settings, "guide-sidebar")}</div>'
+        "</aside>"
+        '<div class="ds-story-layout__body">'
+        f'<div class="ds-prose">{article_html}</div>'
+        f'<div class="ds-story-layout__banner">{sponsor_banner(settings, "guide-banner")}</div>'
+        "</div></div></article>"
+        f'<div class="ds-container ds-spaced-unit">{end_signup}</div>'
+        f"{in_practice_section}"
+        "</main>"
+    )
+
+
 def subscribe_page_body(settings: SiteSettings, content: SiteContent) -> str:
     newsletter = settings.newsletter
     topics = "".join(
@@ -982,9 +1113,11 @@ def story_page_body(settings: SiteSettings, content: SiteContent, entry: Comment
         f'<div class="ds-story-layout__sponsor">{sponsor_sidebar(settings, placement + "-sidebar")}</div>'
         "</aside>"
         '<div class="ds-story-layout__body">'
+        f"{owner_takeaway_box(content, entry)}"
         f'<div class="ds-prose">{body_with_signup}</div>'
         f'<div class="ds-story-layout__banner">{sponsor_banner(settings, placement + "-banner")}</div>'
         f"{filed_under_chips(entry)}"
+        f"{sponsor_referral_note(settings, placement + '-referral')}"
         "</div></div></article>"
         f'<div class="ds-container ds-spaced-unit">{end_signup}</div>'
         f"{related_section}"
