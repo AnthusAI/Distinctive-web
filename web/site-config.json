@@ -1,0 +1,63 @@
+{
+  "publication": {
+    "name": "Distinctive",
+    "tagline": "Trademark News & Analysis",
+    "description": "Commentary on TTAB decisions, USPTO practice, and the business of marks.",
+    "publisher": "[Publisher Name]",
+    "copyrightYear": 2026,
+    "siteUrl": null,
+    "legalNotice": "Commentary on this site is general information, not legal advice, and reading it does not create an attorney–client relationship. TTAB decisions are summarized from the public record; read the opinion before relying on it."
+  },
+  "issueFilters": ["§2(d)", "§2(e)(1)", "§2(e)(4)", "Failure to function", "Genericness", "Fraud", "Abandonment"],
+  "issueChipLabels": {
+    "§2(d)": "§2(d) Confusion",
+    "§2(e)(1)": "§2(e)(1) Descriptiveness",
+    "§2(e)(4)": "§2(e)(4) Surnames",
+    "Failure to function": "Failure to function",
+    "Genericness": "Genericness",
+    "Fraud": "Fraud & nonuse"
+  },
+  "wireSources": ["USPTO", "Courts", "International", "Press"],
+  "primarySourcesWatched": [
+    { "label": "USPTO news & updates", "url": "https://www.uspto.gov/about-us/news-updates" },
+    { "label": "Official Gazette", "url": "https://www.uspto.gov/learning-and-resources/official-gazette" },
+    { "label": "TTABVUE dockets", "url": "https://ttabvue.uspto.gov/ttabvue/" },
+    { "label": "Federal Register — USPTO", "url": "https://www.federalregister.gov/agencies/patent-and-trademark-office" },
+    { "label": "Federal Circuit opinions", "url": "https://cafc.uscourts.gov/" }
+  ],
+  "newsletter": {
+    "name": "The Docket",
+    "cadence": "Every Friday",
+    "signupEndpoint": null,
+    "topics": ["§2(d)", "§2(e)(1)", "§2(e)(4)", "Failure to function", "Genericness", "Fraud & abandonment", "Federal Circuit"]
+  },
+  "sponsor": {
+    "isPlaceholder": true,
+    "name": "John Doe",
+    "credential": "Attorney at Law",
+    "initials": "JD",
+    "practiceSummary": "Trademark clearance, registration & disputes",
+    "practiceDescription": "Trademark clearance, registration, Office action responses and TTAB proceedings.",
+    "practiceDescriptionShort": "Clearance, registration, Office actions and TTAB proceedings.",
+    "consultationUrl": null,
+    "phoneLabel": "[Phone number]",
+    "phoneUrl": null,
+    "headshotUrl": null,
+    "sponsorshipInquiryUrl": "/sponsorship/"
+  },
+  "sponsorPitches": {
+    "home-sidebar": "Received an Office action? Talk to a trademark attorney.",
+    "home-banner": "Launching a new brand? Get it cleared before you file.",
+    "home-feed": "Opposing a mark that’s too close to yours?",
+    "ruling-sidebar": "Facing a refusal like this one?",
+    "ruling-banner": "Got a refusal? Talk to a trademark attorney before you respond.",
+    "commentary-sidebar": "Need help with a trademark application or a TTAB proceeding?",
+    "commentary-banner": "Need help with a trademark application or a TTAB proceeding?",
+    "rulings-banner": "Planning an opposition or a TTAB appeal? Get experienced counsel.",
+    "rulings-feed": "Need a response to an Office action or a TTAB filing?",
+    "wire-sidebar": "Saw your brand in the news for the wrong reasons?",
+    "wire-feed": "Trademark news affecting your business? Get advice that fits your situation.",
+    "commentary-index-feed": "Questions about your own mark? Ask an attorney.",
+    "subscribe-banner": "The Docket is free thanks to our sponsor. Need trademark help? Start here."
+  }
+}
