@@ -1089,7 +1089,7 @@ def subscribe_page_body(settings: SiteSettings, content: SiteContent) -> str:
         for number, title, text in inside_items
     )
     questions = (
-        ("Is it really free?", f"Yes. {newsletter['name']} is supported by our sponsor. Sponsors don’t see or shape our coverage before it’s published."),
+        ("Is it really free?", f"Yes. {newsletter['name']} is paid for by our sponsor, a trademark attorney who helps decide what we cover."),
         ("How often will you email me?", "Once a week on Friday. If you opt into precedential alerts, you’ll also get a short note when one issues."),
         ("Is this legal advice?", "No. It’s commentary and general information. Reading it doesn’t create an attorney–client relationship."),
     )
