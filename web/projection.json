@@ -57,8 +57,8 @@
     {
       "id": "contact",
       "path": "contact",
-      "title": "Contact the editors",
-      "description": "Send the editors a correction, a tip or a question.",
+      "title": "Contact us",
+      "description": "Request a consultation with our sponsoring attorney, or send the editors a correction, a tip or a question.",
       "dependsOn": []
     }
   ],

@@ -160,7 +160,7 @@ def site_footer(settings: SiteSettings, content: SiteContent, notice: str | None
 
 
 def sponsor_consultation_href(settings: SiteSettings) -> str:
-    return settings.sponsor.get("consultationUrl") or settings.sponsor["sponsorshipInquiryUrl"]
+    return settings.sponsor.get("consultationUrl") or "/contact/?topic=consultation"
 
 
 def sponsor_phone_link(settings: SiteSettings, class_name: str) -> str:
@@ -1238,10 +1238,9 @@ def contact_page_body(settings: SiteSettings) -> str:
     )
     return (
         '<main class="ds-container ds-page-main ds-page-main--narrow">'
-        f'{page_title_band("Contact the editors", "Send a correction, a tip or a question. The editors read every message.")}'
+        f'{page_title_band("Contact us", "Request a consultation with our sponsoring attorney, or send the editors a correction, a tip or a question.")}'
         '<div class="ds-prose ds-contact-intro">'
-        "<p>Please do not send confidential information. Writing to us does not create an attorney–client relationship, "
-        "and we cannot advise on your own matter.</p></div>"
+        "<p>Please do not send confidential information. Writing to us does not create an attorney–client relationship.</p></div>"
         f"{closed_notice}"
         f'<form class="ds-contact-form" data-ds-contact="" {form_attributes}>'
         '<label class="ds-field-label" for="contact-topic">What is this about?</label>'
@@ -1255,7 +1254,7 @@ def contact_page_body(settings: SiteSettings) -> str:
         '<input type="hidden" name="page" value="">'
         '<div class="ds-visually-hidden" aria-hidden="true"><label for="contact-website">Leave this empty</label>'
         '<input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>'
-        f'<button class="ds-solid-button" type="submit"{"" if endpoint else " disabled"}>Send to the editors</button>'
+        f'<button class="ds-solid-button" type="submit"{"" if endpoint else " disabled"}>Send</button>'
         '<p class="ds-form-status" data-ds-form-status="" role="status"></p>'
         "</form></main>"
     )

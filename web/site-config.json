@@ -24,9 +24,11 @@
   "contact": {
     "endpoint": null,
     "topics": [
+      ["consultation", "A consultation with our sponsoring attorney"],
       ["correction", "A correction"],
       ["tip", "A tip or story idea"],
       ["question", "A question for the editors"],
+      ["sponsorship", "Sponsoring Distinctive Mark"],
       ["other", "Something else"]
     ]
   },
@@ -38,7 +40,7 @@
   },
   "sponsor": {
     "isPlaceholder": true,
-    "showWhilePlaceholder": false,
+    "showWhilePlaceholder": true,
     "name": "John Doe",
     "credential": "Attorney at Law",
     "initials": "JD",
@@ -49,7 +51,7 @@
     "phoneLabel": "[Phone number]",
     "phoneUrl": null,
     "headshotUrl": null,
-    "sponsorshipInquiryUrl": "/sponsorship/",
+    "sponsorshipInquiryUrl": "/contact/?topic=sponsorship",
     "referralUrl": null
   },
   "sponsorPitches": {

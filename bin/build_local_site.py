@@ -6,7 +6,6 @@ Each file is YAML front matter plus a Markus body, exactly what an editor writes
 
     python3 bin/build_local_site.py                      # tests/fixtures/sample-content -> web/dist-local
     python3 bin/build_local_site.py --content DIR --out DIR
-    python3 bin/build_local_site.py --as-deployed           # placeholder sponsor hidden, as on the live site
     python3 -m http.server --directory web/dist-local 8080
 
 Needs the Python requirements in ``requirements-publication.txt``.
@@ -15,7 +14,6 @@ Needs the Python requirements in ``requirements-publication.txt``.
 from __future__ import annotations
 
 import argparse
-import os
 import re
 import shutil
 import sys
@@ -67,12 +65,8 @@ def site_index_from_directory(content_directory: Path) -> tuple[SiteIndex, dict[
     return SiteIndex(items=summaries, load_item=items_by_id.__getitem__), items_by_id
 
 
-def render_site(content_directory: Path, show_placeholder_sponsor: bool = True) -> dict[str, bytes]:
+def render_site(content_directory: Path) -> dict[str, bytes]:
     """Every file the standard Papyrus front end writes for the content folder, keyed by site path."""
-    if show_placeholder_sponsor:
-        os.environ["DISTINCTIVE_SHOW_PLACEHOLDER_SPONSOR"] = "1"
-    else:
-        os.environ.pop("DISTINCTIVE_SHOW_PLACEHOLDER_SPONSOR", None)
     projector = StandardMarkusProjector.from_static_directory(WEB_DIRECTORY, environ={"PAPYRUS_SITE_PUBLIC_URL": PREVIEW_ORIGIN})
     site, items_by_id = site_index_from_directory(content_directory)
     files = dict(projector.static_files())
@@ -95,9 +89,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--content", type=Path, default=REPOSITORY / "tests" / "fixtures" / "sample-content")
     parser.add_argument("--out", type=Path, default=REPOSITORY / "web" / "dist-local")
-    parser.add_argument("--as-deployed", action="store_true", help="hide the placeholder sponsor, as the live site does")
     arguments = parser.parse_args()
-    files = render_site(arguments.content, show_placeholder_sponsor=not arguments.as_deployed)
+    files = render_site(arguments.content)
     write_site(files, arguments.out)
     print(f"Wrote {len(files)} files to {arguments.out}")
 

@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import functools
 import json
-import os
 from pathlib import Path
 
 import distinctive_markup as markup
@@ -50,7 +49,6 @@ DEPENDS_ON = {
     "*": ["*"],
 }
 
-SHOW_PLACEHOLDER_SPONSOR_ENV = "DISTINCTIVE_SHOW_PLACEHOLDER_SPONSOR"
 _CONFIGURATION_PATH = Path(__file__).resolve().parent / "site-config.json"
 _content_cache: list = [None, None]
 
@@ -77,8 +75,6 @@ def _settings(page) -> markup.SiteSettings:
     configuration = json.loads(_configuration_text())
     identity = page.settings.identity
     configuration["publication"].update(name=identity.name, tagline=identity.tagline, description=identity.description)
-    if os.environ.get(SHOW_PLACEHOLDER_SPONSOR_ENV) == "1":
-        configuration["sponsor"]["showWhilePlaceholder"] = True
     return markup.SiteSettings(configuration=configuration, site_url=page.environment.origin)
 
 

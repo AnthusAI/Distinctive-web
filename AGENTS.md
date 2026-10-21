@@ -16,7 +16,7 @@ This repository holds only what is specific to Distinctive Mark™ (distinctive-
 
 ## Workflow
 
-1. Public site: `pip install -r requirements-publication.txt`, then `python3 bin/build_local_site.py` (add `--as-deployed` to hide the placeholder sponsor as the live site does) and serve `web/dist-local`.
+1. Public site: `pip install -r requirements-publication.txt`, then `python3 bin/build_local_site.py` and serve `web/dist-local`.
 2. Tests: `python3 -m unittest discover -s tests`.
 3. CMS: `npm ci` then `npm run dev` (runs `papyrus-app sync`, which writes gitignored route shims). It needs a backend's `amplify_outputs.json` (gitignored).
 4. Changing the Papyrus version: edit the exact pin in `package.json`, `infra/package.json`, `infra/site.json` and `requirements-publication.txt` together.
@@ -29,5 +29,5 @@ This repository holds only what is specific to Distinctive Mark™ (distinctive-
 - Author content reaches pages only through Markus with raw HTML disabled. Everything else on a page is generated here and escaped.
 - Keep listing pages renderable from item summaries alone, so the projection's dependency digests stay correct.
 - The newsletter signup forms post to `newsletter.signupEndpoint` in `web/site-config.json`. While it is `null`, forms send readers to `/subscribe/`, and the subscribe page says signups are not open yet. Never fake a successful signup.
-- The sponsor in `web/site-config.json` is a placeholder (`isPlaceholder: true`) until a real sponsor is signed.
+- The sponsor in `web/site-config.json` is a placeholder (`isPlaceholder: true`) until a real sponsor is signed. Its units show on the live site anyway (`showWhilePlaceholder: true`), labeled as a placeholder, because driving readers to the sponsor is the site's purpose.
 - Kanbus is the record of work (project key `dist`). Use the `kbs` CLI (`pip install kanbus`); never read or edit the `project/` directory directly. Without a realtime broker, run it with `KANBUS_NO_DAEMON=1 KANBUS_REALTIME_TRANSPORT=none KANBUS_REALTIME_BROKER=off KANBUS_REALTIME_AUTOSTART=false`. The launch epic lists what is built and what remains.

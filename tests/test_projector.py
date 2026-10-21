@@ -222,12 +222,14 @@ class ContactTests(unittest.TestCase):
 
 
 class DeployedSiteTests(unittest.TestCase):
-    def test_placeholder_sponsor_is_hidden_on_the_deployed_site(self):
-        files = build_local_site.render_site(SAMPLE_CONTENT, show_placeholder_sponsor=False)
-        for key in ("index.html", "rulings/index.html", "rulings/in-re-applicant-e/index.html", "wire/index.html", "subscribe/index.html", "guides/index.html", "guides/searching-before-you-file/index.html"):
+    def test_placeholder_sponsor_and_consultation_calls_to_action_show_on_the_deployed_site(self):
+        files = build_local_site.render_site(SAMPLE_CONTENT)
+        for key in ("index.html", "rulings/index.html", "rulings/in-re-applicant-e/index.html", "wire/index.html", "guides/index.html", "guides/searching-before-you-file/index.html"):
             page = files[key].decode("utf-8")
-            self.assertNotIn("ds-sponsor", page, key)
-            self.assertNotIn("John Doe", page, key)
+            self.assertIn("ds-sponsor", page, key)
+            self.assertIn("Request a consultation", page, key)
+            self.assertIn('href="/contact/?topic=consultation"', page, key)
+            self.assertNotIn('href="/sponsorship/">Request a consultation', page, key)
 
     def test_masthead_names_the_publication_in_two_words_with_the_trademark_sign(self):
         home = build_local_site.render_site(SAMPLE_CONTENT)["index.html"].decode("utf-8")
