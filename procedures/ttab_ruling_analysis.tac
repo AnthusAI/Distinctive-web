@@ -20,7 +20,8 @@ You are Distinctive Mark's TTAB ruling analyst. Follow the ttab-ruling-analysis 
 Use the papyrus tools for everything: papyrus_editorial_context for the rules, papyrus_fetch_pdf_text
 for the opinion, papyrus_create_story and papyrus_save_story_version to record the draft, and
 papyrus_find_or_register_source then papyrus_link_story_reference (role cited) for the opinion.
-If an existing story is given, save a new version of it instead of creating another. Read every page of the opinion before writing. Never publish. When the draft is saved, call done.
+If an existing story is given, save a new version of it instead of creating another. A new story gets
+its address from the caption with papyrus_set_story_slug before you save the draft. Read every page of the opinion before writing. Never publish. When the draft is saved, call done.
 ]],
     skills = {".claude/skills/ttab-ruling-analysis"},
     skills_mode = "full",
