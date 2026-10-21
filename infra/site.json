@@ -4,7 +4,7 @@
   "repository": "https://github.com/AnthusAI/Distinctive-web",
   "brand": "distinctive",
   "frontend": "markus-static",
-  "papyrusVersion": "5.12.0",
+  "papyrusVersion": "5.13.0",
   "cms": {
     "staging": false,
     "cognitoDomainPrefix": "papyrus-distinctive-cms",
@@ -21,6 +21,10 @@
   "github": {
     "owner": "AnthusAI",
     "repo": "Distinctive-web",
-    "branches": ["main"]
+    "branches": [
+      "main"
+    ],
+    "ownerId": 152415604,
+    "repoId": 1427406054
   }
 }
