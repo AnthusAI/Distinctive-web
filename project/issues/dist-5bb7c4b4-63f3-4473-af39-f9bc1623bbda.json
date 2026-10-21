@@ -1,0 +1,20 @@
+{
+  "id": "dist-5bb7c4b4-63f3-4473-af39-f9bc1623bbda",
+  "title": "M4 Scheduled searches",
+  "description": "Query sets with their own cadences using the Papyrus web search: daily news terms, weekly doctrine and cross-border terms, monthly guide research. Results are secondary signals: Wire items only with a primary source, otherwise leads to trace. Query sets live in backend data.",
+  "type": "epic",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "dist-9e8b06ca-083d-4f6a-952e-d7ba7142ecab",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T00:39:42.181318Z",
+  "updated_at": "2026-10-21T00:39:42.181340Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "4c2f34e8-2dda-45e3-a7e4-dcca0bf78a6e",
+  "issue_id": "dist-67ffa005-2565-429a-b6bf-33931e5ecf21",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T00:39:08.558Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "M1 TTAB decisions corpus: full metadata, opinions and text",
+    "description": "Ingest every TTAB decision from the USPTO TTAB Reading Room API (about 19,000 since 1986): metadata, opinion PDFs on the S3 shelves, extracted text, catalogued in DynamoDB. Dedupe on documentId; handle late precedential designations. Feeds the Rulings tracker, the classifiers and every TTAB analysis.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-e86b3649-b3cf-4f1b-a434-9791bad0eeaa",
+    "labels": []
+  }
+}

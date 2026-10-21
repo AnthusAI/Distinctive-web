@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "46acc072-2c53-481f-98b7-1e35c1abf3eb",
+  "issue_id": "dist-f7e4c7dd-2a46-439b-8413-432980409c17",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T00:39:42.194Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "M5 International monitors, read for US consequences",
+    "description": "WIPO Madrid System notices; EUIPO, CJEU trademark judgments and INPI France; Latin American offices (IMPI, INPI Brazil, SIC, INPI Argentina, INAPI). Weekly. Items qualify only through a consequence for a US filing, registration or brand.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "dist-9e8b06ca-083d-4f6a-952e-d7ba7142ecab",
+    "labels": []
+  }
+}

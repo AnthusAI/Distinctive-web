@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "a7bd8980-e7de-42e2-a81c-8433e171e138",
+  "issue_id": "dist-41eaade2-2c2b-40b5-8f8b-37cd1f5f90bc",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T00:39:20.526Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "M3 Investigation: what makes expungement and reexamination petitions succeed",
+    "description": "Find the public records of Trademark Modernization Act expungement and reexamination proceedings (and TTAB nonuse claims), separate successful from failed petitions, and compare them with topic modelling and recursive summarization to identify the factors that help or hurt. Publish as an investigation and a data-driven guide.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "dist-e86b3649-b3cf-4f1b-a434-9791bad0eeaa",
+    "labels": []
+  }
+}

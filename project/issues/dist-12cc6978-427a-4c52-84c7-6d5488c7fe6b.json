@@ -1,0 +1,20 @@
+{
+  "id": "dist-12cc6978-427a-4c52-84c7-6d5488c7fe6b",
+  "title": "M6 Practitioner press and enforcement feeds",
+  "description": "Practitioner press RSS feeds as Wire signals and Commentary ideas (always traced to primary sources); USITC Section 337 trademark and trade dress investigations and CBP IP enforcement releases (weekly); later, a filing-data watchlist of well-known brands from USPTO application bulk data.",
+  "type": "epic",
+  "status": "open",
+  "priority": 3,
+  "assignee": null,
+  "creator": null,
+  "parent": "dist-9e8b06ca-083d-4f6a-952e-d7ba7142ecab",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T00:39:42.206972Z",
+  "updated_at": "2026-10-21T00:39:42.206994Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

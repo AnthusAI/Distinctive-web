@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "6192a5ac-83c1-494c-95d6-5d855210edcd",
+  "issue_id": "dist-91471a86-d6f4-48b2-a58b-e2d8553927f0",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T00:39:42.142Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "M1 TTAB decisions monitor",
+    "description": "Daily poll of the USPTO TTAB Reading Room API: rolling 30-day window (decisions appear about two weeks after issuance), dedupe on documentId, precedential re-check over the last 90-180 days, identifying User-Agent and about one request a second. Output: pending references for the Rulings section, keyed by proceeding number, with the opinion PDF.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-9e8b06ca-083d-4f6a-952e-d7ba7142ecab",
+    "labels": []
+  }
+}

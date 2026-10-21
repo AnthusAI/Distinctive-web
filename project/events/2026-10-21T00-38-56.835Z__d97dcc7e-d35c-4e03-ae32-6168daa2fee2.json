@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "d97dcc7e-d35c-4e03-ae32-6168daa2fee2",
+  "issue_id": "dist-c6df20c6-29f4-4f89-960e-34b15cb83435",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T00:38:56.835Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "M0 Seed the knowledge base: labeled references and first stories",
+    "description": "test",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-e86b3649-b3cf-4f1b-a434-9791bad0eeaa",
+    "labels": []
+  }
+}
