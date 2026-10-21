@@ -134,9 +134,10 @@
   function signupPayload(form) {
     var formData = new FormData(form);
     return {
+      form: "newsletter",
       email: formData.get("email"),
-      lists: formData.getAll("lists"),
-      topics: formData.getAll("topics"),
+      lists: formData.getAll("lists").join(", "),
+      topics: formData.getAll("topics").join(", "),
       page: window.location.pathname
     };
   }
@@ -222,7 +223,7 @@
         return;
       }
       setFormStatus(form, "");
-      var payload = {};
+      var payload = { form: "contact" };
       ["topic", "name", "email", "message", "page", "website"].forEach(function (name) {
         var field = form.elements[name];
         payload[name] = field ? field.value : "";

@@ -321,7 +321,7 @@ def dark_signup_panel(settings: SiteSettings, field_id: str, headline: str, body
         if with_alerts_option
         else ""
     )
-    recent_issue = ' <a href="/subscribe/#latest-issue">See a recent issue</a>' if show_recent_issue_link else ""
+    recent_issue = ' <a href="/subscribe/#latest-issue">See what an issue looks like</a>' if show_recent_issue_link else ""
     return (
         f'<section class="ds-dark-signup" aria-labelledby="{field_id}-heading">'
         '<div class="ds-dark-signup__copy">'
@@ -379,7 +379,7 @@ def confirmation_toast() -> str:
     return (
         '<div class="ds-toast" data-ds-toast="" role="status" hidden="">'
         f'<span class="ds-toast__check">{CHECK_ICON_SVG}</span>'
-        '<span class="ds-toast__text" data-ds-toast-text="">Almost done — check your inbox to confirm. <a href="/subscribe/">Choose issue alerts</a></span>'
+        '<span class="ds-toast__text" data-ds-toast-text="">You’re on the list. The first issue will come to this address. <a href="/subscribe/">Choose issue alerts</a></span>'
         "</div>"
     )
 
@@ -1019,7 +1019,7 @@ def subscribe_page_body(settings: SiteSettings, content: SiteContent) -> str:
         else ""
     )
     preview = (
-        '<aside class="ds-subscribe-preview" aria-label="Preview of a recent issue" id="latest-issue">'
+        '<aside class="ds-subscribe-preview" aria-label="Preview of an issue" id="latest-issue">'
         '<div class="ds-preview-card">'
         f'<div class="ds-preview-card__header">{wordmark("ds-wordmark ds-wordmark--preview")}'
         f'<span class="ds-mono-meta ds-mono-meta--small">{escaped(newsletter["name"])} · {escaped(newsletter["cadence"])}</span></div>'
@@ -1050,13 +1050,13 @@ def subscribe_page_body(settings: SiteSettings, content: SiteContent) -> str:
         '<fieldset class="ds-subscribe-form__topics"><legend class="ds-field-label">Issues you follow <span class="ds-field-label__hint">(optional, shapes your alerts)</span></legend>'
         f'<div class="ds-topic-chips">{topics}</div></fieldset>'
         '<button class="ds-solid-button ds-solid-button--large" type="submit">Subscribe free</button>'
-        '<p class="ds-subscribe-form__fine-print">One click to unsubscribe, any time. We never share your address.</p>'
+        '<p class="ds-subscribe-form__fine-print">We never share your address. To come off the list, write to us from the contact page.</p>'
         '<p class="ds-form-status" data-ds-form-status="" role="status"></p>'
         "</div>"
         '<div class="ds-subscribe-success" data-ds-subscribe-success="" hidden="">'
         f'<span class="ds-subscribe-success__check">{CHECK_ICON_SVG}</span>'
-        '<h2 class="ds-subscribe-success__headline">One more step: confirm your email.</h2>'
-        f'<p>We sent a confirmation link. Click it and your first issue of {escaped(newsletter["name"])} arrives this Friday.</p>'
+        '<h2 class="ds-subscribe-success__headline">You’re on the list.</h2>'
+        f'<p>{escaped(newsletter["name"])} has not started yet. We saved your address and your choices, and the first issue will come to this address.</p>'
         '<div class="ds-subscribe-success__actions">'
         '<a class="ds-pill-button ds-pill-button--ink" href="/rulings/">Browse the notable rulings</a>'
         '<button class="ds-pill-button ds-pill-button--outline" type="button" data-ds-subscribe-reset="">Use a different email</button>'
