@@ -198,6 +198,23 @@ class RulingTierTests(unittest.TestCase):
         self.assertEqual(sample.short_outcome, "Refusal affirmed")
 
 
+class ContactTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.files = build_local_site.render_site(SAMPLE_CONTENT)
+
+    def test_contact_page_says_it_is_not_open_while_no_endpoint_is_configured(self):
+        contact = self.files["contact/index.html"].decode("utf-8")
+        self.assertIn("data-ds-contact-closed", contact)
+        self.assertIn("Messages cannot be sent yet", contact)
+        self.assertIn('name="website"', contact)
+
+    def test_footer_and_stories_link_to_the_contact_page(self):
+        story = self.files["rulings/in-re-applicant-e/index.html"].decode("utf-8")
+        self.assertIn('href="/contact/"', story)
+        self.assertIn("/contact/?topic=correction&amp;page=/rulings/in-re-applicant-e/", story)
+
+
 class DeployedSiteTests(unittest.TestCase):
     def test_placeholder_sponsor_is_hidden_on_the_deployed_site(self):
         files = build_local_site.render_site(SAMPLE_CONTENT, show_placeholder_sponsor=False)

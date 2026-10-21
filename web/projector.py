@@ -58,6 +58,7 @@ WIRE_PAGE_KEY = "wire/index.html"
 COMMENTARY_PAGE_KEY = "commentary/index.html"
 GUIDES_PAGE_KEY = "guides/index.html"
 SUBSCRIBE_PAGE_KEY = "subscribe/index.html"
+CONTACT_PAGE_KEY = "contact/index.html"
 NOT_FOUND_PAGE_KEY = "404.html"
 FEED_KEY = "feed.xml"
 SITEMAP_KEY = "sitemap.xml"
@@ -305,6 +306,12 @@ class DistinctiveProjector:
                 description=f"{settings.newsletter['name']}: the week’s TTAB decisions, read for you. Free, every Friday.",
                 body_html=self._inner_page(content, None, markup.subscribe_page_body(settings, content)),
             ),
+            CONTACT_PAGE_KEY: lambda: self._render(
+                title="Contact the editors",
+                page_path="/contact/",
+                description="Send the editors a correction, a tip or a question.",
+                body_html=self._inner_page(content, None, markup.contact_page_body(settings)),
+            ),
             NOT_FOUND_PAGE_KEY: lambda: self._render(
                 title="Page not found",
                 page_path="/404.html",
@@ -333,6 +340,7 @@ class DistinctiveProjector:
             GUIDES_PAGE_KEY: digest_of([[dataclasses.asdict(guide) for guide in content.guides], footer]),
             SUBSCRIBE_PAGE_KEY: digest_of([rulings_only, footer]),
             NOT_FOUND_PAGE_KEY: footer,
+            CONTACT_PAGE_KEY: digest_of([footer, self._settings.configuration.get("contact")]),
             FEED_KEY: digest_of([[dataclasses.asdict(entry) for entry in [*content.commentary, *content.rulings]], self._settings.site_url]),
             SITEMAP_KEY: digest_of([[entry.href for entry in [*content.commentary, *content.rulings, *content.guides, *content.standing_pages]], content.ruling_archive_months, self._settings.site_url]),
         }
@@ -404,7 +412,7 @@ class DistinctiveProjector:
 
     def _sitemap_bytes(self, content: SiteContent) -> bytes:
         site_url = self._settings.site_url
-        paths = ["/", "/rulings/", "/wire/", "/commentary/", "/guides/", "/subscribe/"]
+        paths = ["/", "/rulings/", "/wire/", "/commentary/", "/guides/", "/subscribe/", "/contact/"]
         paths += [f"/rulings/archive/{month}/" for month in content.ruling_archive_months]
         paths += [entry.href for entry in [*content.commentary, *content.rulings, *content.guides, *content.standing_pages]]
         urls = "".join(f"<url><loc>{xml_escape((site_url or '') + path)}</loc></url>" for path in paths) if site_url else ""

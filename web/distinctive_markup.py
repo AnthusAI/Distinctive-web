@@ -144,6 +144,7 @@ def site_footer(settings: SiteSettings, content: SiteContent, notice: str | None
     links_html = ""
     if show_links:
         footer_links = [(page.title, page.href) for page in content.standing_pages]
+        footer_links.append(("Contact", "/contact/"))
         footer_links.append(("RSS", "/feed.xml"))
         links_html = '<nav class="ds-footer__links" aria-label="Footer">' + "".join(
             f'<a href="{escaped(href)}">{escaped(label)}</a>' for label, href in footer_links
@@ -967,6 +968,7 @@ def guide_page_body(settings: SiteSettings, content: SiteContent, guide: Guide, 
         '<div class="ds-story-layout__body">'
         f'<div class="ds-prose">{article_html}</div>'
         f'<div class="ds-story-layout__banner">{sponsor_banner(settings, "guide-banner")}</div>'
+        f"{report_error_link(guide.href)}"
         "</div></div></article>"
         f'<div class="ds-container ds-spaced-unit">{end_signup}</div>'
         f"{in_practice_section}"
@@ -1207,6 +1209,7 @@ def story_page_body(settings: SiteSettings, content: SiteContent, entry: Comment
         f'<div class="ds-prose">{body_with_signup}</div>'
         f'<div class="ds-story-layout__banner">{sponsor_banner(settings, placement + "-banner")}</div>'
         f"{filed_under_chips(entry)}"
+        f"{report_error_link(entry.href)}"
         f"{sponsor_referral_note(settings, placement + '-referral')}"
         "</div></div></article>"
         f'<div class="ds-container ds-spaced-unit">{end_signup}</div>'
@@ -1221,6 +1224,45 @@ def standing_page_body(title: str, article_html: str) -> str:
         f'<h1 class="ds-page-title__headline">{escaped(title)}</h1>'
         f'<div class="ds-prose">{article_html}</div></main>'
     )
+
+
+def contact_page_body(settings: SiteSettings) -> str:
+    contact = settings.configuration.get("contact", {})
+    endpoint = contact.get("endpoint")
+    topics = "".join(f'<option value="{escaped(value)}">{escaped(label)}</option>' for value, label in contact.get("topics", []))
+    form_attributes = (
+        f'action="{escaped(endpoint)}" method="post"' if endpoint else 'action="/contact/" method="get" data-ds-contact-closed=""'
+    )
+    closed_notice = (
+        "" if endpoint else '<p class="ds-contact-closed" role="note">The contact form opens soon. Messages cannot be sent yet.</p>'
+    )
+    return (
+        '<main class="ds-container ds-page-main ds-page-main--narrow">'
+        f'{page_title_band("Contact the editors", "Send a correction, a tip or a question. The editors read every message.")}'
+        '<div class="ds-prose ds-contact-intro">'
+        "<p>Please do not send confidential information. Writing to us does not create an attorney–client relationship, "
+        "and we cannot advise on your own matter.</p></div>"
+        f"{closed_notice}"
+        f'<form class="ds-contact-form" data-ds-contact="" {form_attributes}>'
+        '<label class="ds-field-label" for="contact-topic">What is this about?</label>'
+        f'<select class="ds-email-input" id="contact-topic" name="topic">{topics}</select>'
+        '<label class="ds-field-label" for="contact-name">Your name <span class="ds-field-label__hint">(optional)</span></label>'
+        '<input class="ds-email-input" id="contact-name" name="name" type="text" autocomplete="name" maxlength="200">'
+        '<label class="ds-field-label" for="contact-email">Email, for our reply</label>'
+        '<input class="ds-email-input" id="contact-email" name="email" type="email" autocomplete="email" required maxlength="320">'
+        '<label class="ds-field-label" for="contact-message">Message</label>'
+        '<textarea class="ds-email-input ds-contact-form__message" id="contact-message" name="message" rows="8" required maxlength="5000"></textarea>'
+        '<input type="hidden" name="page" value="">'
+        '<div class="ds-visually-hidden" aria-hidden="true"><label for="contact-website">Leave this empty</label>'
+        '<input id="contact-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>'
+        f'<button class="ds-solid-button" type="submit"{"" if endpoint else " disabled"}>Send to the editors</button>'
+        '<p class="ds-form-status" data-ds-form-status="" role="status"></p>'
+        "</form></main>"
+    )
+
+
+def report_error_link(page_path: str) -> str:
+    return f'<p class="ds-report-error"><a href="/contact/?topic=correction&amp;page={escaped(page_path)}">Report an error in this piece</a></p>'
 
 
 def not_found_body() -> str:

@@ -25,6 +25,15 @@
     { "label": "Federal Register — USPTO", "url": "https://www.federalregister.gov/agencies/patent-and-trademark-office" },
     { "label": "Federal Circuit opinions", "url": "https://cafc.uscourts.gov/" }
   ],
+  "contact": {
+    "endpoint": null,
+    "topics": [
+      ["correction", "A correction"],
+      ["tip", "A tip or story idea"],
+      ["question", "A question for the editors"],
+      ["other", "Something else"]
+    ]
+  },
   "newsletter": {
     "name": "The Docket",
     "cadence": "Every Friday",

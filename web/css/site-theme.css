@@ -3146,6 +3146,54 @@ img {
   color: var(--ds-sponsor-gold);
 }
 
+
+/* Contact */
+
+.ds-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 620px;
+  margin-top: 8px;
+}
+
+.ds-contact-form .ds-field-label {
+  margin-top: 12px;
+}
+
+.ds-contact-form__message {
+  min-height: 180px;
+  resize: vertical;
+  font-family: var(--ds-text-font);
+  line-height: 1.5;
+}
+
+.ds-contact-form .ds-solid-button {
+  align-self: flex-start;
+  margin-top: 16px;
+}
+
+.ds-contact-form .ds-solid-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ds-contact-closed {
+  margin: 8px 0 0;
+  padding: 14px 18px;
+  background: var(--ds-panel);
+  border-left: 4px solid var(--ds-accent);
+  font-size: 16px;
+}
+
+.ds-report-error {
+  margin: 20px 0 0;
+  font-family: var(--ds-mono-font);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 @media (max-width: 560px) {
   .ds-section-nav,
   .ds-filed-under {

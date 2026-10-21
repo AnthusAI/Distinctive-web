@@ -207,6 +207,42 @@
     });
   }
 
+  function setUpContactForm() {
+    var form = document.querySelector("[data-ds-contact]");
+    if (!form) return;
+    var parameters = new URLSearchParams(window.location.search);
+    var topicSelect = form.querySelector('select[name="topic"]');
+    if (topicSelect && parameters.get("topic")) topicSelect.value = parameters.get("topic");
+    var pageInput = form.querySelector('input[name="page"]');
+    if (pageInput && parameters.get("page")) pageInput.value = parameters.get("page");
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (form.hasAttribute("data-ds-contact-closed")) {
+        setFormStatus(form, "The contact form opens soon. Your message was not sent.");
+        return;
+      }
+      setFormStatus(form, "");
+      var payload = {};
+      ["topic", "name", "email", "message", "page", "website"].forEach(function (name) {
+        var field = form.elements[name];
+        payload[name] = field ? field.value : "";
+      });
+      fetch(form.action, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Message failed with status " + response.status);
+          form.reset();
+          setFormStatus(form, "Thank you. Your message reached the editors.");
+        })
+        .catch(function () {
+          setFormStatus(form, "Something went wrong and your message was not sent. Please try again in a moment.");
+        });
+    });
+  }
+
   function setUpStickySignupBar() {
     var stickyBar = document.querySelector("[data-ds-sticky-signup]");
     var articleBody = document.querySelector(".ds-prose");
@@ -249,6 +285,7 @@
     setUpRulingFilters();
     setUpWireFilters();
     setUpSignupForms();
+    setUpContactForm();
     setUpStickySignupBar();
     setUpExitIntentSlideIn();
   }
