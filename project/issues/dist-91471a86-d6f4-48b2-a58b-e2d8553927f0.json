@@ -29,10 +29,22 @@
         "model": "claude-opus-5-5",
         "name": "Distinctive Mark implementation"
       }
+    },
+    {
+      "id": "c0a5ae0b-096b-44de-b44e-80aec66478dd",
+      "author": "home",
+      "text": "Remaining, tracked on the Papyrus board: PPY-9a79b5 (trigger procedures from monitors), PPY-a2b94e (cloud execution of procedures), and switching Papyrus's own .tac toolsets to modules; initiatives 8e13f6 (Tactus procedures) and de11ec (newsroom chat agent). Still open here: notability rating and the redesignation gap (child tasks).",
+      "created_at": "2026-10-21T23:36:33.362457Z",
+      "comment_type": "default",
+      "agent": {
+        "platform": "claude_code",
+        "model": "claude-opus-5-5",
+        "name": "Distinctive Mark implementation"
+      }
     }
   ],
   "created_at": "2026-10-21T00:39:42.142903Z",
-  "updated_at": "2026-10-21T22:43:58.459602Z",
+  "updated_at": "2026-10-21T23:36:33.362478Z",
   "closed_at": null,
   "right_now_summary": null,
   "right_now_updated_at": null,

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "c8611c99-203a-49c8-b5a9-f45cc24821fe",
+  "issue_id": "dist-87d210fb-35a7-4906-b89e-33597d0d7d46",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T23:36:33.301Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "TTAB ruling analysis skill and Tactus procedure",
+    "description": "Skill .claude/skills/ttab-ruling-analysis and procedures/ttab_ruling_analysis.tac with analyst and fact-checker agents. Wemby ruling published from a clean run. Needs Tactus 0.53 and Papyrus procedure tools.",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "dist-91471a86-d6f4-48b2-a58b-e2d8553927f0",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "Distinctive Mark implementation"
+    }
+  }
+}

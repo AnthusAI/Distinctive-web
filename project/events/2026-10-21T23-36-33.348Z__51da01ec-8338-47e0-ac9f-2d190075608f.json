@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "51da01ec-8338-47e0-ac9f-2d190075608f",
+  "issue_id": "dist-8c0a26b5-0f71-4868-aeba-2421f9fecdef",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T23:36:33.348Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Reused reference not updated when a decision is redesignated",
+    "description": "Papyrus #496 reuses an existing reference across a decision's addresses; the reference is not refreshed if the decision is later redesignated (for example to precedential).",
+    "issue_type": "bug",
+    "status": "open",
+    "priority": 3,
+    "assignee": null,
+    "parent": "dist-91471a86-d6f4-48b2-a58b-e2d8553927f0",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "Distinctive Mark implementation"
+    }
+  }
+}
