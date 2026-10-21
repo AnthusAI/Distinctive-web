@@ -88,9 +88,9 @@ def _first_heading_level_one_removed(article_html: str) -> str:
     return re.sub(r"^\s*<h1[^>]*>.*?</h1>", "", article_html, count=1, flags=re.S)
 
 
-def _inner_page(settings, content, section, main_html: str, notice: str | None = None) -> str:
+def _inner_page(settings, content, section, main_html: str, notice: str | None = None, shows_sponsor_bar: bool = False) -> str:
     return (
-        markup.compact_site_header(settings, section)
+        markup.compact_site_header(settings, section, shows_sponsor_bar=shows_sponsor_bar)
         + main_html
         + markup.site_footer(settings, content, notice=notice, show_links=True)
         + markup.confirmation_toast()
@@ -115,7 +115,7 @@ def _item_body(settings, content, page) -> str | None:
         return None
     article_html = _first_heading_level_one_removed(article_body(page.fragment))
     if isinstance(entry, StandingPage):
-        return _inner_page(settings, content, None, markup.standing_page_body(entry.title, article_html))
+        return _inner_page(settings, content, None, markup.standing_page_body(entry.title, article_html), shows_sponsor_bar=True)
     if isinstance(entry, Guide):
         return _inner_page(
             settings, content, GUIDES_SECTION, markup.guide_page_body(settings, content, entry, article_html), notice=_GUIDE_PAGE_NOTICE

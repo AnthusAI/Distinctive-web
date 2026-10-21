@@ -23,9 +23,31 @@ from distinctive_content import (
     format_short_date_with_year,
 )
 
-CHECK_ICON_SVG = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 12 10 17 19 7"></polyline></svg>'
-CLOSE_ICON_SVG = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></svg>'
-HEADSHOT_PLACEHOLDER_SVG = '<svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path></svg>'
+LUCIDE_ICON_SHAPES = {
+    "arrow-right": '<path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>',
+    "arrow-left": '<path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path>',
+    "external-link": '<path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>',
+    "check": '<path d="M20 6 9 17l-5-5"></path>',
+    "x": '<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>',
+    "user": '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>',
+}
+
+
+def lucide_icon(name: str, class_name: str = "ds-icon", size: int = 24, stroke_width: float = 2) -> str:
+    return (
+        f'<svg class="{class_name}" xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" '
+        f'stroke="currentColor" stroke-width="{stroke_width}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'
+        f"{LUCIDE_ICON_SHAPES[name]}</svg>"
+    )
+
+
+ARROW_RIGHT_ICON = lucide_icon("arrow-right")
+ARROW_LEFT_ICON = lucide_icon("arrow-left", "ds-icon ds-icon--leading")
+EXTERNAL_LINK_ICON = lucide_icon("external-link")
+OPENS_SOURCE_SITE = '<span class="ds-visually-hidden"> (opens the source site)</span>'
+CHECK_ICON_SVG = lucide_icon("check", "ds-icon-glyph", stroke_width=2.5)
+CLOSE_ICON_SVG = lucide_icon("x", "ds-icon-glyph", size=18)
+HEADSHOT_PLACEHOLDER_SVG = lucide_icon("user", "ds-icon-glyph", size=72, stroke_width=1.3)
 
 
 def escaped(value) -> str:
@@ -87,7 +109,7 @@ def section_link(label: str, href: str, is_current: bool, class_name: str) -> st
     return f'<a class="{class_name}" href="{href}"{current}>{escaped(label)}</a>'
 
 
-def compact_site_header(settings: SiteSettings, current_section: str | None) -> str:
+def compact_site_header(settings: SiteSettings, current_section: str | None, shows_sponsor_bar: bool = False) -> str:
     links = "".join(
         section_link(label, href, key == current_section, "ds-compact-header__link") for label, href, key in SECTION_NAVIGATION
     )
@@ -96,7 +118,7 @@ def compact_site_header(settings: SiteSettings, current_section: str | None) -> 
         f'<a class="ds-compact-header__home" href="/">{wordmark_with_tagline(settings, "inline")}</a>'
         f'<nav class="ds-compact-header__nav" aria-label="Sections">{links}'
         '<a class="ds-pill-button ds-pill-button--accent" href="/subscribe/">Subscribe</a></nav>'
-        f"</div>{sponsor_bar(settings)}</header>"
+        f"</div>{sponsor_bar(settings) if shows_sponsor_bar else ''}</header>"
     )
 
 
@@ -121,7 +143,6 @@ def home_site_header(settings: SiteSettings, content: SiteContent) -> str:
         f'<div class="ds-filed-under"><span class="ds-filed-under__label">Filed under</span>{issue_chips}</div>' if issue_chips else ""
     )
     return (
-        f"{sponsor_bar(settings)}"
         '<div class="ds-utility-bar"><div class="ds-container ds-utility-bar__row">'
         '<span data-ds-today=""></span>'
         '<div class="ds-utility-bar__actions">'
@@ -177,8 +198,8 @@ def sponsor_disclosure(settings: SiteSettings, class_name: str, short: bool = Fa
         lead = "Placeholder sponsor." if short else "This is a placeholder sponsor. Want your firm here?"
     else:
         lead = "Want your firm here?"
-    action = "Inquire about sponsoring Distinctive Mark™ →" if short else "Contact us about sponsoring Distinctive Mark™ →"
-    return f'<p class="{class_name}">{lead} <a href="{inquiry}">{action}</a></p>'
+    action = "Inquire about sponsoring Distinctive Mark™" if short else "Contact us about sponsoring Distinctive Mark™"
+    return f'<p class="{class_name}">{lead} <a href="{inquiry}">{action}{ARROW_RIGHT_ICON}</a></p>'
 
 
 def sponsor_headshot(settings: SiteSettings, class_name: str) -> str:
@@ -263,7 +284,7 @@ def sponsor_referral_note(settings: SiteSettings, placement: str) -> str:
         '<span class="ds-sponsor-eyebrow">Sponsored · Attorney advertising</span>'
         f'<p class="ds-sponsor-referral__pitch">{escaped(settings.sponsor_pitch(placement))}</p>'
         f'<a class="ds-sponsor-referral__link" href="{escaped(sponsor_referral_href(settings))}">'
-        f'Refer a matter to {escaped(sponsor["name"])} →</a>'
+        f'Refer a matter to {escaped(sponsor["name"])}{ARROW_RIGHT_ICON}</a>'
         "</aside>"
     )
 
@@ -484,7 +505,7 @@ def wire_card_dark(item: WireItem) -> str:
     return (
         '<div class="ds-wire-card">'
         f'<span class="ds-wire-card__source">{escaped(item.source)} · {escaped(format_short_date(item.date))}</span>'
-        f'<a class="ds-wire-card__headline" href="{escaped(item.source_url or "/wire/")}">{escaped(item.headline)} ↗</a>'
+        f'<a class="ds-wire-card__headline" href="{escaped(item.source_url or "/wire/")}">{escaped(item.headline)}{EXTERNAL_LINK_ICON}{OPENS_SOURCE_SITE}</a>'
         f'<p class="ds-wire-card__take"><span class="ds-our-take">Our take — </span>{escaped(item.take)}</p>'
         "</div>"
     )
@@ -521,7 +542,7 @@ def owner_takeaway_box(content: SiteContent, entry: Commentary | Ruling) -> str:
     if not entry.owner_takeaway:
         return ""
     guide = content.guide_by_slug(entry.guide_slug) if entry.guide_slug else None
-    guide_link = f'<a class="ds-owner-takeaway__link" href="{guide.href}">Read the guide: {escaped(guide.title)} →</a>' if guide else ""
+    guide_link = f'<a class="ds-owner-takeaway__link" href="{guide.href}">Read the guide: {escaped(guide.title)}{ARROW_RIGHT_ICON}</a>' if guide else ""
     return (
         '<aside class="ds-owner-takeaway" aria-label="For brand owners">'
         '<span class="ds-owner-takeaway__label">For brand owners</span>'
@@ -539,14 +560,14 @@ def home_guides_band(content: SiteContent) -> str:
         '<div class="ds-section-heading"><div class="ds-guides-band__heading">'
         '<h2 class="ds-section-heading__title" id="guides-heading">Before You File</h2>'
         "<p>Choosing, filing or protecting a trademark? Start with these plain-language guides.</p></div>"
-        '<a class="ds-mono-link" href="/guides/">All guides →</a></div>'
+        f'<a class="ds-mono-link" href="/guides/">All guides{ARROW_RIGHT_ICON}</a></div>'
         f'<div class="ds-guide-grid">{cards}</div>'
         "</div></section>"
     )
 
 
 def section_heading_row(heading_id: str, heading: str, link_label: str | None, link_href: str | None) -> str:
-    link = f'<a class="ds-mono-link" href="{link_href}">{escaped(link_label)}</a>' if link_label and link_href else ""
+    link = f'<a class="ds-mono-link" href="{link_href}">{escaped(link_label)}{ARROW_RIGHT_ICON}</a>' if link_label and link_href else ""
     return (
         '<div class="ds-section-heading">'
         f'<h2 class="ds-section-heading__title" id="{heading_id}">{escaped(heading)}</h2>{link}</div>'
@@ -571,7 +592,7 @@ def home_page_body(settings: SiteSettings, content: SiteContent) -> str:
             '<div class="ds-dark-band__heading-row"><div class="ds-dark-band__heading">'
             '<h2 id="wire-heading">The Wire</h2>'
             "<p>Trademark news from elsewhere — linked at the source, with a line from us.</p></div>"
-            '<a class="ds-mono-link ds-mono-link--inverse" href="/wire/">Everything on the Wire →</a></div>'
+            f'<a class="ds-mono-link ds-mono-link--inverse" href="/wire/">Everything on the Wire{ARROW_RIGHT_ICON}</a></div>'
             f'<div class="ds-wire-grid">{"".join(wire_card_dark(item) for item in wire_items)}</div>'
             "</div></section>"
         )
@@ -579,7 +600,7 @@ def home_page_body(settings: SiteSettings, content: SiteContent) -> str:
     if commentary:
         commentary_section = (
             '<section class="ds-container ds-commentary-section" aria-labelledby="commentary-heading">'
-            f'{section_heading_row("commentary-heading", "Commentary", "All commentary →", "/commentary/")}'
+            f'{section_heading_row("commentary-heading", "Commentary", "All commentary", "/commentary/")}'
             f'<div class="ds-commentary-grid">{"".join(commentary_card(entry) for entry in commentary)}</div>'
             "</section>"
         )
@@ -588,15 +609,13 @@ def home_page_body(settings: SiteSettings, content: SiteContent) -> str:
         '<section class="ds-container ds-home-top">'
         f"{lead_html}"
         '<aside class="ds-home-top__board" aria-labelledby="from-board">'
-        f'{section_heading_row("from-board", "From the Board", "All rulings →", "/rulings/")}'
+        f'{section_heading_row("from-board", "From the Board", "All rulings", "/rulings/")}'
         f"{board_html}"
         f'<div class="ds-home-top__sponsor">{sponsor_sidebar(settings, "home-sidebar")}</div>'
         "</aside></section>"
-        f'<div class="ds-container ds-spaced-unit">{sponsor_banner(settings, "home-banner")}</div>'
         f"{home_guides_band(content)}"
         f"{wire_section}"
         f"{commentary_section}"
-        f'<div class="ds-container ds-spaced-unit">{sponsor_feed_row(settings, "home-feed")}</div>'
         f"{newsletter_band(settings)}"
         "</main>"
     )
@@ -668,13 +687,13 @@ def filter_buttons(group_label: str, filter_name: str, labels: list[str], label_
 
 
 TIER_LABELS = {"precedential": "Precedential", "analysis": "Analysis", "brief": "Brief", "line": ""}
-TIER_LINK_LABELS = {"precedential": "Read the decision →", "analysis": "Read the analysis →", "brief": "Read the brief →", "line": "Details →"}
+TIER_LINK_LABELS = {"precedential": "Read the decision", "analysis": "Read the analysis", "brief": "Read the brief", "line": "Details"}
 LATEST_WEEK_COUNT = 8
 
 
 def ruling_row(ruling: Ruling) -> str:
     tier = ruling.tier
-    link_label = "Read the analysis →" if tier == "precedential" and ruling.is_notable else TIER_LINK_LABELS[tier]
+    link_label = "Read the analysis" if tier == "precedential" and ruling.is_notable else TIER_LINK_LABELS[tier]
     attributes = (
         f'class="ds-ruling-row ds-ruling-row--{tier}" data-ds-row="ruling" data-ds-tier="{tier}" data-ds-issue="{escaped(ruling.issue)}" '
         f'data-ds-notable="{"true" if ruling.is_notable or tier == "precedential" else "false"}" '
@@ -711,7 +730,7 @@ def ruling_row(ruling: Ruling) -> str:
         f'<p class="ds-ruling-row__summary">{escaped(ruling.listing_summary)}</p>{brief_html}</div>'
         '<div class="ds-ruling-row__outcome">'
         f"{outcome_badge(ruling.outcome)}"
-        f'<a class="ds-mono-link ds-mono-link--underlined" href="{ruling.href}">{link_label}</a></div>'
+        f'<a class="ds-mono-link ds-mono-link--underlined" href="{ruling.href}">{link_label}{ARROW_RIGHT_ICON}</a></div>'
         "</li>"
     )
 
@@ -735,7 +754,7 @@ def ruling_week_groups(settings: SiteSettings, weeks: list[tuple[object, list[Ru
         counts = f'{len(rulings)} decision{"" if len(rulings) == 1 else "s"}' + (f" · {precedential_count} precedential" if precedential_count else "")
         sponsor = (
             f'<li class="ds-feed-sponsor-row" data-ds-row="sponsor">{sponsor_feed_row(settings, "rulings-feed")}</li>'
-            if index in (0, 2) and settings.shows_sponsor_units
+            if index == 0 and len(weeks) > 1 and settings.shows_sponsor_units
             else ""
         )
         groups.append(
@@ -836,7 +855,6 @@ def rulings_page_body(settings: SiteSettings, content: SiteContent) -> str:
         f'{page_title_band("TTAB Rulings", "Trademark Trial and Appeal Board decisions, week by week. Precedential decisions come first; the notable ones get full analysis, and every decision gets a summary.")}'
         f"{ruling_stats_strip(content)}"
         f"{notable_section}"
-        f'{sponsor_banner(settings, "rulings-banner")}'
         f"{alert_signup}"
         f'{ruling_list_section(settings, content, recent, "Latest decisions")}'
         "</main>"
@@ -848,7 +866,7 @@ def ruling_archive_page_body(settings: SiteSettings, content: SiteContent, month
     return (
         '<main class="ds-container ds-page-main">'
         f'{page_title_band(f"TTAB Rulings: {month_label}", f"Every Trademark Trial and Appeal Board decision we tracked in {month_label}, week by week.")}'
-        f'<p class="ds-mono-meta"><a class="ds-mono-link" href="/rulings/">← Latest decisions</a></p>'
+        f'<p class="ds-mono-meta"><a class="ds-mono-link" href="/rulings/">{ARROW_LEFT_ICON}Latest decisions</a></p>'
         f'{ruling_list_section(settings, content, content.rulings_in_month(month), month_label, current_month=month)}'
         "</main>"
     )
@@ -862,7 +880,7 @@ def wire_row(item: WireItem) -> str:
         f'<span class="ds-wire-row__source-name">{escaped(item.source)}</span>'
         f"<span>{escaped(format_short_date(item.date))}</span></div>"
         '<div class="ds-wire-row__body">'
-        f'<h2 class="ds-wire-row__headline"><a href="{escaped(item.source_url or "#")}" rel="noopener">{escaped(item.headline)} <span aria-label="opens the source site">↗</span></a></h2>'
+        f'<h2 class="ds-wire-row__headline"><a href="{escaped(item.source_url or "#")}" rel="noopener">{escaped(item.headline)}{EXTERNAL_LINK_ICON}{OPENS_SOURCE_SITE}</a></h2>'
         f'<p class="ds-wire-row__take"><span class="ds-our-take">Our take — </span>{escaped(item.take)}</p>'
         f"{outlet}</div></article>"
     )
@@ -877,11 +895,9 @@ def wire_page_body(settings: SiteSettings, content: SiteContent) -> str:
     rows = []
     for index, item in enumerate(content.wire_items):
         rows.append(wire_row(item))
-        if index == 2 and settings.shows_sponsor_units:
-            rows.append(f'<div class="ds-feed-sponsor-row" data-ds-row="sponsor">{sponsor_feed_row(settings, "wire-feed")}</div>')
     rows_html = "".join(rows) or empty_state("Nothing on the Wire yet.")
     primary_sources = "".join(
-        f'<a href="{escaped(source["url"])}">{escaped(source["label"])} <span aria-hidden="true">↗</span></a>'
+        f'<a href="{escaped(source["url"])}">{escaped(source["label"])}{EXTERNAL_LINK_ICON}{OPENS_SOURCE_SITE}</a>'
         for source in settings.configuration.get("primarySourcesWatched", [])
     )
     newsletter_name = settings.newsletter["name"]
@@ -979,7 +995,6 @@ def guide_page_body(settings: SiteSettings, content: SiteContent, guide: Guide, 
         '<div class="ds-container ds-story-layout">'
         '<aside class="ds-story-layout__side" aria-label="About this guide">'
         f"{series_list}"
-        f'<div class="ds-story-layout__sponsor">{sponsor_sidebar(settings, "guide-sidebar")}</div>'
         "</aside>"
         '<div class="ds-story-layout__body">'
         f'<div class="ds-prose">{article_html}</div>'
@@ -1096,7 +1111,6 @@ def subscribe_page_body(settings: SiteSettings, content: SiteContent) -> str:
         '<section class="ds-white-band" aria-labelledby="inside-heading"><div class="ds-container ds-stack">'
         '<h2 class="ds-band-heading" id="inside-heading">Inside every issue</h2>'
         f'<div class="ds-numbered-grid">{inside}</div></div></section>'
-        f'<div class="ds-container ds-spaced-unit ds-spaced-unit--top">{sponsor_banner(settings, "subscribe-banner")}</div>'
         '<section class="ds-container ds-container--narrow ds-faq" aria-labelledby="faq-heading">'
         f'<h2 class="ds-band-heading" id="faq-heading">Questions</h2>{faq}</section>'
         "</main>"
@@ -1123,7 +1137,7 @@ def decision_at_a_glance(ruling: Ruling) -> str:
         rows.append(glance_row("Outcome", outcome_badge(ruling.outcome)))
     rows.append(glance_row("Status", escaped(ruling.status_label)))
     opinion = (
-        f'<a class="ds-block-button" href="{escaped(ruling.opinion_url)}" rel="noopener">Read the opinion on TTABVUE ↗</a>'
+        f'<a class="ds-block-button" href="{escaped(ruling.opinion_url)}" rel="noopener">Read the opinion on TTABVUE{EXTERNAL_LINK_ICON}{OPENS_SOURCE_SITE}</a>'
         if ruling.opinion_url
         else ""
     )
@@ -1173,7 +1187,6 @@ def story_page_body(settings: SiteSettings, content: SiteContent, entry: Comment
         )
         figure = marks_figure(entry, "article")
         side_top = decision_at_a_glance(entry)
-        placement = "ruling"
     else:
         breadcrumb = (
             '<a href="/commentary/">Commentary</a>'
@@ -1181,7 +1194,6 @@ def story_page_body(settings: SiteSettings, content: SiteContent, entry: Comment
         )
         figure = ""
         side_top = ""
-        placement = "commentary"
     byline = "".join(
         f'<span class="{"ds-byline__author" if index == 0 and entry.author else ""}">{escaped(part)}</span>'
         for index, part in enumerate(
@@ -1190,6 +1202,8 @@ def story_page_body(settings: SiteSettings, content: SiteContent, entry: Comment
     )
     dek = f'<p class="ds-story-header__dek">{escaped(entry.dek)}</p>' if entry.dek else ""
     body_with_signup = insert_before_second_section(article_html, inline_article_signup(settings))
+    sponsor_sidebar_slot = f'<div class="ds-story-layout__sponsor">{sponsor_sidebar(settings, "ruling-sidebar")}</div>' if is_ruling else ""
+    sponsor_referral_slot = "" if is_ruling else sponsor_referral_note(settings, "commentary-referral")
     related = content.related_entries(entry)
     related_section = ""
     if related:
@@ -1219,15 +1233,14 @@ def story_page_body(settings: SiteSettings, content: SiteContent, entry: Comment
         '<div class="ds-container ds-story-layout">'
         '<aside class="ds-story-layout__side" aria-label="About this story">'
         f"{side_top}"
-        f'<div class="ds-story-layout__sponsor">{sponsor_sidebar(settings, placement + "-sidebar")}</div>'
+        f'{sponsor_sidebar_slot}'
         "</aside>"
         '<div class="ds-story-layout__body">'
         f"{owner_takeaway_box(content, entry)}"
         f'<div class="ds-prose">{body_with_signup}</div>'
-        f'<div class="ds-story-layout__banner">{sponsor_banner(settings, placement + "-banner")}</div>'
         f"{filed_under_chips(entry)}"
         f"{report_error_link(entry.href)}"
-        f"{sponsor_referral_note(settings, placement + '-referral')}"
+        f"{sponsor_referral_slot}"
         "</div></div></article>"
         f'<div class="ds-container ds-spaced-unit">{end_signup}</div>'
         f"{related_section}"

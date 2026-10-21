@@ -81,7 +81,7 @@ class RenderedSampleSiteTests(unittest.TestCase):
         hero_start = tracker.index('class="ds-notable-hero"')
         self.assertIn("Notability 5 of 5", tracker[hero_start : hero_start + 600])
         self.assertIn("12 decisions", tracker)
-        self.assertEqual(tracker.count('data-ds-row="sponsor"'), 2)
+        self.assertEqual(tracker.count('data-ds-row="sponsor"'), 1)
 
     def test_story_page_has_glance_marks_inline_signup_and_sponsor_units(self):
         story = self.page("rulings/in-re-applicant-e/index.html")
@@ -91,7 +91,6 @@ class RenderedSampleSiteTests(unittest.TestCase):
         self.assertLess(story.index('id="what-the-board-decided"'), signup_position)
         self.assertLess(signup_position, story.index('id="why-the-registrations-didnt-carry-the-day"'))
         self.assertIn("ds-sponsor-sidebar", story)
-        self.assertIn("ds-sponsor-banner", story)
         self.assertIn("More on §2(d)", story)
 
     def test_markus_title_heading_is_not_repeated_in_the_body(self):
@@ -170,8 +169,28 @@ class GuideTests(unittest.TestCase):
         self.assertIn("ds-guides-band", self.page("index.html"))
         self.assertIn("/guides/searching-before-you-file/", self.page("sitemap.xml"))
 
-    def test_practitioner_referral_note_appears_on_rulings(self):
-        self.assertIn("ds-sponsor-referral", self.page("rulings/in-re-applicant-e/index.html"))
+    def test_practitioner_referral_note_appears_on_commentary(self):
+        self.assertIn("ds-sponsor-referral", self.page("commentary/letters-of-protest/index.html"))
+
+    def test_each_page_carries_exactly_one_sponsor_unit_of_its_kind(self):
+        expected_units = {
+            "index.html": "ds-sponsor-sidebar",
+            "rulings/index.html": "ds-sponsor-feed",
+            "rulings/in-re-applicant-e/index.html": "ds-sponsor-sidebar",
+            "commentary/index.html": "ds-sponsor-feed",
+            "commentary/letters-of-protest/index.html": "ds-sponsor-referral",
+            "guides/index.html": "ds-sponsor-banner",
+            "guides/searching-before-you-file/index.html": "ds-sponsor-banner",
+            "wire/index.html": "ds-sponsor-sidebar",
+            "about/index.html": "ds-sponsor-bar",
+            "rulings/archive/2026-09/index.html": "ds-sponsor-feed",
+        }
+        for key, unit_class in expected_units.items():
+            page = self.page(key)
+            self.assertEqual(page.count('aria-label="Sponsor"'), 1, key)
+            self.assertIn(f'class="{unit_class}"', page, key)
+        for key in ("contact/index.html", "subscribe/index.html"):
+            self.assertEqual(self.page(key).count('aria-label="Sponsor"'), 0, key)
 
 
 class RulingTierTests(unittest.TestCase):
