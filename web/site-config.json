@@ -22,7 +22,7 @@
     { "label": "Federal Circuit opinions", "url": "https://cafc.uscourts.gov/" }
   ],
   "contact": {
-    "endpoint": null,
+    "endpoint": "https://5nyz2qu4suuas7j4sdpdxnexie0xjlth.lambda-url.us-east-1.on.aws/",
     "topics": [
       ["consultation", "A consultation with our sponsoring attorney"],
       ["correction", "A correction"],
@@ -35,7 +35,7 @@
   "newsletter": {
     "name": "The Docket",
     "cadence": "Every Friday",
-    "signupEndpoint": null,
+    "signupEndpoint": "https://5nyz2qu4suuas7j4sdpdxnexie0xjlth.lambda-url.us-east-1.on.aws/",
     "topics": ["§2(d)", "§2(e)(1)", "§2(e)(4)", "Failure to function", "Genericness", "Fraud & abandonment", "Federal Circuit"]
   },
   "sponsor": {

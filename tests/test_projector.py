@@ -241,9 +241,19 @@ class ContactTests(unittest.TestCase):
         cls.files = build_local_site.render_site(SAMPLE_CONTENT)
 
     def test_contact_page_says_it_is_not_open_while_no_endpoint_is_configured(self):
+        import json
+        import distinctive_markup
+        configuration = json.loads((REPOSITORY / "web" / "site-config.json").read_text(encoding="utf-8"))
+        configuration["contact"]["endpoint"] = None
+        closed = distinctive_markup.contact_page_body(distinctive_markup.SiteSettings(configuration=configuration, site_url=None))
+        self.assertIn("data-ds-contact-closed", closed)
+        self.assertIn("Messages cannot be sent yet", closed)
+        self.assertIn('name="website"', closed)
+
+    def test_contact_form_posts_to_the_configured_endpoint(self):
         contact = self.files["contact/index.html"].decode("utf-8")
-        self.assertIn("data-ds-contact-closed", contact)
-        self.assertIn("Messages cannot be sent yet", contact)
+        self.assertNotIn("data-ds-contact-closed", contact)
+        self.assertIn('method="post"', contact)
         self.assertIn('name="website"', contact)
 
     def test_footer_and_stories_link_to_the_contact_page(self):
