@@ -954,7 +954,7 @@ def guides_index_body(settings: SiteSettings, content: SiteContent) -> str:
     )
 
 
-def guide_page_body(settings: SiteSettings, content: SiteContent, guide: Guide, article_html: str) -> str:
+def guide_page_body(settings: SiteSettings, content: SiteContent, guide: Guide, article_html: str, page_actions: str = "") -> str:
     breadcrumb = '<a href="/guides/">Before You File</a>' + (
         f'<span aria-hidden="true">/</span><span class="ds-breadcrumb__current">{escaped(guide.series)}</span>' if guide.series else ""
     )
@@ -990,7 +990,7 @@ def guide_page_body(settings: SiteSettings, content: SiteContent, guide: Guide, 
         f'<nav class="ds-breadcrumb" aria-label="Breadcrumb">{breadcrumb}</nav>'
         f'<h1 class="ds-story-header__headline">{escaped(guide.title)}</h1>'
         f"{dek}"
-        f'<div class="ds-byline">{meta}</div>'
+        f'<div class="ds-byline">{meta}</div>{page_actions}'
         "</div>"
         '<div class="ds-container ds-story-layout">'
         '<aside class="ds-story-layout__side" aria-label="About this guide">'
@@ -1177,7 +1177,7 @@ def insert_before_second_section(article_html: str, insertion: str) -> str:
     return article_html[:second] + insertion + article_html[second:]
 
 
-def story_page_body(settings: SiteSettings, content: SiteContent, entry: Commentary | Ruling, article_html: str) -> str:
+def story_page_body(settings: SiteSettings, content: SiteContent, entry: Commentary | Ruling, article_html: str, page_actions: str = "") -> str:
     is_ruling = isinstance(entry, Ruling)
     if is_ruling:
         breadcrumb = (
@@ -1227,7 +1227,7 @@ def story_page_body(settings: SiteSettings, content: SiteContent, entry: Comment
         f'<h1 class="ds-story-header__headline">{escaped(entry.title)}</h1>'
         f'{precedent_statement(entry, "article")}'
         f"{dek}"
-        f'<div class="ds-byline">{byline}</div>'
+        f'<div class="ds-byline">{byline}</div>{page_actions}'
         f"{figure}"
         "</div>"
         '<div class="ds-container ds-story-layout">'

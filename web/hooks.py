@@ -118,11 +118,11 @@ def _item_body(settings, content, page) -> str | None:
         return _inner_page(settings, content, None, markup.standing_page_body(entry.title, article_html), shows_sponsor_bar=True)
     if isinstance(entry, Guide):
         return _inner_page(
-            settings, content, GUIDES_SECTION, markup.guide_page_body(settings, content, entry, article_html), notice=_GUIDE_PAGE_NOTICE
+            settings, content, GUIDES_SECTION, markup.guide_page_body(settings, content, entry, article_html, page.page_actions), notice=_GUIDE_PAGE_NOTICE
         )
     section = RULINGS_SECTION if isinstance(entry, Ruling) else COMMENTARY_SECTION
     notice = _RULING_PAGE_NOTICE if isinstance(entry, Ruling) else None
-    body = _inner_page(settings, content, section, markup.story_page_body(settings, content, entry, article_html), notice=notice)
+    body = _inner_page(settings, content, section, markup.story_page_body(settings, content, entry, article_html, page.page_actions), notice=notice)
     return body + markup.sticky_signup_bar_and_slide_in(settings)
 
 

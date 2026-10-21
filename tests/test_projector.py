@@ -169,6 +169,14 @@ class GuideTests(unittest.TestCase):
         self.assertIn("ds-guides-band", self.page("index.html"))
         self.assertIn("/guides/searching-before-you-file/", self.page("sitemap.xml"))
 
+    def test_articles_carry_page_actions_and_standing_pages_do_not(self):
+        for key in ("rulings/in-re-applicant-e/index.html", "commentary/letters-of-protest/index.html", "guides/searching-before-you-file/index.html"):
+            page = self.page(key)
+            self.assertIn('class="markus-copy-md"', page, key)
+            self.assertIn("Open in Claude", page, key)
+            self.assertIn("papyrus-page-actions-v1.js", page, key)
+        self.assertNotIn("markus-page-actions", self.page("about/index.html"))
+
     def test_practitioner_referral_note_appears_on_commentary(self):
         self.assertIn("ds-sponsor-referral", self.page("commentary/letters-of-protest/index.html"))
 

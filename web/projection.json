@@ -78,6 +78,6 @@
     "title_template": "{title} — {site}™",
     "same_title_template": "{site}™ — Trademark News &amp; Analysis"
   },
-  "pageActions": { "enabled": false },
+  "pageActions": { "enabled": true, "ai": ["chatgpt", "claude", "perplexity"] },
   "hooks": "hooks.py"
 }
