@@ -151,6 +151,7 @@ class Ruling(PublishedEntry):
     panel: str = ""
     opinion_url: str = ""
     one_line_summary: str = ""
+    precedent: str = ""
     reasons_notable: tuple[str, ...] = ()
     marks_at_issue: tuple[MarkAtIssue, ...] = ()
     tier_override: str = ""
@@ -198,6 +199,14 @@ class Ruling(PublishedEntry):
     @property
     def headline(self) -> str:
         return self.title or self.caption
+
+    @property
+    def states_precedent(self) -> bool:
+        return self.is_precedential and bool(self.precedent)
+
+    @property
+    def listing_summary(self) -> str:
+        return self.precedent if self.states_precedent else self.one_line_summary
 
     @property
     def has_written_headline(self) -> bool:
@@ -323,6 +332,7 @@ def ruling_from_summary(summary) -> Ruling:
         panel=read_text(front_matter, "panel"),
         opinion_url=read_text(front_matter, "opinionUrl"),
         one_line_summary=read_text(front_matter, "summary"),
+        precedent=read_text(front_matter, "precedent"),
         reasons_notable=read_text_list(front_matter, "whyNotable"),
         marks_at_issue=read_marks_at_issue(front_matter),
         tier_override=read_text(front_matter, "tier").lower(),

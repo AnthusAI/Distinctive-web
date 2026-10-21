@@ -3119,6 +3119,47 @@ img {
   margin-bottom: 28px;
 }
 
+/* The precedent a precedential ruling sets */
+
+.ds-precedent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 22px;
+  background: var(--ds-panel);
+  border-left: 4px solid var(--ds-accent-fill);
+}
+
+.ds-precedent--article {
+  margin: 4px 0 24px;
+  max-width: 760px;
+}
+
+.ds-precedent--card {
+  margin: 0 0 16px;
+}
+
+.ds-precedent__label {
+  font-family: var(--ds-mono-font);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ds-accent);
+}
+
+.ds-precedent__text {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--ds-ink);
+}
+
+.ds-precedent--card .ds-precedent__text {
+  font-size: 17px;
+}
+
 /* For brand owners */
 
 .ds-owner-takeaway {

@@ -72,7 +72,7 @@ class RenderedSampleSiteTests(unittest.TestCase):
     def test_front_page_leads_with_the_flagged_ruling(self):
         home = self.page("index.html")
         lead_start = home.index('class="ds-lead-story"')
-        self.assertIn("A crowded field, or just a few neighbors?", home[lead_start : lead_start + 1500])
+        self.assertIn("Third‑party registrations alone do not prove a crowded field", home[lead_start : lead_start + 1500])
         self.assertIn("From the Board", home)
         self.assertIn("The Docket, <span>weekly.</span>", home)
 
@@ -180,6 +180,10 @@ class RulingTierTests(unittest.TestCase):
         cls.files = build_local_site.render_site(SAMPLE_CONTENT)
         cls.tracker = cls.files["rulings/index.html"].decode("utf-8")
 
+    def tracker_row(self, slug):
+        rows = [row for row in self.tracker.split('<li class="ds-ruling-row')[1:] if f'href="/rulings/{slug}/"' in row.split("</li>", 1)[0]]
+        return rows[0].split(f'href="/rulings/{slug}/">', 1)[1].split("</li>", 1)[0]
+
     def test_every_ruling_gets_a_tier_from_precedential_status_and_notability(self):
         for tier in ("precedential", "brief", "line"):
             self.assertIn(f'data-ds-tier="{tier}"', self.tracker)
@@ -196,6 +200,24 @@ class RulingTierTests(unittest.TestCase):
 
     def test_stats_strip_counts_tracked_decisions(self):
         self.assertIn("decisions tracked in 2026", self.tracker)
+
+    def test_a_precedential_ruling_leads_with_its_precedent(self):
+        precedent = "[The rule this decision sets, stated generally"
+        story = self.files["rulings/in-re-applicant-e/index.html"].decode("utf-8")
+        header = story.split('<h1 class="ds-story-header__headline">', 1)[1]
+        self.assertLess(header.index('class="ds-precedent ds-precedent--article"'), header.index('class="ds-story-header__dek"'))
+        self.assertIn(precedent, header)
+        row = self.tracker_row("in-re-applicant-e")
+        self.assertTrue(row.startswith("Third‑party registrations alone do not prove a crowded field</a>"))
+        self.assertIn("In re [Applicant E]", row)
+        self.assertIn(precedent, row)
+        home = self.files["index.html"].decode("utf-8")
+        self.assertIn('class="ds-precedent ds-precedent--card"', home)
+
+    def test_rulings_without_a_precedent_keep_the_caption_and_summary(self):
+        row = self.tracker_row("in-re-applicant-a")
+        self.assertTrue(row.startswith("In re [Applicant A]</a>"))
+        self.assertNotIn("ds-precedent", self.files["rulings/in-re-applicant-a/index.html"].decode("utf-8"))
 
     def test_line_rows_show_the_short_outcome(self):
         from distinctive_content import Ruling

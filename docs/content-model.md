@@ -34,6 +34,7 @@ Page: `/rulings/<slug>/`. The tracker at `/rulings/` groups the latest eight wee
 | `issueLabel` | Long form, e.g. `Likelihood of confusion, §2(d)` |
 | `outcome` | e.g. `Refusal affirmed`, `Opposition sustained` |
 | `precedential` | `true` or `false` |
+| `precedent` | For a precedential decision: the rule it sets, stated generally in one or two sentences without party names. When present it leads the ruling page, the tracker row (whose headline is then the `title`, which should state the rule) and the front-page cards |
 | `notability` | 1 to 5 |
 | `tier` | Optional override of how the tracker shows the ruling: `precedential`, `analysis`, `brief` or `line`. By default precedential decisions are `precedential`, notability 4–5 `analysis`, 3 `brief` (shows the `dek` as a paragraph) and 1–2 `line` (one compact line) |
 | `date` | Decision date |

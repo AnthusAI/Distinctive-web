@@ -4,6 +4,7 @@ caption: In re [Applicant E]
 proceeding: Ex parte appeal
 proceedingNumber: Serial No. [00000000]
 precedential: true
+precedent: "[The rule this decision sets, stated generally: third-party registrations without evidence of use do not show that a cited mark is weak.]"
 issue: §2(d)
 issueLabel: §2(d) likelihood of confusion; DuPont factor 6 (number and nature of similar marks)
 outcome: Refusal affirmed
@@ -12,7 +13,7 @@ ownerTakeaway: "[Two or three plain-language sentences on what this decision mea
 guide: searching-before-you-file
 lead: true
 summary: Third‑party registrations offered without evidence of use did not show the cited mark was weak or entitled to a narrow scope of protection.
-title: A crowded field, or just a few neighbors? The Board weighs third‑party registrations under §2(d)
+title: Third‑party registrations alone do not prove a crowded field
 dek: The applicant arrived with a stack of similar registrations and argued the cited mark was weak. The Board affirmed the refusal anyway. Why registrations alone rarely prove a crowded field — and what evidence of actual use does.
 author: '[Author Name]'
 readMinutes: 8

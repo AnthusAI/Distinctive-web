@@ -431,6 +431,17 @@ def marks_figure(ruling: Ruling, size: str) -> str:
     )
 
 
+def precedent_statement(entry: Commentary | Ruling, variant: str) -> str:
+    if not isinstance(entry, Ruling) or not entry.states_precedent:
+        return ""
+    return (
+        f'<aside class="ds-precedent ds-precedent--{variant}" aria-label="The precedent">'
+        '<span class="ds-precedent__label">The precedent</span>'
+        f'<p class="ds-precedent__text">{escaped(entry.precedent)}</p>'
+        "</aside>"
+    )
+
+
 def lead_story(settings: SiteSettings, entry: Commentary | Ruling) -> str:
     if isinstance(entry, Ruling):
         kicker_parts = ["TTAB", entry.status_label if entry.is_precedential else "", entry.issue]
@@ -448,6 +459,7 @@ def lead_story(settings: SiteSettings, entry: Commentary | Ruling) -> str:
         '<article class="ds-lead-story">'
         f'<div class="ds-kicker ds-kicker--accent">{escaped(kicker)}</div>'
         f'<h1 class="ds-lead-story__headline"><a href="{entry.href}">{escaped(entry.title)}</a></h1>'
+        f'{precedent_statement(entry, "card")}'
         f"{dek}"
         f'<div class="ds-meta-line">{meta_html}</div>'
         f"{figure}"
@@ -462,7 +474,7 @@ def board_ruling_card(ruling: Ruling) -> str:
         f"<span>{escaped(format_short_date(ruling.date))} · {escaped(ruling.issue)}</span>"
         f"<span>{escaped(ruling.status_label)}</span></div>"
         f'<span class="ds-board-ruling__caption">{escaped(ruling.caption)}</span>'
-        f'<span class="ds-board-ruling__summary">{escaped(ruling.one_line_summary)}</span>'
+        f'<span class="ds-board-ruling__summary">{escaped(ruling.listing_summary)}</span>'
         f"{outcome_badge(ruling.outcome)}"
         "</a>"
     )
@@ -681,18 +693,22 @@ def ruling_row(ruling: Ruling) -> str:
         )
     detail = " · ".join(part for part in [ruling.proceeding_number and f"{ruling.proceeding} · {ruling.proceeding_number}" or ruling.proceeding, ruling.issue_label] if part)
     tier_mark = f'<span class="ds-tier-mark ds-tier-mark--{tier}">{TIER_LABELS[tier]}</span>'
-    headline = ruling.title if tier in ("precedential", "analysis") and ruling.has_written_headline else ""
+    leads_with_rule = tier == "precedential" and ruling.states_precedent and ruling.has_written_headline
+    headline = ruling.title if tier in ("precedential", "analysis") and ruling.has_written_headline and not leads_with_rule else ""
     headline_html = f'<p class="ds-ruling-row__headline">{escaped(headline)}</p>' if headline else ""
+    row_title = ruling.title if leads_with_rule else ruling.caption or ruling.title
+    if leads_with_rule:
+        detail = " · ".join(part for part in [ruling.caption, detail] if part)
     brief_html = f'<p class="ds-ruling-row__brief">{escaped(ruling.dek)}</p>' if tier == "brief" and ruling.dek else ""
     return (
         f"<li {attributes}>"
         f'<div class="ds-ruling-row__date">{date_html}{notability_meter(ruling.notability, "small")}</div>'
         '<div class="ds-ruling-row__body">'
         f'<div class="ds-ruling-row__marks">{tier_mark}</div>'
-        f'<h3 class="ds-ruling-row__caption"><a href="{ruling.href}">{escaped(ruling.caption or ruling.title)}</a></h3>'
+        f'<h3 class="ds-ruling-row__caption"><a href="{ruling.href}">{escaped(row_title)}</a></h3>'
         f"{headline_html}"
         f'<span class="ds-mono-meta ds-mono-meta--case">{escaped(detail)}</span>'
-        f'<p class="ds-ruling-row__summary">{escaped(ruling.one_line_summary)}</p>{brief_html}</div>'
+        f'<p class="ds-ruling-row__summary">{escaped(ruling.listing_summary)}</p>{brief_html}</div>'
         '<div class="ds-ruling-row__outcome">'
         f"{outcome_badge(ruling.outcome)}"
         f'<a class="ds-mono-link ds-mono-link--underlined" href="{ruling.href}">{link_label}</a></div>'
@@ -1195,6 +1211,7 @@ def story_page_body(settings: SiteSettings, content: SiteContent, entry: Comment
         '<div class="ds-container ds-story-header">'
         f'<nav class="ds-breadcrumb" aria-label="Breadcrumb">{breadcrumb}</nav>'
         f'<h1 class="ds-story-header__headline">{escaped(entry.title)}</h1>'
+        f'{precedent_statement(entry, "article")}'
         f"{dek}"
         f'<div class="ds-byline">{byline}</div>'
         f"{figure}"
