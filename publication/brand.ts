@@ -25,8 +25,5 @@ export const distinctiveBrand: SiteBrand = {
   newsroomBasePath: "/newsroom",
   opsChrome: "app",
   corpusKey: "distinctive",
-  steeringConfigPath: "corpora/distinctive-steering.yml",
-  newsroomSectionsConfigPath: "corpora/distinctive-newsroom-sections.yml",
-  analysisProfilesPath: "corpora/distinctive-analysis-profiles.yml",
   publicationName: "Distinctive Mark",
 };

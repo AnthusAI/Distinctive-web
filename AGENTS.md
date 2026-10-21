@@ -25,7 +25,7 @@ This repository holds only what is specific to Distinctive Mark™ (distinctive-
 ## Rules
 
 - No line-level comments. Use long, clear names.
-- This repository is public and its code is a generic container. Sections, editorial missions and policies and classifier guidance live only in the newsroom's backend data, never in code or seed files; the brand's `corpora/` paths point at files that intentionally do not exist. Plans, research and roadmap ideas belong in Kanbus issues and the Kanbus wiki as usual. Never describe competing publications as data sources, and never record the sponsor's client matters anywhere in the repository.
+- This repository is public and its code is a generic container. Sections, editorial missions and policies and classifier guidance live only in the newsroom's backend data, never in code or seed files. Plans, research and roadmap ideas belong in Kanbus issues and the Kanbus wiki as usual. Never describe competing publications as data sources, and never record the sponsor's client matters anywhere in the repository.
 - Author content reaches pages only through Markus with raw HTML disabled. Everything else on a page is generated here and escaped.
 - Keep listing pages renderable from item summaries alone, so the projection's dependency digests stay correct.
 - The newsletter signup forms post to `newsletter.signupEndpoint` in `web/site-config.json`. While it is `null`, forms send readers to `/subscribe/`, and the subscribe page says signups are not open yet. Never fake a successful signup.
