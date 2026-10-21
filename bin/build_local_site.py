@@ -1,4 +1,4 @@
-"""Render a content folder through the Distinctive projector into a local directory.
+"""Render a content folder through the standard Papyrus front end into a local directory.
 
 The content folder is laid out the way the CMS stores items: ``<section>/<slug>.md`` for
 commentary, rulings and Wire items, and ``<slug>.md`` at the top level for standing pages.
@@ -15,18 +15,20 @@ Needs the Python requirements in ``requirements-publication.txt``.
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import shutil
 import sys
 from pathlib import Path
 
 REPOSITORY = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(REPOSITORY / "web"))
+WEB_DIRECTORY = REPOSITORY / "web"
+PREVIEW_ORIGIN = "https://distinctive-mark.com"
 
 from papyrus_content.projection.model import ItemSummary, ProjectedItem, SiteIndex  # noqa: E402
 from papyrus_content.projection.stored import projection_metadata  # noqa: E402
 
-import projector as distinctive_projector  # noqa: E402
+from papyrus_content.projection.standard.projector import StandardMarkusProjector  # noqa: E402
 
 FRONT_MATTER_PATTERN = re.compile(r"\A---\n(.*?)\n---\n?(.*)\Z", re.S)
 
@@ -66,9 +68,12 @@ def site_index_from_directory(content_directory: Path) -> tuple[SiteIndex, dict[
 
 
 def render_site(content_directory: Path, show_placeholder_sponsor: bool = True) -> dict[str, bytes]:
-    configuration = distinctive_projector.read_site_configuration()
-    configuration["sponsor"]["showWhilePlaceholder"] = show_placeholder_sponsor
-    projector = distinctive_projector.DistinctiveProjector(configuration, distinctive_projector.read_committed_static_files())
+    """Every file the standard Papyrus front end writes for the content folder, keyed by site path."""
+    if show_placeholder_sponsor:
+        os.environ["DISTINCTIVE_SHOW_PLACEHOLDER_SPONSOR"] = "1"
+    else:
+        os.environ.pop("DISTINCTIVE_SHOW_PLACEHOLDER_SPONSOR", None)
+    projector = StandardMarkusProjector.from_static_directory(WEB_DIRECTORY, environ={"PAPYRUS_SITE_PUBLIC_URL": PREVIEW_ORIGIN})
     site, items_by_id = site_index_from_directory(content_directory)
     files = dict(projector.static_files())
     for item in items_by_id.values():

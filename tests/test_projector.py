@@ -13,10 +13,16 @@ sys.path.insert(0, str(REPOSITORY / "bin"))
 sys.path.insert(0, str(REPOSITORY / "web"))
 
 import build_local_site  # noqa: E402
-import projector as distinctive_projector  # noqa: E402
 from papyrus_content.projection.model import SiteIndex  # noqa: E402
+from papyrus_content.projection.standard.projector import StandardMarkusProjector  # noqa: E402
 
 SAMPLE_CONTENT = REPOSITORY / "tests" / "fixtures" / "sample-content"
+
+
+def create_projector():
+    return StandardMarkusProjector.from_static_directory(
+        REPOSITORY / "web", environ={"PAPYRUS_SITE_PUBLIC_URL": build_local_site.PREVIEW_ORIGIN}
+    )
 
 
 def sample_site():
@@ -60,7 +66,7 @@ class RenderedSampleSiteTests(unittest.TestCase):
             self.assertIn(key, self.files)
 
     def test_wire_items_link_out_and_have_no_page(self):
-        self.assertFalse(any(key.startswith("wire/") and key != "wire/index.html" for key in self.files))
+        self.assertFalse(any(key.startswith("wire/") and key not in ("wire/index.html", "wire/index.md") for key in self.files))
         self.assertIn("https://www.wipo.int/madrid/en/", self.page("wire/index.html"))
 
     def test_front_page_leads_with_the_flagged_ruling(self):
@@ -101,7 +107,7 @@ class RenderedSampleSiteTests(unittest.TestCase):
 
 class DependencyRuleTests(unittest.TestCase):
     def setUp(self):
-        self.projector = distinctive_projector.create_projector()
+        self.projector = create_projector()
         self.site, _items = sample_site()
 
     def test_editing_a_wire_item_rerenders_wire_and_front_page_only(self):
@@ -109,7 +115,7 @@ class DependencyRuleTests(unittest.TestCase):
         changed_site = site_with_changed_front_matter(self.site, "wire/madrid-system-update", take="A different take.")
         after = self.projector.listing_inputs(changed_site)
         changed_keys = {key for key in before if before[key] != after[key]}
-        self.assertEqual(changed_keys, {"index.html", "wire/index.html"})
+        self.assertEqual(changed_keys, {"index.html", "wire/index.html", "index.md", "wire/index.md"})
 
     def test_editing_a_ruling_card_field_moves_item_page_shared_inputs(self):
         changed_site = site_with_changed_front_matter(self.site, "rulings/in-re-applicant-a", outcome="Refusal reversed")
@@ -230,9 +236,63 @@ class DeployedSiteTests(unittest.TestCase):
         self.assertIn("<title>Distinctive Mark™", home)
 
 
+class StandardFrontEndTests(unittest.TestCase):
+    """What Papyrus core now provides around the page bodies."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.files = build_local_site.render_site(SAMPLE_CONTENT)
+
+    def page(self, key):
+        return self.files[key].decode("utf-8")
+
+    def test_story_head_has_canonical_social_cards_and_json_ld_with_modified_date(self):
+        story = self.page("rulings/in-re-applicant-e/index.html")
+        self.assertIn('<link rel="canonical" href="https://distinctive-mark.com/rulings/in-re-applicant-e/">', story)
+        self.assertIn('<meta property="og:type" content="article">', story)
+        self.assertIn('<meta name="twitter:card"', story)
+        self.assertIn('"@type":"NewsArticle"', story)
+        self.assertIn('"dateModified"', story)
+
+    def test_both_feeds_are_advertised_and_published(self):
+        home = self.page("index.html")
+        self.assertIn('type="application/rss+xml"', home)
+        self.assertIn('type="application/atom+xml"', home)
+        self.assertIn("<feed ", self.page("atom.xml"))
+        self.assertIn('<rss version="2.0"', self.page("feed.xml"))
+
+    def test_the_feeds_carry_commentary_and_rulings_but_not_the_wire_or_guides(self):
+        feed = self.page("feed.xml")
+        self.assertIn("/rulings/in-re-applicant-e/", feed)
+        self.assertIn("/commentary/letters-of-protest/", feed)
+        self.assertNotIn("/guides/", feed)
+        self.assertNotIn("/wire/", feed)
+
+    def test_the_sitemap_has_lastmod_and_covers_guides_and_standing_pages(self):
+        sitemap = self.page("sitemap.xml")
+        self.assertIn("<lastmod>", sitemap)
+        self.assertIn("/guides/searching-before-you-file/", sitemap)
+        self.assertIn("/about/", sitemap)
+        self.assertNotIn("/wire/madrid-system-update", sitemap)
+
+    def test_pages_have_a_skip_link_that_reaches_main(self):
+        home = self.page("index.html")
+        self.assertIn('<a class="markus-skip-link" href="#main">', home)
+        self.assertIn('<main id="main"', home)
+
+    def test_a_staging_origin_is_not_indexable(self):
+        projector = StandardMarkusProjector.from_static_directory(
+            REPOSITORY / "web", environ={"PAPYRUS_SITE_PUBLIC_URL": "https://staging.example.test"}
+        )
+        self.assertEqual(projector.static_files()["robots.txt"], b"User-agent: *\nDisallow: /\n")
+        site, _items = sample_site()
+        home = projector.listing_pages(site, keys={"index.html"})["index.html"].decode("utf-8")
+        self.assertIn('<meta name="robots" content="noindex, nofollow">', home)
+
+
 class EscapingTests(unittest.TestCase):
     def test_front_matter_text_is_escaped_in_listings(self):
-        projector = distinctive_projector.create_projector()
+        projector = create_projector()
         site, _items = sample_site()
         hostile_site = site_with_changed_front_matter(site, "wire/madrid-system-update", title='<script>alert("x")</script>')
         wire_page = projector.listing_pages(hostile_site, keys={"wire/index.html"})["wire/index.html"].decode("utf-8")

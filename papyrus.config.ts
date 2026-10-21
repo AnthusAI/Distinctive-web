@@ -28,7 +28,6 @@ export default defineSite({
     auth: resolvedAuthConfiguration,
     publication: {
       kind: "s3-projection",
-      projector: "web/projector.py",
       staticDir: "web",
       reprojectOnDeploy: true,
       edgeDistributionArn: "arn:aws:cloudfront::712236451410:distribution/EHJUVNTK7AFXH",

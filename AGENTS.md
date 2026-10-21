@@ -4,9 +4,9 @@ This repository holds only what is specific to Distinctive Mark™ (distinctive-
 
 ## Layout
 
-- `papyrus.config.ts`: registers the brand and the backend (`defineSite`). `backend.publication` is the S3 projection: `web/projector.py` renders pages, and the whole `web/` directory is bundled into the content-actions Lambda as `site_static/`.
+- `papyrus.config.ts`: registers the brand and the backend (`defineSite`). `backend.publication` is the S3 projection: the standard Papyrus front end renders pages from `web/projection.json`, and the whole `web/` directory is bundled into the content-actions Lambda as `site_static/`.
 - `publication/brand.ts`, `publication/theme.css`: the newsroom (CMS) brand. The CMS uses the generic Papyrus theme pack; do not restyle it here unless asked.
-- `web/projector.py`: the Papyrus `SiteProjector` for the public site. It decides which pages exist, what each depends on, and renders them through the Papyrus Markus shell.
+- `web/projection.json` and `web/hooks.py`: the settings of the standard Papyrus front end (URLs, sections, feeds, sitemap, head) and the one `page_body` hook that composes Distinctive's pages. Papyrus core renders everything else; see its guide "Building a Papyrus static site".
 - `web/distinctive_content.py`: the content model, read from item summaries and front matter (`docs/content-model.md`).
 - `web/distinctive_markup.py`: the page chrome, listing pages, sponsor units and signup units, as HTML.
 - `web/css/site-theme.css`, `web/assets/`: the public site's look, client script (filters, signup forms, sticky bar, exit-intent slide-in) and icon.
