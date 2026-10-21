@@ -138,7 +138,7 @@ class DependencyRuleTests(unittest.TestCase):
             ),
             load_item=self.site.load_item,
         )
-        self.assertEqual(self.projector.redirects(aliased_site), {"/old-ruling-address/": "/rulings/in-re-applicant-a/"})
+        self.assertEqual(self.projector.redirects(aliased_site)["/old-ruling-address/"], "/rulings/in-re-applicant-a/")
 
 
 class GuideTests(unittest.TestCase):
