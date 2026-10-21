@@ -17,10 +17,22 @@
       "text": "Built and live (2026-10-21), in Papyrus #488, deployed to the papyrus-monitoring stack:\n- MONITOR#ttab reads the TTAB Reading Room decision search (sourceType ttab-decisions), a rolling 30-day window, deduplicated per decision document (<proceeding>-<document>).\n- It collects daily: the papyrus-monitoring-ttab-collect schedule wakes it every 6 h, and intervalSeconds is 86400.\n- The router uses decisions: direct, with no Cyclotron call: every final decision goes to Distinctive as a pending Reference, with the opinion PDF as sourceUri and a provenance Message recording the monitor rule. The route schedule is hourly at :41.\n- First runs delivered all 28 final decisions from the last 30 days (25 + 3; no errors). The HN monitor kept running cleanly on the new code.\n\nStill to do for this milestone:\n1. Precedential re-check over 90–180 days. The 30-day window catches a redesignation only within 30 days. Next step: a second query of precedential decisions only (parameterData precedentCitableIndicator Y) over 180 days, or a second monitor with that filter.\n2. Duplicate references. References registered earlier from TTABVUE opinion URLs (Hansen Honey Farm, International First Committee) aren't matched to the Reading Room PDF URL, so those decisions now have two pending References. Intake should also match on the proceeding number.\n3. Notability rating by Distinctive's own Cyclotron (not the shared one).\n4. Starting the ruling-analysis procedure for each new decision: Papyrus PPY-9a79b5, plus cloud execution of procedures, PPY-a2b94e.",
       "created_at": "2026-10-21T21:24:45.231671Z",
       "comment_type": "default"
+    },
+    {
+      "id": "3997b1f8-90e0-43fc-aa3b-15c6447444a7",
+      "author": "home",
+      "text": "Items 1 and 2 done (2026-10-21), in Papyrus #496, deployed to papyrus-monitoring at 22:29Z:\n- Precedential re-check: MONITOR#ttab has precedentialLookbackDays 180. Each collect also queries precedential decisions only (precedentCitableIndicator Y, all decision types) over 180 days and merges them with the 30-day window. The first forced collect found 7 precedential decisions older than 30 days; the route run delivered 7 of 7 with no errors.\n- Duplicates: each decision now carries its other URL forms as aliases (the Reading Room double-slash PDF URL and the TTABVUE ttabvue-<proceeding>-<type>-<entry>.pdf URL). Intake reuses a Reference that matches the canonical URL or any alias. CIELO and Wemby reused their existing TTABVUE references. Totals: 33 Reading Room and 2 TTABVUE references, no duplicates.\n- The earlier note about Hansen Honey Farm and International First Committee was wrong: they had no duplicates.\n- Matching is per decision document, not per proceeding, because one proceeding can hold more than one decision (for example a final decision and a decision on reconsideration).\n- Known gap: a reused Reference is not updated when a decision is redesignated precedential; intake only adds a provenance Message.\n\nStill open: 3 (notability by Distinctive's own Cyclotron) and 4 (PPY-9a79b5 procedure trigger, PPY-a2b94e cloud execution).",
+      "created_at": "2026-10-21T22:43:52.164699Z",
+      "comment_type": "default",
+      "agent": {
+        "platform": "claude_code",
+        "model": "claude-opus-5-5",
+        "name": "Distinctive Mark implementation"
+      }
     }
   ],
   "created_at": "2026-10-21T00:39:42.142903Z",
-  "updated_at": "2026-10-21T21:24:45.251172Z",
+  "updated_at": "2026-10-21T22:43:58.459602Z",
   "closed_at": null,
   "right_now_summary": null,
   "right_now_updated_at": null,
