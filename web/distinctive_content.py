@@ -15,6 +15,7 @@ listing can be rendered from summaries alone, without loading item bodies.
 from __future__ import annotations
 
 import datetime as dt
+import re
 from dataclasses import dataclass, field
 
 COMMENTARY_SECTION = "commentary"
@@ -22,7 +23,9 @@ RULINGS_SECTION = "rulings"
 WIRE_SECTION = "wire"
 GUIDES_SECTION = "guides"
 NOTABLE_RULING_MINIMUM_NOTABILITY = 4
+BRIEF_RULING_MINIMUM_NOTABILITY = 3
 MAXIMUM_NOTABILITY = 5
+RULING_TIERS = ("precedential", "analysis", "brief", "line")
 
 
 def read_text(front_matter: dict, *names: str) -> str:
@@ -150,6 +153,7 @@ class Ruling(PublishedEntry):
     one_line_summary: str = ""
     reasons_notable: tuple[str, ...] = ()
     marks_at_issue: tuple[MarkAtIssue, ...] = ()
+    tier_override: str = ""
 
     @property
     def page_key(self) -> str:
@@ -164,12 +168,44 @@ class Ruling(PublishedEntry):
         return self.notability >= NOTABLE_RULING_MINIMUM_NOTABILITY
 
     @property
+    def tier(self) -> str:
+        if self.tier_override in RULING_TIERS:
+            return self.tier_override
+        if self.is_precedential:
+            return "precedential"
+        if self.notability >= NOTABLE_RULING_MINIMUM_NOTABILITY:
+            return "analysis"
+        if self.notability >= BRIEF_RULING_MINIMUM_NOTABILITY:
+            return "brief"
+        return "line"
+
+    @property
+    def tier_rank(self) -> int:
+        return RULING_TIERS.index(self.tier)
+
+    @property
+    def week_start(self) -> dt.date | None:
+        return self.date - dt.timedelta(days=self.date.weekday()) if self.date else None
+
+    @property
+    def archive_month(self) -> str:
+        return f"{self.date:%Y-%m}" if self.date else ""
+
+    @property
     def status_label(self) -> str:
         return "Precedential" if self.is_precedential else "Not precedential"
 
     @property
     def headline(self) -> str:
         return self.title or self.caption
+
+    @property
+    def has_written_headline(self) -> bool:
+        return bool(self.title) and self.title not in (self.caption, self.slug)
+
+    @property
+    def short_outcome(self) -> str:
+        return re.split(r"\s*[(;]", self.outcome, maxsplit=1)[0].strip()
 
 
 @dataclass(frozen=True)
@@ -289,6 +325,7 @@ def ruling_from_summary(summary) -> Ruling:
         one_line_summary=read_text(front_matter, "summary"),
         reasons_notable=read_text_list(front_matter, "whyNotable"),
         marks_at_issue=read_marks_at_issue(front_matter),
+        tier_override=read_text(front_matter, "tier").lower(),
     )
 
 
@@ -387,6 +424,13 @@ class SiteContent:
     @property
     def notable_rulings(self) -> list[Ruling]:
         return [ruling for ruling in self.rulings if ruling.is_notable]
+
+    @property
+    def ruling_archive_months(self) -> list[str]:
+        return sorted({ruling.archive_month for ruling in self.rulings if ruling.archive_month}, reverse=True)
+
+    def rulings_in_month(self, month: str) -> list[Ruling]:
+        return [ruling for ruling in self.rulings if ruling.archive_month == month]
 
     @property
     def standing_page_slugs(self) -> set[str]:

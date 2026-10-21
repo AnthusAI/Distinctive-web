@@ -5,7 +5,8 @@ Pages:
 * item pages: each commentary article, each TTAB ruling, each Before You File guide and each
   standing page (About, ...),
   with its body converted by Markus and wrapped in the Distinctive Mark chrome;
-* listing pages: the front page, the rulings tracker, the Wire, the commentary index, the guides index,
+* listing pages: the front page, the rulings tracker and its monthly archive, the Wire, the commentary index,
+  the guides index,
   the subscribe page, the RSS feed and the sitemap;
 * static files: the stylesheet, the client script, the icon, robots.txt and 404.html.
 
@@ -18,6 +19,7 @@ the content it renders; item pages share one digest of everything their chrome a
 from __future__ import annotations
 
 import dataclasses
+import datetime as dt
 import json
 import os
 import re
@@ -51,6 +53,7 @@ CLIENT_SCRIPT_KEY = "assets/distinctive.js"
 ICON_KEY = "assets/icon.svg"
 HOME_PAGE_KEY = "index.html"
 RULINGS_PAGE_KEY = "rulings/index.html"
+RULING_ARCHIVE_PAGE_KEY_TEMPLATE = "rulings/archive/{month}/index.html"
 WIRE_PAGE_KEY = "wire/index.html"
 COMMENTARY_PAGE_KEY = "commentary/index.html"
 GUIDES_PAGE_KEY = "guides/index.html"
@@ -252,6 +255,22 @@ class DistinctiveProjector:
                     notice="Summaries are drawn from the public record on TTABVUE and are not legal advice. Read the opinion before relying on it.",
                 ),
             ),
+            **{
+                RULING_ARCHIVE_PAGE_KEY_TEMPLATE.format(month=month): (
+                    lambda month=month: self._render(
+                        title=f"TTAB Rulings: {dt.date.fromisoformat(month + '-01'):%B %Y}",
+                        page_path=f"/rulings/archive/{month}/",
+                        description="Trademark Trial and Appeal Board decisions tracked this month, week by week.",
+                        body_html=self._inner_page(
+                            content,
+                            RULINGS_SECTION,
+                            markup.ruling_archive_page_body(settings, content, month),
+                            notice="Summaries are drawn from the public record and are not legal advice. Read the opinion before relying on it.",
+                        ),
+                    )
+                )
+                for month in content.ruling_archive_months
+            },
             WIRE_PAGE_KEY: lambda: self._render(
                 title="The Wire",
                 page_path="/wire/",
@@ -303,13 +322,19 @@ class DistinctiveProjector:
         return {
             HOME_PAGE_KEY: everything,
             RULINGS_PAGE_KEY: digest_of([rulings_only, footer]),
+            **{
+                RULING_ARCHIVE_PAGE_KEY_TEMPLATE.format(month=month): digest_of(
+                    [[dataclasses.asdict(ruling) for ruling in content.rulings_in_month(month)], content.ruling_archive_months, footer]
+                )
+                for month in content.ruling_archive_months
+            },
             WIRE_PAGE_KEY: digest_of([[dataclasses.asdict(item) for item in content.wire_items], footer]),
             COMMENTARY_PAGE_KEY: digest_of([[dataclasses.asdict(entry) for entry in content.commentary], footer]),
             GUIDES_PAGE_KEY: digest_of([[dataclasses.asdict(guide) for guide in content.guides], footer]),
             SUBSCRIBE_PAGE_KEY: digest_of([rulings_only, footer]),
             NOT_FOUND_PAGE_KEY: footer,
             FEED_KEY: digest_of([[dataclasses.asdict(entry) for entry in [*content.commentary, *content.rulings]], self._settings.site_url]),
-            SITEMAP_KEY: digest_of([[entry.href for entry in [*content.commentary, *content.rulings, *content.guides, *content.standing_pages]], self._settings.site_url]),
+            SITEMAP_KEY: digest_of([[entry.href for entry in [*content.commentary, *content.rulings, *content.guides, *content.standing_pages]], content.ruling_archive_months, self._settings.site_url]),
         }
 
     def listing_inputs(self, site) -> dict[str, str]:
@@ -380,6 +405,7 @@ class DistinctiveProjector:
     def _sitemap_bytes(self, content: SiteContent) -> bytes:
         site_url = self._settings.site_url
         paths = ["/", "/rulings/", "/wire/", "/commentary/", "/guides/", "/subscribe/"]
+        paths += [f"/rulings/archive/{month}/" for month in content.ruling_archive_months]
         paths += [entry.href for entry in [*content.commentary, *content.rulings, *content.guides, *content.standing_pages]]
         urls = "".join(f"<url><loc>{xml_escape((site_url or '') + path)}</loc></url>" for path in paths) if site_url else ""
         return (

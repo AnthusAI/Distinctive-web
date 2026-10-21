@@ -6,6 +6,7 @@ article bodies are the only author content and they come from Markus.
 
 from __future__ import annotations
 
+import datetime as dt
 import html
 import json
 from dataclasses import dataclass
@@ -653,21 +654,44 @@ def filter_buttons(group_label: str, filter_name: str, labels: list[str], label_
     )
 
 
+TIER_LABELS = {"precedential": "Precedential", "analysis": "Analysis", "brief": "Brief", "line": ""}
+TIER_LINK_LABELS = {"precedential": "Read the decision →", "analysis": "Read the analysis →", "brief": "Read the brief →", "line": "Details →"}
+LATEST_WEEK_COUNT = 8
+
+
 def ruling_row(ruling: Ruling) -> str:
-    link_label = "Read the analysis →" if ruling.is_notable else "Read the summary →"
-    detail = " · ".join(part for part in [ruling.proceeding_number and f"{ruling.proceeding} · {ruling.proceeding_number}" or ruling.proceeding, ruling.status_label, ruling.issue_label] if part)
-    month_anchor = f"{ruling.date:%Y-%m}" if ruling.date else ""
+    tier = ruling.tier
+    link_label = "Read the analysis →" if tier == "precedential" and ruling.is_notable else TIER_LINK_LABELS[tier]
+    attributes = (
+        f'class="ds-ruling-row ds-ruling-row--{tier}" data-ds-row="ruling" data-ds-tier="{tier}" data-ds-issue="{escaped(ruling.issue)}" '
+        f'data-ds-notable="{"true" if ruling.is_notable or tier == "precedential" else "false"}" '
+        f'data-ds-precedential="{"true" if ruling.is_precedential else "false"}" data-ds-month="{ruling.archive_month}"'
+    )
+    date_html = f'<time datetime="{ruling.date.isoformat() if ruling.date else ""}">{escaped(format_short_date(ruling.date))}</time>'
+    if tier == "line":
+        facts = " · ".join(part for part in [ruling.issue, ruling.proceeding] if part)
+        return (
+            f"<li {attributes}>"
+            f'<div class="ds-ruling-row__date">{date_html}</div>'
+            f'<a class="ds-ruling-row__caption ds-ruling-row__caption--line" href="{ruling.href}">{escaped(ruling.caption or ruling.title)}</a>'
+            f'<span class="ds-mono-meta ds-ruling-row__facts">{escaped(facts)}</span>'
+            f'<div class="ds-ruling-row__outcome">{outcome_badge(ruling.short_outcome)}</div>'
+            "</li>"
+        )
+    detail = " · ".join(part for part in [ruling.proceeding_number and f"{ruling.proceeding} · {ruling.proceeding_number}" or ruling.proceeding, ruling.issue_label] if part)
+    tier_mark = f'<span class="ds-tier-mark ds-tier-mark--{tier}">{TIER_LABELS[tier]}</span>'
+    headline = ruling.title if tier in ("precedential", "analysis") and ruling.has_written_headline else ""
+    headline_html = f'<p class="ds-ruling-row__headline">{escaped(headline)}</p>' if headline else ""
+    brief_html = f'<p class="ds-ruling-row__brief">{escaped(ruling.dek)}</p>' if tier == "brief" and ruling.dek else ""
     return (
-        f'<li class="ds-ruling-row" data-ds-row="ruling" data-ds-issue="{escaped(ruling.issue)}" '
-        f'data-ds-notable="{"true" if ruling.is_notable else "false"}" data-ds-precedential="{"true" if ruling.is_precedential else "false"}" '
-        f'data-ds-month="{month_anchor}">'
-        '<div class="ds-ruling-row__date">'
-        f'<time datetime="{ruling.date.isoformat() if ruling.date else ""}">{escaped(format_short_date_with_year(ruling.date))}</time>'
-        f'{notability_meter(ruling.notability, "small")}</div>'
+        f"<li {attributes}>"
+        f'<div class="ds-ruling-row__date">{date_html}{notability_meter(ruling.notability, "small")}</div>'
         '<div class="ds-ruling-row__body">'
+        f'<div class="ds-ruling-row__marks">{tier_mark}</div>'
         f'<h3 class="ds-ruling-row__caption"><a href="{ruling.href}">{escaped(ruling.caption or ruling.title)}</a></h3>'
+        f"{headline_html}"
         f'<span class="ds-mono-meta ds-mono-meta--case">{escaped(detail)}</span>'
-        f'<p class="ds-ruling-row__summary">{escaped(ruling.one_line_summary)}</p></div>'
+        f'<p class="ds-ruling-row__summary">{escaped(ruling.one_line_summary)}</p>{brief_html}</div>'
         '<div class="ds-ruling-row__outcome">'
         f"{outcome_badge(ruling.outcome)}"
         f'<a class="ds-mono-link ds-mono-link--underlined" href="{ruling.href}">{link_label}</a></div>'
@@ -675,32 +699,54 @@ def ruling_row(ruling: Ruling) -> str:
     )
 
 
-SPONSOR_ROW_POSITIONS = (3, 9)
+def rulings_by_week(rulings: list[Ruling]) -> list[tuple[object, list[Ruling]]]:
+    weeks: dict = {}
+    for ruling in rulings:
+        weeks.setdefault(ruling.week_start, []).append(ruling)
+    ordered = sorted(weeks.items(), key=lambda pair: pair[0] or dt.date.min, reverse=True)
+    return [(week, sorted(group, key=lambda ruling: (ruling.tier_rank, -(ruling.date or dt.date.min).toordinal(), ruling.slug))) for week, group in ordered]
 
 
-def ruling_rows_with_sponsors(settings: SiteSettings, rulings: list[Ruling]) -> str:
-    rows = []
-    for index, ruling in enumerate(rulings):
-        rows.append(ruling_row(ruling))
-        if index in SPONSOR_ROW_POSITIONS and settings.shows_sponsor_units:
-            rows.append(f'<li class="ds-feed-sponsor-row" data-ds-row="sponsor">{sponsor_feed_row(settings, "rulings-feed")}</li>')
-    return "".join(rows)
+def week_heading(week) -> str:
+    return f"Week of {format_long_date(week)}" if week else "Undated"
 
 
-def rulings_page_body(settings: SiteSettings, content: SiteContent) -> str:
-    notable = sorted(content.notable_rulings, key=lambda ruling: (ruling.notability, ruling.sort_key), reverse=True)[:3]
-    notable_section = ""
-    if notable:
-        secondary = "".join(notable_ruling_card(ruling) for ruling in notable[1:])
-        notable_section = (
-            '<section class="ds-stack" aria-labelledby="notable-heading">'
-            '<div class="ds-section-heading ds-section-heading--plain">'
-            '<h2 class="ds-section-heading__title" id="notable-heading">Notable rulings</h2></div>'
-            f"{notable_ruling_hero(notable[0])}"
-            f'{f"<div class=ds-notable-grid>{secondary}</div>" if secondary else ""}'
-            "</section>"
+def ruling_week_groups(settings: SiteSettings, weeks: list[tuple[object, list[Ruling]]]) -> str:
+    groups = []
+    for index, (week, rulings) in enumerate(weeks):
+        precedential_count = sum(1 for ruling in rulings if ruling.tier == "precedential")
+        counts = f'{len(rulings)} decision{"" if len(rulings) == 1 else "s"}' + (f" · {precedential_count} precedential" if precedential_count else "")
+        sponsor = (
+            f'<li class="ds-feed-sponsor-row" data-ds-row="sponsor">{sponsor_feed_row(settings, "rulings-feed")}</li>'
+            if index in (0, 2) and settings.shows_sponsor_units
+            else ""
         )
-    present_issues = {ruling.issue for ruling in content.rulings if ruling.issue}
+        groups.append(
+            f'<section class="ds-ruling-week" data-ds-week="{week.isoformat() if week else ""}">'
+            f'<div class="ds-ruling-week__heading"><h3 class="ds-ruling-week__title">{escaped(week_heading(week))}</h3>'
+            f'<span class="ds-mono-meta">{escaped(counts)}</span></div>'
+            f'<ol class="ds-ruling-list">{"".join(ruling_row(ruling) for ruling in rulings)}{sponsor}</ol></section>'
+        )
+    return "".join(groups)
+
+
+def ruling_stats_strip(content: SiteContent) -> str:
+    dated = [ruling for ruling in content.rulings if ruling.date]
+    if not dated:
+        return ""
+    year = max(ruling.date.year for ruling in dated)
+    this_year = [ruling for ruling in dated if ruling.date.year == year]
+    stats = [
+        (str(len(this_year)), f"decisions tracked in {year}"),
+        (str(sum(1 for ruling in this_year if ruling.is_precedential)), "precedential"),
+        (str(sum(1 for ruling in this_year if ruling.tier in ("precedential", "analysis"))), "with full analysis"),
+    ]
+    cells = "".join(f'<div class="ds-stat"><span class="ds-stat__value">{escaped(value)}</span><span class="ds-stat__label">{escaped(label)}</span></div>' for value, label in stats)
+    return f'<div class="ds-stats-strip" role="group" aria-label="Decisions tracked">{cells}</div>'
+
+
+def ruling_filters(settings: SiteSettings, rulings: list[Ruling]) -> str:
+    present_issues = {ruling.issue for ruling in rulings if ruling.issue}
     configured_issues = settings.configuration.get("issueFilters", [])
     issues = [issue for issue in configured_issues if issue in present_issues]
     issues += sorted(present_issues - set(configured_issues))
@@ -708,27 +754,59 @@ def rulings_page_body(settings: SiteSettings, content: SiteContent) -> str:
     notability_filter = filter_buttons(
         "Filter by notability",
         "notability",
-        [("all", "All decisions"), ("notable", "Notable only"), ("precedential", "Precedential only")],
+        [("all", "All decisions"), ("precedential", "Precedential"), ("notable", "Precedential and analyzed")],
         "Show",
         accent_selected=True,
     )
-    months = sorted({ruling.date.replace(day=1) for ruling in content.rulings if ruling.date}, reverse=True)
-    archive = "".join(f'<a href="#{month:%Y-%m}" data-ds-month-link="{month:%Y-%m}">{month:%b %Y}</a>' for month in months[:6])
-    archive_nav = (
-        f'<nav class="ds-archive-nav" aria-label="Archive"><span>Archive</span>{archive}</nav>' if archive else ""
+    return issue_filter + notability_filter
+
+
+def ruling_archive_nav(content: SiteContent, current_month: str | None = None) -> str:
+    months = content.ruling_archive_months
+    if not months:
+        return ""
+    links = "".join(
+        f'<a href="/rulings/archive/{month}/"{" aria-current=page" if month == current_month else ""}>{dt.date.fromisoformat(month + "-01"):%b %Y}</a>'
+        for month in months
     )
-    count = len(content.rulings)
-    all_decisions = (
+    return f'<nav class="ds-archive-nav" aria-label="Archive by month"><span>Archive</span>{links}</nav>'
+
+
+def ruling_list_section(settings: SiteSettings, content: SiteContent, rulings: list[Ruling], heading: str, current_month: str | None = None) -> str:
+    weeks = rulings_by_week(rulings)
+    count = len(rulings)
+    return (
         '<section class="ds-stack ds-stack--tight" aria-labelledby="all-heading" data-ds-ruling-list="">'
         '<div class="ds-section-heading">'
-        '<h2 class="ds-section-heading__title" id="all-heading">All decisions</h2>'
-        f'<span class="ds-mono-meta"><span data-ds-count="">{count} decision{"" if count == 1 else "s"}</span> · Newest first</span></div>'
-        f"{issue_filter}{notability_filter}"
-        f'<ol class="ds-ruling-list">{ruling_rows_with_sponsors(settings, content.rulings)}</ol>'
-        f'<p class="ds-empty-state" data-ds-empty="" {"" if not content.rulings else "hidden"}>No decisions match these filters yet.</p>'
-        f"{archive_nav}"
+        f'<h2 class="ds-section-heading__title" id="all-heading">{escaped(heading)}</h2>'
+        f'<span class="ds-mono-meta"><span data-ds-count="">{count} decision{"" if count == 1 else "s"}</span> · Week by week, precedential first</span></div>'
+        f"{ruling_filters(settings, rulings)}"
+        f"{ruling_week_groups(settings, weeks)}"
+        f'<p class="ds-empty-state" data-ds-empty="" {"" if not rulings else "hidden"}>No decisions match these filters yet.</p>'
+        f"{ruling_archive_nav(content, current_month)}"
         "</section>"
     )
+
+
+def rulings_page_body(settings: SiteSettings, content: SiteContent) -> str:
+    featured = sorted(
+        [ruling for ruling in content.rulings if ruling.tier in ("precedential", "analysis") and ruling.is_notable],
+        key=lambda ruling: (ruling.notability, ruling.sort_key),
+        reverse=True,
+    )[:3]
+    notable_section = ""
+    if featured:
+        secondary = "".join(notable_ruling_card(ruling) for ruling in featured[1:])
+        notable_section = (
+            '<section class="ds-stack" aria-labelledby="notable-heading">'
+            '<div class="ds-section-heading ds-section-heading--plain">'
+            '<h2 class="ds-section-heading__title" id="notable-heading">Notable rulings</h2></div>'
+            f"{notable_ruling_hero(featured[0])}"
+            f'{f"<div class=ds-notable-grid>{secondary}</div>" if secondary else ""}'
+            "</section>"
+        )
+    recent_weeks = {week for week, _rulings in rulings_by_week(content.rulings)[:LATEST_WEEK_COUNT]}
+    recent = [ruling for ruling in content.rulings if ruling.week_start in recent_weeks]
     alert_signup = dark_signup_panel(
         settings,
         "rulings-signup-email",
@@ -738,11 +816,23 @@ def rulings_page_body(settings: SiteSettings, content: SiteContent) -> str:
     )
     return (
         '<main class="ds-container ds-page-main">'
-        f'{page_title_band("TTAB Rulings", "Every Trademark Trial and Appeal Board decision we track. The most notable get full analysis; every decision gets a summary.")}'
+        f'{page_title_band("TTAB Rulings", "Trademark Trial and Appeal Board decisions, week by week. Precedential decisions come first; the notable ones get full analysis, and every decision gets a summary.")}'
+        f"{ruling_stats_strip(content)}"
         f"{notable_section}"
         f'{sponsor_banner(settings, "rulings-banner")}'
         f"{alert_signup}"
-        f"{all_decisions}"
+        f'{ruling_list_section(settings, content, recent, "Latest decisions")}'
+        "</main>"
+    )
+
+
+def ruling_archive_page_body(settings: SiteSettings, content: SiteContent, month: str) -> str:
+    month_label = f"{dt.date.fromisoformat(month + '-01'):%B %Y}"
+    return (
+        '<main class="ds-container ds-page-main">'
+        f'{page_title_band(f"TTAB Rulings: {month_label}", f"Every Trademark Trial and Appeal Board decision we tracked in {month_label}, week by week.")}'
+        f'<p class="ds-mono-meta"><a class="ds-mono-link" href="/rulings/">← Latest decisions</a></p>'
+        f'{ruling_list_section(settings, content, content.rulings_in_month(month), month_label, current_month=month)}'
         "</main>"
     )
 

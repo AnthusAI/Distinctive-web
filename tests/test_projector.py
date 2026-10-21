@@ -168,6 +168,36 @@ class GuideTests(unittest.TestCase):
         self.assertIn("ds-sponsor-referral", self.page("rulings/in-re-applicant-e/index.html"))
 
 
+class RulingTierTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.files = build_local_site.render_site(SAMPLE_CONTENT)
+        cls.tracker = cls.files["rulings/index.html"].decode("utf-8")
+
+    def test_every_ruling_gets_a_tier_from_precedential_status_and_notability(self):
+        for tier in ("precedential", "brief", "line"):
+            self.assertIn(f'data-ds-tier="{tier}"', self.tracker)
+
+    def test_rulings_are_grouped_by_week_with_precedential_first(self):
+        self.assertIn("Week of October 12, 2026", self.tracker)
+        week = self.tracker.split('data-ds-week="2026-10-12"', 1)[1].split("</section>", 1)[0]
+        self.assertLess(week.index('data-ds-tier="precedential"'), week.index('data-ds-tier="line"'))
+
+    def test_monthly_archive_pages_exist_and_are_in_the_sitemap(self):
+        self.assertIn("rulings/archive/2026-09/index.html", self.files)
+        self.assertIn('href="/rulings/archive/2026-09/"', self.tracker)
+        self.assertIn("/rulings/archive/2026-09/", self.files["sitemap.xml"].decode("utf-8"))
+
+    def test_stats_strip_counts_tracked_decisions(self):
+        self.assertIn("decisions tracked in 2026", self.tracker)
+
+    def test_line_rows_show_the_short_outcome(self):
+        from distinctive_content import Ruling
+        sample = Ruling(item_id="x", slug="x", title="x", dek="", date=None, author="", read_minutes=None, tags=(), is_lead=False,
+                        owner_takeaway="", guide_slug="", outcome="Refusal affirmed (classes 35 and 41); other grounds not reached")
+        self.assertEqual(sample.short_outcome, "Refusal affirmed")
+
+
 class DeployedSiteTests(unittest.TestCase):
     def test_placeholder_sponsor_is_hidden_on_the_deployed_site(self):
         files = build_local_site.render_site(SAMPLE_CONTENT, show_placeholder_sponsor=False)

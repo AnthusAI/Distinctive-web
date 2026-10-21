@@ -21,7 +21,7 @@ Page: `/commentary/<slug>/`.
 
 ## TTAB rulings (section `rulings`)
 
-Page: `/rulings/<slug>/`. Every ruling appears in the tracker; rulings with `notability` 4 or 5 are "notable" and get the analysis treatment.
+Page: `/rulings/<slug>/`. The tracker at `/rulings/` groups the latest eight weeks by week, precedential decisions first; older weeks are on monthly archive pages at `/rulings/archive/<YYYY-MM>/`. Rulings with `notability` 4 or 5 are "notable" and get the analysis treatment.
 
 | Field | Meaning |
 | --- | --- |
@@ -35,6 +35,7 @@ Page: `/rulings/<slug>/`. Every ruling appears in the tracker; rulings with `not
 | `outcome` | e.g. `Refusal affirmed`, `Opposition sustained` |
 | `precedential` | `true` or `false` |
 | `notability` | 1 to 5 |
+| `tier` | Optional override of how the tracker shows the ruling: `precedential`, `analysis`, `brief` or `line`. By default precedential decisions are `precedential`, notability 4–5 `analysis`, 3 `brief` (shows the `dek` as a paragraph) and 1–2 `line` (one compact line) |
 | `date` | Decision date |
 | `panel` | Judges and author of the opinion |
 | `opinionUrl` | Link to the opinion on TTABVUE |

@@ -88,6 +88,9 @@
         if (!row.hidden) visibleRulingCount += 1;
       });
       showSponsorRowsOnlyBetweenVisibleRows(rows);
+      Array.prototype.slice.call(container.querySelectorAll("[data-ds-week]")).forEach(function (week) {
+        week.hidden = !week.querySelector('[data-ds-row="ruling"]:not([hidden])');
+      });
       if (countLabel) countLabel.textContent = visibleRulingCount === 1 ? "1 decision" : visibleRulingCount + " decisions";
       if (emptyMessage) emptyMessage.hidden = visibleRulingCount !== 0;
     }
