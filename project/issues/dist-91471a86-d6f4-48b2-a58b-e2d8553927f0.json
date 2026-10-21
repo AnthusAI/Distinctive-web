@@ -3,16 +3,24 @@
   "title": "M1 TTAB decisions monitor",
   "description": "Daily poll of the USPTO TTAB Reading Room API: rolling 30-day window (decisions appear about two weeks after issuance), dedupe on documentId, precedential re-check over the last 90-180 days, identifying User-Agent and about one request a second. Output: pending references for the Rulings section, keyed by proceeding number, with the opinion PDF.",
   "type": "epic",
-  "status": "open",
+  "status": "in_progress",
   "priority": 1,
   "assignee": null,
   "creator": null,
   "parent": "dist-9e8b06ca-083d-4f6a-952e-d7ba7142ecab",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "06176cae-ba45-4e06-8a72-4831dee39b47",
+      "author": "home",
+      "text": "Built and live (2026-10-21), in Papyrus #488, deployed to the papyrus-monitoring stack:\n- MONITOR#ttab reads the TTAB Reading Room decision search (sourceType ttab-decisions), a rolling 30-day window, deduplicated per decision document (<proceeding>-<document>).\n- It collects daily: the papyrus-monitoring-ttab-collect schedule wakes it every 6 h, and intervalSeconds is 86400.\n- The router uses decisions: direct, with no Cyclotron call: every final decision goes to Distinctive as a pending Reference, with the opinion PDF as sourceUri and a provenance Message recording the monitor rule. The route schedule is hourly at :41.\n- First runs delivered all 28 final decisions from the last 30 days (25 + 3; no errors). The HN monitor kept running cleanly on the new code.\n\nStill to do for this milestone:\n1. Precedential re-check over 90–180 days. The 30-day window catches a redesignation only within 30 days. Next step: a second query of precedential decisions only (parameterData precedentCitableIndicator Y) over 180 days, or a second monitor with that filter.\n2. Duplicate references. References registered earlier from TTABVUE opinion URLs (Hansen Honey Farm, International First Committee) aren't matched to the Reading Room PDF URL, so those decisions now have two pending References. Intake should also match on the proceeding number.\n3. Notability rating by Distinctive's own Cyclotron (not the shared one).\n4. Starting the ruling-analysis procedure for each new decision: Papyrus PPY-9a79b5, plus cloud execution of procedures, PPY-a2b94e.",
+      "created_at": "2026-10-21T21:24:45.231671Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-21T00:39:42.142903Z",
-  "updated_at": "2026-10-21T00:39:42.142933Z",
+  "updated_at": "2026-10-21T21:24:45.251172Z",
   "closed_at": null,
   "right_now_summary": null,
   "right_now_updated_at": null,
