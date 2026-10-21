@@ -319,9 +319,13 @@ def commentary_from_summary(summary) -> Commentary:
 def ruling_from_summary(summary) -> Ruling:
     front_matter = summary.front_matter
     notability = read_positive_integer(front_matter, "notability") or 1
+    entry_fields = shared_entry_fields(summary)
+    caption = read_text(front_matter, "caption")
+    if caption and not read_text(front_matter, "title"):
+        entry_fields["title"] = caption
     return Ruling(
-        **shared_entry_fields(summary),
-        caption=read_text(front_matter, "caption"),
+        **entry_fields,
+        caption=caption,
         proceeding=read_text(front_matter, "proceeding"),
         proceeding_number=read_text(front_matter, "proceedingNumber"),
         issue=read_text(front_matter, "issue"),

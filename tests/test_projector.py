@@ -219,6 +219,15 @@ class RulingTierTests(unittest.TestCase):
         self.assertTrue(row.startswith("In re [Applicant A]</a>"))
         self.assertNotIn("ds-precedent", self.files["rulings/in-re-applicant-a/index.html"].decode("utf-8"))
 
+    def test_a_ruling_without_a_title_is_headed_by_its_caption(self):
+        from distinctive_content import ruling_from_summary
+        summary = dataclasses.replace(
+            build_local_site.site_index_from_directory(SAMPLE_CONTENT)[0].items[0],
+            section="rulings", slug="in-re-untitled", title="", page_title="",
+            front_matter={"caption": "In re Untitled", "summary": "x"},
+        )
+        self.assertEqual(ruling_from_summary(summary).title, "In re Untitled")
+
     def test_line_rows_show_the_short_outcome(self):
         from distinctive_content import Ruling
         sample = Ruling(item_id="x", slug="x", title="x", dek="", date=None, author="", read_minutes=None, tags=(), is_lead=False,
