@@ -11,6 +11,8 @@ This repository holds only what is specific to Distinctive Mark™ (distinctive-
 - `web/distinctive_markup.py`: the page chrome, listing pages, sponsor units and signup units, as HTML.
 - `web/css/site-theme.css`, `web/assets/`: the public site's look, client script (filters, signup forms, sticky bar, exit-intent slide-in) and icon.
 - `web/site-config.json`: publication identity, issue filters, Wire sources, newsletter and sponsor settings.
+- `.claude/skills/ttab-ruling-analysis/SKILL.md`: how an agent turns a new TTAB decision into a checked draft ruling page. Procedure only; the editorial rules are fetched from the newsroom at run time.
+- `procedures/ttab_ruling_analysis.tac`: the Tactus procedure that runs that skill (an analyst agent and a separate fact-checker agent). Run it from the repository root with `tactus run procedures/ttab_ruling_analysis.tac --no-sandbox --real-all --param proceeding=... --param opinion_url=...`. It needs Tactus with plugin module support (AnthusAI/Tactus#115) and the Papyrus procedure tools (AnthusAI/Papyrus#456). It saves drafts and never publishes.
 - `tests/fixtures/sample-content/`: placeholder items in the CMS layout, used only by `bin/build_local_site.py` and the tests. Never import them into the CMS: the live site is rendered from CMS items alone.
 - `amplify/`, `amplify.yml`, `infra/`: the CMS app and backend, as for every Papyrus site.
 
