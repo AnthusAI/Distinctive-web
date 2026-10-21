@@ -3,23 +3,31 @@
   "title": "Fill in publisher identity",
   "description": "`publication.publisher` is `[Publisher Name]` (footer copyright). Also review the legal notice text with counsel.",
   "type": "chore",
-  "status": "open",
+  "status": "closed",
   "priority": 3,
   "assignee": null,
   "creator": null,
   "parent": "dist-38d589b6-f91d-4473-8ec5-8a7b2c61f260",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "5f95a3b9-8b99-4ae4-a41b-d799f7493b5c",
+      "author": "home",
+      "text": "The publication is its own publisher: publisher stays null in web/site-config.json and the footer reads © Distinctive Mark.",
+      "created_at": "2026-10-21T00:07:13.196233Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-20T18:35:48.284452Z",
-  "updated_at": "2026-10-20T18:35:48.284812Z",
-  "closed_at": null,
-  "right_now_summary": null,
-  "right_now_updated_at": null,
-  "custom": {},
+  "updated_at": "2026-10-21T00:07:13.201508Z",
+  "closed_at": "2026-10-21T00:07:13.201482Z",
   "agent": {
     "platform": "claude-code",
     "model": "claude-opus-5-5",
     "name": "Claude"
-  }
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
 }
