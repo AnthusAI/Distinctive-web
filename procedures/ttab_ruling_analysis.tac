@@ -71,11 +71,11 @@ local function work_until_done_then_report(agent, first_message)
     end
     local report = agent{message = "Report the results of this work as the structured output.", tools = {}}
     local attempts = 1
-    while type(report.output) ~= "table" and attempts < MAXIMUM_REPORT_ATTEMPTS do
+    while report.output == nil and attempts < MAXIMUM_REPORT_ATTEMPTS do
         report = agent{message = "Your last reply had no structured output. Reply with every declared output field now.", tools = {}}
         attempts = attempts + 1
     end
-    if type(report.output) ~= "table" then
+    if report.output == nil then
         error("the agent did not return its structured report after " .. attempts .. " attempts")
     end
     return report
