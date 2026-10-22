@@ -5,7 +5,11 @@
     "tagline": "Trademark News & Analysis",
     "description": "Commentary on TTAB decisions, USPTO practice, and the business of marks.",
     "productionUrl": "https://distinctive-mark.com",
-    "summaryFields": ["dek", "description", "summary"]
+    "summaryFields": [
+      "dek",
+      "description",
+      "summary"
+    ]
   },
   "urls": {
     "style": "directory",
@@ -42,17 +46,33 @@
         "pageSize": 100000,
         "listEmpty": true,
         "feed": false
+      },
+      "docket": {
+        "base": "docket",
+        "label": "The Docket",
+        "description": "Every issue of The Docket, the weekly email.",
+        "feed": false,
+        "listEmpty": true
       }
     }
   },
-  "listings": { "tags": false, "homeCount": 12 },
+  "listings": {
+    "tags": false,
+    "homeCount": 12,
+    "types": [
+      "article",
+      "newsletter_issue"
+    ]
+  },
   "pages": [
     {
       "id": "subscribe",
       "path": "subscribe",
       "title": "Subscribe to The Docket",
-      "description": "The Docket: the week’s TTAB decisions, read for you. Free, every Friday.",
-      "dependsOn": ["rulings"]
+      "description": "The Docket: the week’s TTAB decisions, read for you. Free, every Monday.",
+      "dependsOn": [
+        "rulings"
+      ]
     },
     {
       "id": "contact",
@@ -62,22 +82,62 @@
       "dependsOn": []
     }
   ],
-  "seo": { "jsonLdTypes": { "rulings": "NewsArticle" }, "publisherName": "Distinctive Mark", "breadcrumbs": false, "defaultImage": "/assets/share-card.png", "imageSize": [1200, 630] },
-  "feeds": { "formats": ["rss", "atom"], "count": 30 },
-  "sitemap": { "style": "single", "lastmod": true },
+  "seo": {
+    "jsonLdTypes": {
+      "rulings": "NewsArticle"
+    },
+    "publisherName": "Distinctive Mark",
+    "breadcrumbs": false,
+    "defaultImage": "/assets/share-card.png",
+    "imageSize": [
+      1200,
+      630
+    ]
+  },
+  "feeds": {
+    "formats": [
+      "rss",
+      "atom"
+    ],
+    "count": 30
+  },
+  "sitemap": {
+    "style": "single",
+    "lastmod": true
+  },
   "fonts": {
     "stylesheet": "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
   },
-  "icons": { "icon": "/assets/icon.svg", "appleTouch": "/assets/apple-touch-icon.png" },
-  "redirects": { "exact": { "/favicon.ico": "/assets/favicon.ico" } },
-  "components": { "breadcrumbs": false },
+  "icons": {
+    "icon": "/assets/icon.svg",
+    "appleTouch": "/assets/apple-touch-icon.png"
+  },
+  "redirects": {
+    "exact": {
+      "/favicon.ico": "/assets/favicon.ico"
+    }
+  },
+  "components": {
+    "breadcrumbs": false
+  },
   "chrome": {
     "body_class": "ds-body",
-    "stylesheets": ["css/site-theme.css"],
-    "scripts": ["assets/distinctive.js"],
+    "stylesheets": [
+      "css/site-theme.css"
+    ],
+    "scripts": [
+      "assets/distinctive.js"
+    ],
     "title_template": "{title} — {site}™",
     "same_title_template": "{site}™ — Trademark News &amp; Analysis"
   },
-  "pageActions": { "enabled": true, "ai": ["chatgpt", "claude", "perplexity"] },
+  "pageActions": {
+    "enabled": true,
+    "ai": [
+      "chatgpt",
+      "claude",
+      "perplexity"
+    ]
+  },
   "hooks": "hooks.py"
 }

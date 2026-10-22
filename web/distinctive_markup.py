@@ -307,11 +307,39 @@ def sponsor_feed_row(settings: SiteSettings, placement: str) -> str:
     )
 
 
-def signup_form_attributes(settings: SiteSettings) -> str:
+WEEKLY_LIST = "weekly"
+RULING_ALERTS_LIST = "ruling-alerts"
+
+
+def weekly_consent(settings: SiteSettings) -> str:
+    return f"Email me {settings.newsletter['name']} each week. I can unsubscribe in one click."
+
+
+def weekly_and_alerts_consent(settings: SiteSettings) -> str:
+    return f"Email me {settings.newsletter['name']} each week, and ruling alerts if I ticked them. I can unsubscribe in one click."
+
+
+def chosen_lists_consent() -> str:
+    return "Email me the lists I ticked. I can unsubscribe in one click."
+
+
+def signup_form_attributes(settings: SiteSettings, consent: str, default_lists: tuple[str, ...] = (WEEKLY_LIST,)) -> str:
     endpoint = settings.newsletter.get("signupEndpoint")
-    if endpoint:
-        return f'class="ds-signup-form" data-ds-signup="" action="{escaped(endpoint)}" method="post"'
-    return 'class="ds-signup-form" data-ds-signup="" action="/subscribe/" method="get"'
+    if not endpoint:
+        return 'class="ds-signup-form" data-ds-signup="" action="/subscribe/" method="get"'
+    default_lists_attribute = f' data-ds-default-lists="{escaped(",".join(default_lists))}"' if default_lists else ""
+    return (
+        f'class="ds-signup-form" data-ds-signup="" action="{escaped(endpoint)}" method="post" '
+        f'data-ds-consent="{escaped(consent)}"{default_lists_attribute}'
+    )
+
+
+def signup_honeypot_and_consent(consent: str) -> str:
+    return (
+        '<div class="ds-visually-hidden" aria-hidden="true"><label>Leave this empty'
+        '<input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>'
+        f'<p class="ds-signup-consent">{escaped(consent)}</p>'
+    )
 
 
 def email_field(field_id: str, visible_label: bool, label_class: str, input_class: str) -> str:
@@ -325,35 +353,36 @@ def email_field(field_id: str, visible_label: bool, label_class: str, input_clas
 def inline_article_signup(settings: SiteSettings) -> str:
     newsletter = settings.newsletter
     return (
-        f'<form {signup_form_attributes(settings)}><div class="ds-inline-signup">'
+        f'<form {signup_form_attributes(settings, weekly_consent(settings))}><div class="ds-inline-signup">'
         f'<span class="ds-inline-signup__eyebrow">{escaped(newsletter["name"])} · Weekly</span>'
-        '<span class="ds-inline-signup__headline">Analysis like this, plus every TTAB decision summarized. Fridays.</span>'
+        '<span class="ds-inline-signup__headline">Analysis like this, plus every TTAB decision summarized. Mondays.</span>'
         '<div class="ds-field-row">'
         f'{email_field("inline-signup-email", False, "", "ds-email-input")}'
         '<button class="ds-solid-button" type="submit">Subscribe</button>'
-        "</div></div></form>"
+        f"</div>{signup_honeypot_and_consent(weekly_consent(settings))}</div></form>"
     )
 
 
 def dark_signup_panel(settings: SiteSettings, field_id: str, headline: str, body: str, with_alerts_option: bool = False, show_recent_issue_link: bool = False) -> str:
     alerts_option = (
-        '<label class="ds-dark-signup__option"><input type="checkbox" name="lists" value="precedential-alerts">'
-        "Also alert me when a precedential decision issues</label>"
+        f'<label class="ds-dark-signup__option"><input type="checkbox" name="lists" value="{RULING_ALERTS_LIST}">'
+        "Also email me when a new ruling is published</label>"
         if with_alerts_option
         else ""
     )
     recent_issue = ' <a href="/subscribe/#latest-issue">See what an issue looks like</a>' if show_recent_issue_link else ""
+    consent = weekly_and_alerts_consent(settings) if with_alerts_option else weekly_consent(settings)
     return (
         f'<section class="ds-dark-signup" aria-labelledby="{field_id}-heading">'
         '<div class="ds-dark-signup__copy">'
         f'<h2 class="ds-dark-signup__headline" id="{field_id}-heading">{escaped(headline)}</h2>'
         f'<p class="ds-dark-signup__body">{escaped(body)}{recent_issue}</p>'
         "</div>"
-        f'<form {signup_form_attributes(settings)}><div class="ds-dark-signup__form">'
+        f'<form {signup_form_attributes(settings, consent)}><div class="ds-dark-signup__form">'
         '<div class="ds-field-row">'
         f'{email_field(field_id, False, "", "ds-email-input ds-email-input--dark")}'
         '<button class="ds-solid-button" type="submit">Subscribe free</button>'
-        f"</div>{alerts_option}</div></form>"
+        f"</div>{alerts_option}{signup_honeypot_and_consent(consent)}</div></form>"
         "</section>"
     )
 
@@ -365,14 +394,14 @@ def newsletter_band(settings: SiteSettings) -> str:
         '<div class="ds-container ds-newsletter-band__row">'
         '<div class="ds-newsletter-band__copy">'
         f'<h2 class="ds-newsletter-band__headline" id="newsletter-heading">{escaped(newsletter["name"])}, <span>weekly.</span></h2>'
-        "<p>Every Friday: the week's precedential TTAB decisions, briefly explained, plus the trademark news worth your time.</p>"
+        "<p>Every Monday: the week's precedential TTAB decisions, briefly explained, plus the trademark news worth your time.</p>"
         "</div>"
-        f'<form {signup_form_attributes(settings)}><div class="ds-newsletter-band__form">'
+        f'<form {signup_form_attributes(settings, weekly_consent(settings))}><div class="ds-newsletter-band__form">'
         '<label class="ds-field-label" for="newsletter-band-email">Email address</label>'
         '<div class="ds-field-row">'
         '<input class="ds-email-input ds-email-input--outlined" id="newsletter-band-email" name="email" type="email" autocomplete="email" placeholder="you@firm.com" required>'
         '<button class="ds-solid-button ds-solid-button--mono" type="submit">Subscribe</button>'
-        "</div></div></form>"
+        f"</div>{signup_honeypot_and_consent(weekly_consent(settings))}</div></form>"
         "</div></section>"
     )
 
@@ -388,7 +417,7 @@ def sticky_signup_bar_and_slide_in(settings: SiteSettings) -> str:
         "</div></div>"
         '<div class="ds-slide-in" data-ds-slide-in="" hidden="" role="dialog" aria-label="Subscribe to The Docket">'
         '<div class="ds-slide-in__top">'
-        '<span class="ds-slide-in__headline">Before you go: this week’s notable rulings, in your inbox Friday.</span>'
+        '<span class="ds-slide-in__headline">Before you go: this week’s notable rulings, in your inbox Monday.</span>'
         f'<button class="ds-icon-button ds-icon-button--small" type="button" aria-label="Close" data-ds-dismiss="slide-in">{CLOSE_ICON_SVG}</button>'
         "</div>"
         '<a class="ds-solid-button ds-solid-button--block" href="/subscribe/">Subscribe free</a>'
@@ -400,7 +429,7 @@ def confirmation_toast() -> str:
     return (
         '<div class="ds-toast" data-ds-toast="" role="status" hidden="">'
         f'<span class="ds-toast__check">{CHECK_ICON_SVG}</span>'
-        '<span class="ds-toast__text" data-ds-toast-text="">You’re on the list. The first issue will come to this address. <a href="/subscribe/">Choose issue alerts</a></span>'
+        '<span class="ds-toast__text" data-ds-toast-text="">Check your inbox: we sent a link to confirm your address. <a href="/subscribe/">Add ruling alerts</a></span>'
         "</div>"
     )
 
@@ -847,7 +876,7 @@ def rulings_page_body(settings: SiteSettings, content: SiteContent) -> str:
         settings,
         "rulings-signup-email",
         "Get the notable rulings in your inbox.",
-        f"{settings.newsletter['name']} arrives every Friday with the week’s notable decisions and a summary of every other one.",
+        f"{settings.newsletter['name']} arrives every Monday with the week’s notable decisions and a summary of every other one.",
         with_alerts_option=True,
     )
     return (
@@ -917,11 +946,12 @@ def wire_page_body(settings: SiteSettings, content: SiteContent) -> str:
         '<div class="ds-source-list">'
         '<h2 class="ds-rule-heading" id="sources-heading">Primary sources we watch</h2>'
         f"{primary_sources}</div>"
-        f'<form {signup_form_attributes(settings)}><div class="ds-side-signup">'
-        f'<h2 class="ds-side-signup__headline">The Wire, in your inbox every Friday.</h2>'
+        f'<form {signup_form_attributes(settings, weekly_consent(settings))}><div class="ds-side-signup">'
+        f'<h2 class="ds-side-signup__headline">The Wire, in your inbox every Monday.</h2>'
         f'{email_field("wire-signup-email", True, "ds-field-label ds-field-label--inverse", "ds-email-input ds-email-input--dark")}'
         '<button class="ds-solid-button" type="submit">Subscribe free</button>'
         f'<span class="ds-visually-hidden">{escaped(newsletter_name)}</span>'
+        f"{signup_honeypot_and_consent(weekly_consent(settings))}"
         "</div></form>"
         "</aside></main>"
     )
@@ -982,7 +1012,7 @@ def guide_page_body(settings: SiteSettings, content: SiteContent, guide: Guide, 
         settings,
         "guide-end-email",
         "Keep up with the rules that affect your mark.",
-        f"{settings.newsletter['name']}: what changed at the USPTO and the Board this week, in plain terms. Free, every Friday.",
+        f"{settings.newsletter['name']}: what changed at the USPTO and the Board this week, in plain terms. Free, every Monday.",
     )
     return (
         '<main><article class="ds-story ds-guide">'
@@ -1009,10 +1039,6 @@ def guide_page_body(settings: SiteSettings, content: SiteContent, guide: Guide, 
 
 def subscribe_page_body(settings: SiteSettings, content: SiteContent) -> str:
     newsletter = settings.newsletter
-    topics = "".join(
-        f'<label class="ds-topic-chip"><input type="checkbox" name="topics" value="{escaped(topic)}"><span>{escaped(topic)}</span></label>'
-        for topic in newsletter.get("topics", [])
-    )
     preview_ruling = content.notable_rulings[0] if content.notable_rulings else None
     preview_rulings = content.rulings[:3]
     preview_lines = "".join(
@@ -1048,30 +1074,29 @@ def subscribe_page_body(settings: SiteSettings, content: SiteContent) -> str:
     )
     endpoint_note = "" if newsletter.get("signupEndpoint") else ' data-ds-signup-closed=""'
     form = (
-        f'<form {signup_form_attributes(settings)} data-ds-subscribe-page=""{endpoint_note}>'
+        f'<form {signup_form_attributes(settings, chosen_lists_consent(), default_lists=())} data-ds-subscribe-page=""{endpoint_note}>'
         '<div class="ds-subscribe-form" data-ds-subscribe-form="">'
         '<div class="ds-subscribe-form__field">'
         '<label class="ds-field-label" for="subscribe-email">Work email</label>'
         '<input class="ds-email-input ds-email-input--large" id="subscribe-email" name="email" type="email" autocomplete="email" placeholder="you@firm.com" required>'
         "</div>"
         '<fieldset class="ds-subscribe-form__lists"><legend class="ds-field-label">What you’ll get</legend>'
-        '<label class="ds-list-option"><input type="checkbox" name="lists" value="weekly" checked>'
+        f'<label class="ds-list-option"><input type="checkbox" name="lists" value="{WEEKLY_LIST}" checked>'
         f'<span><span class="ds-list-option__title">{escaped(newsletter["name"])}, weekly</span>'
-        '<span class="ds-list-option__description">Fridays. Notable rulings, every decision summarized, the Wire.</span></span></label>'
-        '<label class="ds-list-option"><input type="checkbox" name="lists" value="precedential-alerts">'
-        '<span><span class="ds-list-option__title">Precedential alerts</span>'
-        '<span class="ds-list-option__description">A short email the day a precedential decision issues.</span></span></label>'
+        '<span class="ds-list-option__description">Mondays. Notable rulings, every decision summarized, the Wire.</span></span></label>'
+        f'<label class="ds-list-option"><input type="checkbox" name="lists" value="{RULING_ALERTS_LIST}">'
+        '<span><span class="ds-list-option__title">Ruling alerts</span>'
+        '<span class="ds-list-option__description">A short email when we publish a new ruling.</span></span></label>'
         "</fieldset>"
-        '<fieldset class="ds-subscribe-form__topics"><legend class="ds-field-label">Issues you follow <span class="ds-field-label__hint">(optional, shapes your alerts)</span></legend>'
-        f'<div class="ds-topic-chips">{topics}</div></fieldset>'
+        f"{signup_honeypot_and_consent(chosen_lists_consent())}"
         '<button class="ds-solid-button ds-solid-button--large" type="submit">Subscribe free</button>'
-        '<p class="ds-subscribe-form__fine-print">We never share your address. To come off the list, write to us from the contact page.</p>'
+        '<p class="ds-subscribe-form__fine-print">We never share your address. Every email has a one-click unsubscribe link.</p>'
         '<p class="ds-form-status" data-ds-form-status="" role="status"></p>'
         "</div>"
         '<div class="ds-subscribe-success" data-ds-subscribe-success="" hidden="">'
         f'<span class="ds-subscribe-success__check">{CHECK_ICON_SVG}</span>'
-        '<h2 class="ds-subscribe-success__headline">You’re on the list.</h2>'
-        f'<p>{escaped(newsletter["name"])} has not started yet. We saved your address and your choices, and the first issue will come to this address.</p>'
+        '<h2 class="ds-subscribe-success__headline">Check your inbox.</h2>'
+        '<p>We sent a link to confirm your address. Nothing is sent until you confirm it.</p>'
         '<div class="ds-subscribe-success__actions">'
         '<a class="ds-pill-button ds-pill-button--ink" href="/rulings/">Browse the notable rulings</a>'
         '<button class="ds-pill-button ds-pill-button--outline" type="button" data-ds-subscribe-reset="">Use a different email</button>'
@@ -1090,7 +1115,7 @@ def subscribe_page_body(settings: SiteSettings, content: SiteContent) -> str:
     )
     questions = (
         ("Is it really free?", f"Yes. {newsletter['name']} is paid for by our sponsor, a trademark attorney who helps decide what we cover."),
-        ("How often will you email me?", "Once a week on Friday. If you opt into precedential alerts, you’ll also get a short note when one issues."),
+        ("How often will you email me?", "Once a week, on Monday morning. If you also choose ruling alerts, you’ll get a short note when we publish a new ruling."),
         ("Is this legal advice?", "No. It’s commentary and general information. Reading it doesn’t create an attorney–client relationship."),
     )
     faq = "".join(
@@ -1104,7 +1129,7 @@ def subscribe_page_body(settings: SiteSettings, content: SiteContent) -> str:
         '<div class="ds-subscribe-hero__intro">'
         f'<span class="ds-kicker ds-kicker--accent ds-kicker--large">{escaped(newsletter["name"])} · Free · {escaped(newsletter["cadence"])}</span>'
         '<h1 class="ds-subscribe-hero__headline">The week’s TTAB decisions, read for you.</h1>'
-        '<p class="ds-subscribe-hero__dek">The notable rulings with real analysis, a one‑line summary of every other decision, and the trademark news worth your time. Five minutes on Friday.</p>'
+        '<p class="ds-subscribe-hero__dek">The notable rulings with real analysis, a one‑line summary of every other decision, and the trademark news worth your time. Five minutes on Monday.</p>'
         f"</div>{form}</div>"
         f"{preview}"
         "</section>"
@@ -1217,7 +1242,7 @@ def story_page_body(settings: SiteSettings, content: SiteContent, entry: Comment
         settings,
         "story-end-email",
         "Don’t miss the next precedential decision.",
-        f"{settings.newsletter['name']}: notable rulings analyzed, every decision summarized. Free, every Friday.",
+        f"{settings.newsletter['name']}: notable rulings analyzed, every decision summarized. Free, every Monday.",
         show_recent_issue_link=True,
     )
     return (
@@ -1244,6 +1269,35 @@ def story_page_body(settings: SiteSettings, content: SiteContent, entry: Comment
         "</div></div></article>"
         f'<div class="ds-container ds-spaced-unit">{end_signup}</div>'
         f"{related_section}"
+        "</main>"
+    )
+
+
+def issue_date_text(date_text: str) -> str:
+    try:
+        return format_long_date(dt.date.fromisoformat((date_text or "")[:10]))
+    except ValueError:
+        return ""
+
+
+def docket_archive_body(settings: SiteSettings, entries) -> str:
+    newsletter = settings.newsletter
+    rows = "".join(
+        f'<li class="ds-docket-archive__issue"><a href="{escaped(entry.url)}">{escaped(entry.title)}</a>'
+        f'<span class="ds-mono-meta ds-mono-meta--small">{escaped(issue_date_text(entry.date))}</span></li>'
+        for entry in entries
+        if entry.url
+    )
+    issues = (
+        f'<ol class="ds-docket-archive">{rows}</ol>'
+        if rows
+        else '<p class="ds-page-title__description">No issues yet. The first one goes out on a Monday.</p>'
+    )
+    return (
+        '<main class="ds-container ds-page-main ds-page-main--narrow">'
+        f'{page_title_band(newsletter["name"], "Every issue of the weekly email, newest first.")}'
+        f"{issues}"
+        '<p><a class="ds-pill-button ds-pill-button--ink" href="/subscribe/">Subscribe free</a></p>'
         "</main>"
     )
 

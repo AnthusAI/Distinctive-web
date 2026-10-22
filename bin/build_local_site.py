@@ -44,7 +44,7 @@ def projected_item_from_file(content_directory: Path, path: Path) -> ProjectedIt
     stored = projection_metadata(front_matter_yaml)
     summary = ItemSummary(
         item_id=relative.with_suffix("").as_posix(),
-        type="article" if section else "page",
+        type=str(stored["frontMatter"].get("type") or ("article" if section else "page")),
         section=section,
         slug=relative.stem,
         output_path=relative.as_posix(),

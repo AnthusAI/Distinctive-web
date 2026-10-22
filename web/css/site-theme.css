@@ -2692,6 +2692,30 @@ img {
   color: var(--ds-muted-text);
 }
 
+.ds-docket-archive {
+  list-style: none;
+  margin: 24px 0;
+  padding: 0;
+  border-top: 1px solid var(--ds-rule);
+}
+
+.ds-docket-archive__issue {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--ds-rule);
+}
+
+.ds-signup-consent {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: inherit;
+  opacity: 0.75;
+}
+
 .ds-form-status {
   margin: 0;
   font-size: 15px;
