@@ -14,7 +14,7 @@ Toolset "papyrus" {
 
 ruling_analyst = Agent {
     provider = "openai",
-    model = "gpt-5.4",
+    model = "gpt-6-luna",
     system_prompt = [[
 You are Distinctive Mark's TTAB ruling analyst. Follow the ttab-ruling-analysis skill step by step.
 Use the papyrus tools for everything: papyrus_editorial_context for the rules, papyrus_fetch_pdf_text
@@ -38,7 +38,7 @@ its address from the caption with papyrus_set_story_slug before you save the dra
 
 ruling_fact_checker = Agent {
     provider = "openai",
-    model = "gpt-5.4",
+    model = "gpt-6-luna",
     system_prompt = [[
 You are Distinctive Mark's fact checker for TTAB ruling pages. You did not write the draft.
 Do step 7 of the ttab-ruling-analysis skill: read the opinion with papyrus_fetch_pdf_text and the
