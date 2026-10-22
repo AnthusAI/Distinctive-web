@@ -131,14 +131,22 @@
     }, TOAST_VISIBLE_MILLISECONDS);
   }
 
+  function chosenLists(form) {
+    var defaults = (form.getAttribute("data-ds-default-lists") || "").split(",").filter(Boolean);
+    var ticked = new FormData(form).getAll("lists");
+    return defaults.concat(ticked.filter(function (list) { return defaults.indexOf(list) < 0; }));
+  }
+
   function signupPayload(form) {
     var formData = new FormData(form);
     return {
-      form: "newsletter",
+      formId: form.hasAttribute("data-ds-subscribe-page") ? "subscribe-page" : "signup",
       email: formData.get("email"),
-      lists: formData.getAll("lists").join(", "),
-      topics: formData.getAll("topics").join(", "),
-      page: window.location.pathname
+      lists: chosenLists(form),
+      page: window.location.pathname,
+      website: formData.get("website") || "",
+      renderedAt: Number(form.getAttribute("data-ds-rendered-at")),
+      consent: form.getAttribute("data-ds-consent") || ""
     };
   }
 
@@ -165,6 +173,7 @@
   function setUpSignupForms() {
     var requestedEmail = new URLSearchParams(window.location.search).get("email");
     document.querySelectorAll("[data-ds-signup]").forEach(function (form) {
+      form.setAttribute("data-ds-rendered-at", String(Date.now()));
       var isSubscribePage = form.hasAttribute("data-ds-subscribe-page");
       if (isSubscribePage && requestedEmail) {
         var emailInput = form.querySelector('input[name="email"]');
@@ -188,12 +197,21 @@
         }
         event.preventDefault();
         setFormStatus(form, "");
+        var payload = signupPayload(form);
+        if (!payload.lists.length) {
+          setFormStatus(form, "Choose at least one email to get.");
+          return;
+        }
         fetch(form.action, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(signupPayload(form))
+          body: JSON.stringify(payload)
         })
           .then(function (response) {
+            if (response.status === 400) {
+              setFormStatus(form, "That email address doesn’t look right. Please check it and try again.");
+              return;
+            }
             if (!response.ok) throw new Error("Signup failed with status " + response.status);
             storeFlag(SUBSCRIBED_KEY);
             if (!showSubscribePageSuccess(form)) {

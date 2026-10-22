@@ -22,6 +22,7 @@ from pathlib import Path
 import distinctive_markup as markup
 from distinctive_content import (
     COMMENTARY_SECTION,
+    DOCKET_SECTION,
     GUIDES_SECTION,
     RULINGS_SECTION,
     WIRE_SECTION,
@@ -45,6 +46,7 @@ DEPENDS_ON = {
     "listing:commentary": ["commentary", "@root"],
     "listing:guides": ["guides", "@root"],
     "custom:subscribe": ["rulings", "@root"],
+    "listing:docket": ["docket", "@root"],
     "not_found": ["@root"],
     "*": ["*"],
 }
@@ -97,7 +99,7 @@ def _inner_page(settings, content, section, main_html: str, notice: str | None =
     )
 
 
-def _listing_body(settings, content, section: str) -> str:
+def _listing_body(settings, content, section: str, listing) -> str:
     if section == RULINGS_SECTION:
         return _inner_page(settings, content, RULINGS_SECTION, markup.rulings_page_body(settings, content), notice=_RULINGS_NOTICE)
     if section == WIRE_SECTION:
@@ -106,14 +108,18 @@ def _listing_body(settings, content, section: str) -> str:
         return _inner_page(settings, content, COMMENTARY_SECTION, markup.commentary_index_body(settings, content))
     if section == GUIDES_SECTION:
         return _inner_page(settings, content, GUIDES_SECTION, markup.guides_index_body(settings, content), notice=_GUIDES_NOTICE)
+    if section == DOCKET_SECTION:
+        return _inner_page(settings, content, None, markup.docket_archive_body(settings, listing.entries))
     raise ValueError(f"No composition for the {section!r} listing")
 
 
 def _item_body(settings, content, page) -> str | None:
+    article_html = _first_heading_level_one_removed(article_body(page.fragment))
+    if page.entry.summary.section == DOCKET_SECTION:
+        return _inner_page(settings, content, None, markup.standing_page_body(page.entry.title, article_html))
     entry = content.entry_for_item(page.entry.item_id)
     if entry is None:
         return None
-    article_html = _first_heading_level_one_removed(article_body(page.fragment))
     if isinstance(entry, StandingPage):
         return _inner_page(settings, content, None, markup.standing_page_body(entry.title, article_html), shows_sponsor_bar=True)
     if isinstance(entry, Guide):
@@ -142,7 +148,7 @@ def page_body(page):
             + markup.confirmation_toast()
         )
     elif page.kind == "listing":
-        body = _listing_body(settings, content, page.listing.section)
+        body = _listing_body(settings, content, page.listing.section, page.listing)
     elif page.kind == "archive":
         body = _inner_page(
             settings, content, RULINGS_SECTION, markup.ruling_archive_page_body(settings, content, page.listing.group), notice=_ARCHIVE_NOTICE

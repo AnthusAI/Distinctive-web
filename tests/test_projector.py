@@ -104,6 +104,39 @@ class RenderedSampleSiteTests(unittest.TestCase):
         self.assertNotIn('href="/contributors/"', home)
 
 
+class NewsletterTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.files = build_local_site.render_site(SAMPLE_CONTENT)
+
+    def page(self, key):
+        return self.files[key].decode("utf-8")
+
+    def test_docket_archive_lists_issues_and_issue_pages_use_the_site_chrome(self):
+        archive = self.page("docket/index.html")
+        self.assertIn('href="/docket/2026-10-26/"', archive)
+        self.assertIn("ds-docket-archive", archive)
+        issue = self.page("docket/2026-10-26/index.html")
+        self.assertIn("ds-page-title__headline", issue)
+        self.assertIn("The Docket: 19–25 October 2026", issue)
+
+    def test_signup_forms_post_to_the_newsletter_plugin_with_consent_and_a_honeypot(self):
+        subscribe = self.page("subscribe/index.html")
+        self.assertIn('action="/api/newsletter/subscribe" method="post"', subscribe)
+        self.assertIn('data-ds-consent="Email me the lists I ticked. I can unsubscribe in one click."', subscribe)
+        self.assertIn('value="weekly" checked', subscribe)
+        self.assertIn('value="ruling-alerts"', subscribe)
+        self.assertIn('name="website"', subscribe)
+        self.assertNotIn("has not started", subscribe)
+        story = self.page("rulings/in-re-applicant-e/index.html")
+        self.assertIn('data-ds-default-lists="weekly"', story)
+        self.assertIn("ds-signup-consent", story)
+
+    def test_newsletter_copy_says_monday(self):
+        for key in ("subscribe/index.html", "index.html"):
+            self.assertNotIn("Friday", self.page(key))
+
+
 class DependencyRuleTests(unittest.TestCase):
     def setUp(self):
         self.projector = create_projector()
