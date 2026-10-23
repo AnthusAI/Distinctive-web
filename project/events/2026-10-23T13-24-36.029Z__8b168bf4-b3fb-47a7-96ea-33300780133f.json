@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "event_id": "8b168bf4-b3fb-47a7-96ea-33300780133f",
+  "issue_id": "dist-22eb9344-7ca9-45bb-840a-05320de1a180",
+  "event_type": "comment_added",
+  "occurred_at": "2026-10-23T13:24:36.029Z",
+  "actor_id": "home",
+  "payload": {
+    "comment_id": "c56004ea-17ce-481a-95fc-c38b9520166d",
+    "comment_author": "home",
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "Distinctive Mark implementation"
+    }
+  }
+}
