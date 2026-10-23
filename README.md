@@ -1,25 +1,42 @@
-# Distinctive Mark™ — Trademark News & Analysis
+# Distinctive Mark™
 
-Commentary on TTAB decisions, USPTO practice, and the business of marks.
+Trademark news and analysis, live at [distinctive-mark.com](https://distinctive-mark.com). The newsroom (CMS) is at `/newsroom`.
 
-This repository is the publication. It follows the Anth.us shape:
+This repository holds only what is specific to Distinctive Mark: the brand and backend configuration, the content model, the public front end (page compositions, markup, styles, client script) and the Tactus procedure that drafts TTAB ruling pages. The engine is not here. It comes from [Papyrus](https://github.com/AnthusAI/Papyrus), pinned exactly: the `@anthusai/papyrus` npm package and the `papyrus-newsroom[markus]` Python package, currently `5.32.0`. Procedures run on Tactus. Never copy Papyrus code into this repository; fix it in Papyrus and bump the pins.
 
-- **CMS**: the stock Papyrus newsroom (`@anthusai/papyrus`, pinned in `package.json`) with the generic Papyrus theme. Editors write commentary, TTAB rulings, Wire items and standing pages there.
-- **Public site**: Markus pages projected into an S3 bucket and served by CloudFront. A save in the newsroom re-renders only the pages that depend on the item, within seconds. The standard Papyrus front end renders them from `web/projection.json`, with the page compositions in `web/hooks.py`; the look is `web/css/site-theme.css`.
+## Where it runs
 
-The design is the "Distinctive™ — Trademark News & Analysis" canvas: home, ruling commentary, the TTAB rulings tracker, the Wire, the newsletter signup page, the sponsor units and the signup touchpoints.
+- Public site: `https://distinctive-mark.com` (`www` redirects to the apex), served by CloudFront from an S3 projection of the newsroom's content.
+- Newsroom: `https://distinctive-mark.com/newsroom`, an Amplify app (`d2xke8ygmrzqpp`, branch `main`).
+- AWS account `papyrus-production` (`712236451410`), region `us-east-1`.
+- CloudFront distribution `EHJUVNTK7AFXH` (stack `papyrus-edge-distinctive-mark`). The default behavior is the S3 projection; `/newsroom*`, `/_next/*` and `/api/*` go to the CMS app.
+
+## Quick start
+
+Prerequisites: Python 3.12, Node 22.
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements-publication.txt
-.venv/bin/python bin/build_local_site.py          # tests/fixtures/sample-content -> web/dist-local
+.venv/bin/python bin/build_local_site.py
 python3 -m http.server --directory web/dist-local 8080
 .venv/bin/python -m unittest discover -s tests
-
-npm ci && npm run dev                             # the newsroom CMS, against a backend's amplify_outputs.json
 ```
 
-See [`AGENTS.md`](AGENTS.md) for the layout and [`docs/content-model.md`](docs/content-model.md) for what editors fill in.
+The local build renders `tests/fixtures/sample-content/` (placeholder items) into `web/dist-local/`. Never commit build output.
 
----
+The newsroom app needs a backend's `amplify_outputs.json` (gitignored):
 
-Built by [Anthus AI Solutions](https://anth.us) on [Papyrus](https://github.com/AnthusAI/Papyrus).
+```bash
+npm ci
+npm run dev
+```
+
+## How a change ships
+
+Branch from `main`, open a pull request into `main`, merge. The "CI and deploy" workflow (`.github/workflows/deploy.yml`) runs the TypeScript check and the Python tests on every pull request. On a push to `main` it then deploys to Amplify over GitHub OIDC; no AWS keys are stored. Papyrus releases are cut in the Papyrus repository by semantic-release; this repository picks one up by editing the pin (see `AGENTS.md`).
+
+## Where to look next
+
+[`AGENTS.md`](AGENTS.md) is the operating manual: the map of parts, exact commands, hard rules, ownership and current state. [`docs/content-model.md`](docs/content-model.md) is what editors fill in for each section.
+
+Built by [Anthus AI Solutions](https://anth.us) on Papyrus.
