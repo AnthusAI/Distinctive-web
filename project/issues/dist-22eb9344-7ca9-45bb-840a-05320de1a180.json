@@ -3,7 +3,7 @@
   "title": "Test Papyrus automations slice 2 on Distinctive (PPY-9ff95b)",
   "description": "Distinctive is the test site for the Papyrus automation epic PPY-9ff95b. Slice 1 (5.32.0) is deployed and tested: record distinctive.ttab exists, router link matches, maxConcurrent kept at 1 on purpose. Slice 2 is Papyrus 5.33.0 (enabled real, limits enforced, cost recorded, run now, Notification Center, review requests).",
   "type": "task",
-  "status": "open",
+  "status": "blocked",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -25,7 +25,7 @@
     }
   ],
   "created_at": "2026-10-23T13:24:35.980904Z",
-  "updated_at": "2026-10-23T13:24:36.029289Z",
+  "updated_at": "2026-10-23T13:24:45.965183Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
