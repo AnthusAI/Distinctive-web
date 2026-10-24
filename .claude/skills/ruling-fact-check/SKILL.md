@@ -36,7 +36,7 @@ When the check is done the story moves on to copywriting. Bots never publish.
 
 5. **Fix errors with the smallest change that makes each statement true.** Correct the number, name, date or cite; remove or soften a claim the opinion does not support; restore a quotation exactly. Do not restyle, reorder or rewrite for tone: that is the copy edit's job. A statement you cannot verify either way is left in place and reported, unless it is plainly unsupported, in which case remove it and report the removal.
 
-6. **Save one corrected version**, only if something changed: `papyrus_save_story_version` with the full corrected front matter and body, a reason that lists each correction (what was wrong, what it now says, the opinion page), and the author label you were given. If no correction is needed, save nothing.
+6. **Save one corrected version**, only if something changed: `papyrus_save_story_version` with the full corrected front matter and body, a reason that lists each correction (what was wrong, what it now says, the opinion page), and the author label you were given. If no correction is needed, save nothing. Pass the front matter back exactly as you read it, changing only the values you corrected; keep its YAML valid (quote any value that contains a colon). If the save is refused as invalid YAML, fix the YAML and save again.
 
 ## Report
 

@@ -26,7 +26,7 @@ When the copy edit is done the story moves to typesetting, where an editor revie
 
 4. **Fix each violation, consider each review, and apply house style** from the editorial context, with the smallest edits that resolve them. Do not change any legal fact, holding, quotation, pin cite, number, date, name or citation. If a finding can only be fixed by changing one of those, leave the text as it is and report the finding.
 
-5. **Save one revision** with `papyrus_save_story_version`: the full front matter and body, a reason that lists what you changed and why, and the author label you were given. If nothing needed changing, save nothing.
+5. **Save one revision** with `papyrus_save_story_version`: the full front matter and body, a reason that lists what you changed and why, and the author label you were given. If nothing needed changing, save nothing. Pass the front matter back exactly as you read it, changing only the values you corrected; keep its YAML valid (quote any value that contains a colon). If the save is refused as invalid YAML, fix the YAML and save again.
 
 6. **Check again.** Run `papyrus_check_story_version` on the saved revision's version id. If findings remain that you can fix within step 4's limits, fix them, save once more and check once more. Run the checks at most twice in total.
 
