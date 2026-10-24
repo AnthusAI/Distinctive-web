@@ -29,7 +29,8 @@ fact, holding, quotation, pin cite or citation. Never change the stage. Never pu
     output = {
         version = field.string{required = true, description = "Final version id, or an empty string if nothing was saved"},
         remaining_findings = field.array{required = true},
-        changed_fact_findings = field.array{required = true, description = "Findings whose fix would change a legal fact, left unfixed"}
+        changed_fact_findings = field.array{required = true, description = "Findings whose fix would change a legal fact, left unfixed"},
+        changed_fact_count = field.number{required = true, description = "How many findings were left unfixed because the fix would change a legal fact"}
     }
 }
 
@@ -78,11 +79,10 @@ Procedure {
 Copy-edit story %s, version %s (version number %s).
 Record any revision with author label: %s.
 Report the final version id (empty if you saved nothing), every finding that remains, and separately every
-finding that could only be fixed by changing a legal fact (changed_fact_findings).
+finding that could only be fixed by changing a legal fact (changed_fact_findings, and their number as changed_fact_count).
 ]], input.story, input.version, tostring(input.versionNumber), input.author_label))
 
-        local fact_findings = edited.output.changed_fact_findings
-        if fact_findings ~= nil and #fact_findings > 0 then
+        if (tonumber(edited.output.changed_fact_count) or 0) > 0 then
             return {
                 version = input.version,
                 hold = true,
