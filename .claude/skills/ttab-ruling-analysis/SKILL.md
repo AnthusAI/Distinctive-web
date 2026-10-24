@@ -1,11 +1,13 @@
 ---
 name: ttab-ruling-analysis
-description: Turn a new Trademark Trial and Appeal Board decision into a Distinctive Mark ruling page, from the opinion on TTABVUE to a checked draft waiting for an editor. Use when a new TTAB decision needs coverage, when the TTAB monitor files one, or when asked to analyze, summarize or write up a Board ruling. The same document guides Claude Code and the Tactus ruling-analysis procedure.
+description: Analyze a new Trademark Trial and Appeal Board decision into a draft Distinctive Mark ruling story, from the opinion on TTABVUE to a saved draft at the reporting stage. Use when a new TTAB decision needs coverage, when the TTAB monitor files one, or when asked to analyze, summarize or write up a Board ruling. Fact checking and copy editing are separate stage bots (ruling-fact-check, ruling-copy-edit). The same document guides Claude Code and the Tactus ruling-analysis procedure.
 ---
 
 # TTAB ruling analysis
 
-This skill is the procedure. The editorial rules are not in it: they live in the newsroom and change there. Fetch them at the start of every run and follow them over anything you remember.
+This skill is the analyst's procedure. The editorial rules are not in it: they live in the newsroom and change there. Fetch them at the start of every run and follow them over anything you remember.
+
+The analysis creates the draft story at the reporting stage and stops. Later stage bots take it from there: a fact checker verifies the draft against the opinion, then a copy editor runs the editorial checks and fixes house style. An editor reviews and publishes. Because the draft will be checked by others, record every point you are unsure how to state in your output, and never skip verifying the facts you state against the opinion as you write them.
 
 ## Inputs
 
@@ -29,13 +31,8 @@ This skill is the procedure. The editorial rules are not in it: they live in the
 
 6. **Write the page** in the order the guidance sets: the general meaning first, then its limits and open questions, then what changes in practice for practitioners and for brand owners, then the case as the illustration, with only the detail the lesson needs. Pin-cite every point (`(at 27–28)`, `(slip op. at 1–5)`). Label the editors' opinion as opinion. Write the `summary` (one listing line, rule first), the `dek`, the `ownerTakeaway` (two or three plain sentences, the only place that speaks to the reader as "you") and `guide` (the related Before You File guide, when one exists). Fill every field in the content model.
 
-7. **Verify, separately.** In a fresh pass, or with a second agent that did not write the draft, check every number, date, name, quotation and pin cite against the opinion. Remove or flag anything the opinion does not support. Do not let a plausible inference stand as a holding, and do not overstate novelty (no "now" unless the Board says the law changed).
+7. **Save, do not publish.** Create the story in section `rulings` if needed (`papyrus stories create --section rulings`) and give it its address from the caption, lowercase with hyphens, for example `in-re-wemby-corporation` or `cielo-e-terra-v-hoteles-y-vinedos-del-valle-de-guadalupe` (`papyrus stories set-slug`). Then `papyrus stories save-version --story <lineage> --front-matter-file <yml> --body-file <md> --reason <why> --author-label <agent name>`. Register the opinion as a reference (it is found, not duplicated, if it is already registered) and link it to the story as cited (`papyrus stories link-reference`). The saved draft sits at the reporting stage for the fact-check bot; an editor approves every item before publication.
 
-8. **Run the editorial checks.** Save the draft (step 9), then run `papyrus editorial check-version --item <version id>`. It checks the version against the publication's and the rulings section's policies, rules and classifier lanes, and records the run. Fix each violation. For a finding you judge to be a false positive, keep the text and record the dismissal with a reason; never ignore a finding silently. Check again after edits.
-
-9. **Save, do not publish.** Create the story if needed (`papyrus stories create --section rulings`) and give it its address from the caption, lowercase with hyphens, for example `in-re-wemby-corporation` or `cielo-e-terra-v-hoteles-y-vinedos-del-valle-de-guadalupe` (`papyrus stories set-slug`). Then `papyrus stories save-version --story <lineage> --front-matter-file <yml> --body-file <md> --reason <why> --author-label <agent name>`. Register the opinion as a reference (it is found, not duplicated, if it is already registered) and link it to the story as cited (`papyrus stories link-reference`). Leave the story for an editor: every item is approved by an editor before publication.
-
-10. **After approval, publish and look.** Publish the approved version (`papyrus ops content publish --id <version id>`), then open the live ruling page and the tracker. Confirm the headline, the precedent panel for a precedential decision, and the tracker row.
 
 ## Front matter
 
@@ -62,11 +59,11 @@ A ruling page is YAML front matter (no `---` lines when saved through the tools)
 
 ## Report
 
-End with: the title, the precedent statement or pattern, the notability and why, the item and version ids, the check results, and every point in the opinion you were unsure how to state.
+End with: the title, the precedent statement or pattern, the notability and why, the story and version ids, and every point in the opinion you were unsure how to state (the fact checker reads this list).
 
 ## Never
 
-- Publish without an editor's approval.
+- Publish, or run the fact check or editorial checks yourself in place of the stage bots.
 - Imply that an attorney wrote or reviewed the piece.
 - Give advice on a reader's own facts.
 - Mock the losing party.
