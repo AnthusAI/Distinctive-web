@@ -25,7 +25,8 @@ Procedures run on Tactus. Relevance classification for other monitors comes from
 - `web/css/site-theme.css`, `web/assets/`: the public site's look, client script (filters, signup forms, sticky bar, exit-intent slide-in) and icon.
 - `web/site-config.json`: publication identity, issue filters, Wire sources, newsletter and sponsor settings.
 - `.claude/skills/ttab-ruling-analysis/SKILL.md`: how an agent turns a new TTAB decision into a checked draft ruling page. Procedure only; the editorial rules are fetched from the newsroom at run time.
-- `procedures/ttab_ruling_analysis.tac`: the Tactus procedure that runs that skill (an analyst agent and a separate fact-checker agent, both `gpt-6-luna`). Both agents save drafts and never publish.
+- `.claude/skills/ruling-fact-check/SKILL.md`, `.claude/skills/ruling-copy-edit/SKILL.md`: the procedures of the two stage bots that follow the analysis.
+- `procedures/ttab_ruling_analysis.tac`, `procedures/ruling_fact_check.tac`, `procedures/ruling_copy_edit.tac`: the Tactus procedures that run those skills (one `gpt-6-luna` agent each). They save drafts, never change the stage and never publish.
 - `tests/`: Python unit tests (`test_projector.py`). `tests/fixtures/sample-content/` holds placeholder items in the CMS layout, used only by `bin/build_local_site.py` and the tests. Never import them into the CMS: the live site is rendered from CMS items alone.
 - `bin/build_local_site.py`: renders the fixtures into `web/dist-local/` for a local preview.
 - `docs/content-model.md`: what editors fill in for each section.
@@ -94,18 +95,20 @@ The stack `amplify-app-shell-distinctive-cms` changes separately from the merge 
 
 `infra/edge/distinctive-mark.yaml` is a hand-maintained template. Change it only through a reviewed change set. `infra/README.md` has the first-time order of operations. Never connect the repository from the Amplify console on an app that already has branches: it can delete the branches and their backends.
 
-### Register the ruling-analysis procedure
+### Register the ruling procedures
 
-Do this after changing `procedures/ttab_ruling_analysis.tac` or the skill. From the repository root:
+Do this after changing a procedure under `procedures/` or its skill. From the repository root:
 
 ```bash
 eval "$(aws configure export-credentials --profile papyrus-production --format env)"
 export AWS_REGION=us-east-1 PAPYRUS_BACKEND=cloud PAPYRUS_GRAPHQL_AUTH=iam
 export PAPYRUS_GRAPHQL_ENDPOINT=https://lzc75j6qdjboblirpdtsalilnq.appsync-api.us-east-1.amazonaws.com/graphql
 .venv/bin/papyrus procedures register --file procedures/ttab_ruling_analysis.tac --key distinctive.ttab.ruling-analysis
+.venv/bin/papyrus procedures register --file procedures/ruling_fact_check.tac --key distinctive.ruling.fact-check
+.venv/bin/papyrus procedures register --file procedures/ruling_copy_edit.tac --key distinctive.ruling.copy-edit
 ```
 
-Add `--dry-run --json` to preview. The newsroom's published procedure `distinctive.ttab.ruling-analysis` is what the runner executes.
+Add `--dry-run --json` to preview. The newsroom's published procedures are what the runner executes.
 
 To run the procedure by hand from the repository root (needs Tactus with plugin module support, AnthusAI/Tactus#115, and the Papyrus procedure tools, AnthusAI/Papyrus#456):
 
@@ -113,7 +116,7 @@ To run the procedure by hand from the repository root (needs Tactus with plugin 
 tactus run procedures/ttab_ruling_analysis.tac --no-sandbox --real-all --param proceeding=... --param opinion_url=...
 ```
 
-It saves drafts and never publishes.
+It saves drafts and never publishes. The stage bots take `--param story=... --param version=...` instead.
 
 ### Create an automation
 
@@ -130,8 +133,12 @@ It lives in Papyrus's `papyrus-monitoring` and `papyrus-procedure-runner` stacks
 1. Monitor `MONITOR#ttab` collects TTAB Reading Room final decisions daily, over a 30-day window plus a 180-day recheck for precedential decisions. Matching uses aliases, so a decision is never delivered twice.
 2. The router (direct decisions, hourly) delivers each new decision as a pending Reference in Distinctive's newsroom.
 3. For a newly created Reference, the router's `procedureTriggers` write a `TRIGGER#` row once and start the procedure runner asynchronously, with input `{proceeding: "{sourceIdPrefix}", opinion_url: "{documentUrl}"}`.
-4. The runner executes the newsroom's published procedure `distinctive.ttab.ruling-analysis`: `procedures/ttab_ruling_analysis.tac` plus the skill in `.claude/skills/ttab-ruling-analysis/`. Two `gpt-6-luna` agents, an analyst and a fact-checker, save a draft ruling story in section `rulings` and never publish.
-5. An editor reviews the draft in the newsroom and publishes.
+4. The runner executes the newsroom's published procedure `distinctive.ttab.ruling-analysis`: `procedures/ttab_ruling_analysis.tac` plus the skill in `.claude/skills/ttab-ruling-analysis/`. It is analyst only (one `gpt-6-luna` agent): it creates the ruling story in section `rulings` directly at stage `reporting` and never publishes.
+5. The stage bots then move the story along. Each takes `{story, version, versionNumber, stage, runKey, automationId, hop}` and returns `{version}`, or `{hold, reason}` to stop the story and raise a review request. Procedures never change the stage and never publish; the engine moves the stage after a successful run that returned a version and did not hold.
+   - Entering `reporting`: `distinctive.ruling.fact-check` (`procedures/ruling_fact_check.tac`, skill `.claude/skills/ruling-fact-check`) checks the draft against the opinion and holds if the opinion could not be read.
+   - Then `copywriting`: `distinctive.ruling.copy-edit` (`procedures/ruling_copy_edit.tac`, skill `.claude/skills/ruling-copy-edit`) runs the editorial checks (`papyrus_check_story_version`, not yet released, name may change) and holds if a fix would change a legal fact.
+   - Then `typesetting`: the editor gate. An editor reviews the story in the newsroom and publishes.
+6. Planned automation records, waiting on the Papyrus release with story-state triggers (PPY-f0914799): `ruling-analysis` on the TTAB monitor, fact-check on reporting to copywriting, copy-edit on copywriting to typesetting.
 
 ## Automations
 

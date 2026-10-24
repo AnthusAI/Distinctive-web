@@ -1,8 +1,9 @@
 -- Distinctive Mark: TTAB ruling analysis.
 --
--- From a Board decision on TTABVUE to a checked draft ruling page waiting for an editor.
--- Both agents follow the ttab-ruling-analysis skill (.claude/skills/ttab-ruling-analysis/SKILL.md),
--- the same document Claude Code uses, and fetch the editorial rules from the newsroom at run time.
+-- From a Board decision on TTABVUE to a draft ruling page at the reporting stage.
+-- The analyst follows the ttab-ruling-analysis skill (.claude/skills/ttab-ruling-analysis/SKILL.md),
+-- the same document Claude Code uses, and fetches the editorial rules from the newsroom at run time.
+-- The fact-check and copy-edit stage bots take the story from there.
 -- Run from the repository root so the skill path resolves.
 
 local done = require("tactus.tools.done")
@@ -33,28 +34,6 @@ its address from the caption with papyrus_set_story_slug before you save the dra
         precedent_or_pattern = field.string{required = true},
         notability = field.number{required = true},
         uncertain_points = field.array{required = true}
-    }
-}
-
-ruling_fact_checker = Agent {
-    provider = "openai",
-    model = "gpt-6-luna",
-    system_prompt = [[
-You are Distinctive Mark's fact checker for TTAB ruling pages. You did not write the draft.
-Do step 7 of the ttab-ruling-analysis skill: read the opinion with papyrus_fetch_pdf_text and the
-draft with papyrus_story_version (front matter and body of the version you are given), then check every number, date, name, quotation
-and pin cite against the opinion. Remove or correct anything the opinion does not support, and
-anything that overstates novelty or turns an inference into a holding. If you change anything, save
-one corrected version with papyrus_save_story_version and a reason listing each correction.
-Never publish. When finished, call done.
-]],
-    skills = {".claude/skills/ttab-ruling-analysis"},
-    skills_mode = "full",
-    tools = {"papyrus", done},
-    output = {
-        version_id = field.string{required = true},
-        corrections = field.array{required = true},
-        unverifiable = field.array{required = true}
     }
 }
 
@@ -95,10 +74,7 @@ Procedure {
         title = field.string{required = true},
         precedent_or_pattern = field.string{required = true},
         notability = field.number{required = true},
-        corrections = field.array{required = true},
-        unverifiable = field.array{required = true},
         uncertain_points = field.array{required = true},
-        editorial_checks = field.string{required = true},
         next_step = field.string{required = true}
     },
     function(input)
@@ -111,27 +87,19 @@ Existing story on the board: %s
 Record saved versions with author label: %s
 Register the opinion as a reference in corpus: %s
 
-Follow the skill. Create the story in the rulings section if none is given, save the draft version, then call done.
+Follow the skill. Create the story in the rulings section at stage reporting (pass stage "reporting" explicitly to papyrus_create_story) if none is given, save the draft version, then call done.
 Return the story lineage, the saved version id, the title, the precedent statement (or the pattern, for a
 non-precedential decision), the notability rating and every point you were unsure how to state.
 ]], input.proceeding, input.opinion_url, input.story ~= "" and input.story or "none", input.author_label, input.corpus))
 
-        local checked = work_until_done_then_report(ruling_fact_checker, string.format([[
-Fact-check the draft of story %s (version %s) against the opinion at %s.
-Record any corrected version with author label: %s (fact check).
-]], draft.output.story, draft.output.version_id, input.opinion_url, input.author_label))
-
         return {
             story = draft.output.story,
-            version_id = (checked.output.version_id ~= nil and checked.output.version_id ~= "") and checked.output.version_id or draft.output.version_id,
+            version_id = draft.output.version_id,
             title = draft.output.title,
             precedent_or_pattern = draft.output.precedent_or_pattern,
             notability = draft.output.notability,
-            corrections = checked.output.corrections,
-            unverifiable = checked.output.unverifiable,
             uncertain_points = draft.output.uncertain_points,
-            editorial_checks = "not run: no procedure tool for the editorial checks yet (PPY-aa63ae)",
-            next_step = "An editor reviews the draft in the newsroom; publishing happens only after approval."
+            next_step = "The fact-check and copy-edit bots follow, and an editor publishes."
         }
     end
 }
