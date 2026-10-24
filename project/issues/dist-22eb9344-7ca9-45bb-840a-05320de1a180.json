@@ -3,7 +3,7 @@
   "title": "Test Papyrus automations slice 2 on Distinctive (PPY-9ff95b)",
   "description": "Distinctive is the test site for the Papyrus automation epic PPY-9ff95b. Slice 1 (5.32.0) is deployed and tested: record distinctive.ttab exists, router link matches, maxConcurrent kept at 1 on purpose. Slice 2 is Papyrus 5.33.0 (enabled real, limits enforced, cost recorded, run now, Notification Center, review requests).",
   "type": "task",
-  "status": "blocked",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -22,11 +22,30 @@
         "model": "claude-opus-5-5",
         "name": "Distinctive Mark implementation"
       }
+    },
+    {
+      "id": "91c79c4e-e510-4a33-bd22-06dd80153767",
+      "author": "home",
+      "text": "Done (2026-10-24). Distinctive on Papyrus 5.33.1 (Distinctive-web #16, Amplify job 54); papyrus-procedure-runner rebuilt on 5.33.1; papyrus-monitoring router updated from v5.35.0 (dynamodb:UpdateItem, RouterAutomationReadPolicy; procedure-runner wiring kept). distinctive.ttab now enforces enabled, maxConcurrent 1 and the 840 s timeout. Dry run OK; run now on 92082396-CAN_53 (Overland Sheepskin v. Storyteller Overland) completed in 190.6 s at $0.0145, listed as this automation's run with its draft story (rulings, stage reporting). Earlier hand-invoked runs are listed separately. Untested here: Notification Center and review requests (need an editor sign-in).",
+      "created_at": "2026-10-24T17:10:00.986772Z",
+      "comment_type": "default",
+      "agent": {
+        "platform": "claude_code",
+        "model": "claude-opus-5-5",
+        "name": "Distinctive Mark implementation"
+      }
+    },
+    {
+      "id": "ae1d7f59-3249-4e54-971d-e7f7269501ef",
+      "author": "home",
+      "text": "Slice 2 verified on Distinctive.",
+      "created_at": "2026-10-24T17:10:01.008240Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-23T13:24:35.980904Z",
-  "updated_at": "2026-10-23T13:24:45.965183Z",
-  "closed_at": null,
+  "updated_at": "2026-10-24T17:10:01.016171Z",
+  "closed_at": "2026-10-24T17:10:01.014546Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",
