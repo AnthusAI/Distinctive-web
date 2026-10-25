@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "d31c980d-1141-4f0e-99cc-c4808c369033",
+  "issue_id": "dist-93d205f6-5b70-4360-b202-5b25d44219c5",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-25T16:00:28.772Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Test steering on the next natural review request (Papyrus PPY-9ff95b)",
+    "description": "Review requests and the Notification Center are verified live (2026-10-24): a fact-check hold raised a flag, Acknowledge was recorded. Still untested: steering. On the next natural flag or soft review (for example a fact-check hold), use Steer with this note with a short note, then check that steering_for returns it on the next run of that automation and that the card shows where it was applied (appliedIn). Report to the Papyrus implementation session.",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 3,
+    "assignee": null,
+    "parent": "dist-91471a86-d6f4-48b2-a58b-e2d8553927f0",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "Distinctive Mark implementation"
+    }
+  }
+}
