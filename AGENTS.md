@@ -1,6 +1,6 @@
 # Distinctive Mark publication
 
-This repository holds only what is specific to Distinctive Mark™ (distinctive-mark.com). The newsroom application, the Amplify Gen 2 backend, the S3 projection engine and the deployment constructs come from the pinned `@anthusai/papyrus` npm package and the `papyrus-newsroom[markus]` Python package (exact pins, currently 5.52.0). Do not copy Papyrus code into this repository. Fix Papyrus in the Papyrus repository and bump the pins.
+This repository holds only what is specific to Distinctive Mark™ (distinctive-mark.com). The newsroom application, the Amplify Gen 2 backend, the S3 projection engine and the deployment constructs come from the pinned `@anthusai/papyrus` npm package and the `papyrus-newsroom[markus]` Python package (exact pins, currently 5.53.0). Do not copy Papyrus code into this repository. Fix Papyrus in the Papyrus repository and bump the pins.
 
 Procedures run on Tactus. Relevance classification for other monitors comes from Cyclotron; the TTAB monitor uses no Cyclotron.
 
