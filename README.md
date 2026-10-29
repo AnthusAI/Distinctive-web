@@ -2,7 +2,7 @@
 
 Trademark news and analysis, live at [distinctive-mark.com](https://distinctive-mark.com). The newsroom (CMS) is at `/newsroom`.
 
-This repository holds only what is specific to Distinctive Mark: the brand and backend configuration, the content model, the public front end (page compositions, markup, styles, client script) and the Tactus procedure that drafts TTAB ruling pages. The engine is not here. It comes from [Papyrus](https://github.com/AnthusAI/Papyrus), pinned exactly: the `@anthusai/papyrus` npm package and the `papyrus-newsroom[markus]` Python package, currently `5.55.0`. Procedures run on Tactus. Never copy Papyrus code into this repository; fix it in Papyrus and bump the pins.
+This repository holds only what is specific to Distinctive Mark: the brand and backend configuration, the content model, the public front end (page compositions, markup, styles, client script) and the Tactus procedure that drafts TTAB ruling pages. The engine is not here. It comes from [Papyrus](https://github.com/AnthusAI/Papyrus), pinned exactly: the `@anthusai/papyrus` npm package and the `papyrus-newsroom[markus]` Python package, currently `5.56.0`. Procedures run on Tactus. Never copy Papyrus code into this repository; fix it in Papyrus and bump the pins.
 
 ## Where it runs
 
