@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "0a274e01-ce8a-46ab-b9dd-60b695f4b9c1",
+  "issue_id": "dist-317ce645-a335-4503-9da7-39993f8ab5f3",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T00:39:42.169Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "M3 Court monitors: Federal Circuit, federal courts and the Supreme Court",
+    "description": "Federal Circuit opinions filtered to TTAB appeals and Lanham Act cases (daily); federal court Lanham Act opinions through CourtListener, nature of suit 840, opinions only (daily); Supreme Court trademark grants and opinions (weekly).",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-9e8b06ca-083d-4f6a-952e-d7ba7142ecab",
+    "labels": []
+  }
+}

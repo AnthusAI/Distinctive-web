@@ -1,0 +1,20 @@
+{
+  "id": "dist-9e8b06ca-083d-4f6a-952e-d7ba7142ecab",
+  "title": "Trademark monitoring: feeds that bring new references to the Cyclotron",
+  "description": "A portfolio of monitors that turn new rulings, rules, agency announcements, international developments and press into pending references for this publication's own Cyclotrons and section classifiers. Most monitors need new Papyrus source types (RSS/Atom, JSON API, page-change, scheduled search, a TTAB adapter), PDF handling, monitor definitions as backend data and a hosted scheduler; those are Papyrus core work. Wiki: [monitor portfolio](project/wiki/monitor-portfolio.md), [data sources](project/wiki/data-sources.md).",
+  "type": "initiative",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T00:39:32.331388Z",
+  "updated_at": "2026-10-21T00:39:32.331410Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

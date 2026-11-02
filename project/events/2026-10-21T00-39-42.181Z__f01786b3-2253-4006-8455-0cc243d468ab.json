@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "f01786b3-2253-4006-8455-0cc243d468ab",
+  "issue_id": "dist-5bb7c4b4-63f3-4473-af39-f9bc1623bbda",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T00:39:42.181Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "M4 Scheduled searches",
+    "description": "Query sets with their own cadences using the Papyrus web search: daily news terms, weekly doctrine and cross-border terms, monthly guide research. Results are secondary signals: Wire items only with a primary source, otherwise leads to trace. Query sets live in backend data.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "dist-9e8b06ca-083d-4f6a-952e-d7ba7142ecab",
+    "labels": []
+  }
+}

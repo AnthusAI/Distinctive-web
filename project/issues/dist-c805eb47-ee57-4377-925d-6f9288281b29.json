@@ -1,0 +1,20 @@
+{
+  "id": "dist-c805eb47-ee57-4377-925d-6f9288281b29",
+  "title": "M5 Court opinions corpus: Federal Circuit, federal courts and history",
+  "description": "Ingest Federal Circuit trademark opinions, Lanham Act opinions from GovInfo and CourtListener (nature of suit 840), and the Caselaw Access Project history through 2020. Extract marks, goods classes, grounds, outcomes, judges and cited authority.",
+  "type": "epic",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "dist-e86b3649-b3cf-4f1b-a434-9791bad0eeaa",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T00:39:20.550811Z",
+  "updated_at": "2026-10-21T00:39:20.550833Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

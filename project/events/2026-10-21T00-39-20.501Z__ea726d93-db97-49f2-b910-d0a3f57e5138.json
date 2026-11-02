@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "event_id": "ea726d93-db97-49f2-b910-d0a3f57e5138",
+  "issue_id": "dist-c6df20c6-29f4-4f89-960e-34b15cb83435",
+  "event_type": "field_updated",
+  "occurred_at": "2026-10-21T00:39:20.501Z",
+  "actor_id": "home",
+  "payload": {
+    "changes": {
+      "description": {
+        "from": "test",
+        "to": "Enter the first researched references as accepted or rejected, each with a reason tied to the editorial mission and section policy, so the Cyclotron learns both directions. Start from the October 2026 research pass (10 accepts, 5 rejects; wiki ai-at-the-uspto-2026-10). Recording curation decisions needs the agent curation-delegation route, because reviewReferenceCuration accepts only editor and admin users. Then write the first pieces from the story ideas, and repeat in research rounds."
+      }
+    }
+  }
+}

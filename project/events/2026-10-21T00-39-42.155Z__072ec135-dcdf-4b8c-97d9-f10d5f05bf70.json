@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "072ec135-dcdf-4b8c-97d9-f10d5f05bf70",
+  "issue_id": "dist-c3009ce4-d87f-444a-b0d2-962e6da53d40",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T00:39:42.155Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "M2 Rules and agency monitors: Federal Register, USPTO news and pages",
+    "description": "Federal Register USPTO trademark documents (JSON API, daily); USPTO news and trademark alerts (daily); page-change monitors on the TMEP, examination guides, fee schedule, sanctions orders and scam warnings, and TTAB announcements (weekly).",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-9e8b06ca-083d-4f6a-952e-d7ba7142ecab",
+    "labels": []
+  }
+}

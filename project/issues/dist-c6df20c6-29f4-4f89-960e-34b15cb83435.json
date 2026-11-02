@@ -1,0 +1,20 @@
+{
+  "id": "dist-c6df20c6-29f4-4f89-960e-34b15cb83435",
+  "title": "M0 Seed the knowledge base: labeled references and first stories",
+  "description": "Enter the first researched references as accepted or rejected, each with a reason tied to the editorial mission and section policy, so the Cyclotron learns both directions. Start from the October 2026 research pass (10 accepts, 5 rejects; wiki ai-at-the-uspto-2026-10). Recording curation decisions needs the agent curation-delegation route, because reviewReferenceCuration accepts only editor and admin users. Then write the first pieces from the story ideas, and repeat in research rounds.",
+  "type": "epic",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "dist-e86b3649-b3cf-4f1b-a434-9791bad0eeaa",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T00:38:56.835937Z",
+  "updated_at": "2026-10-21T00:39:20.501690Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

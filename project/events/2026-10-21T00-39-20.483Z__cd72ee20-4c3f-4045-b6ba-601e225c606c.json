@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "event_id": "cd72ee20-4c3f-4045-b6ba-601e225c606c",
+  "issue_id": "dist-f529a89f-1b69-4aa4-b0d4-fec7b3866ec8",
+  "event_type": "issue_deleted",
+  "occurred_at": "2026-10-21T00:39:20.483Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "probe",
+    "issue_type": "epic",
+    "status": "open"
+  }
+}

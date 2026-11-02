@@ -88,6 +88,9 @@
         if (!row.hidden) visibleRulingCount += 1;
       });
       showSponsorRowsOnlyBetweenVisibleRows(rows);
+      Array.prototype.slice.call(container.querySelectorAll("[data-ds-week]")).forEach(function (week) {
+        week.hidden = !week.querySelector('[data-ds-row="ruling"]:not([hidden])');
+      });
       if (countLabel) countLabel.textContent = visibleRulingCount === 1 ? "1 decision" : visibleRulingCount + " decisions";
       if (emptyMessage) emptyMessage.hidden = visibleRulingCount !== 0;
     }
@@ -128,13 +131,22 @@
     }, TOAST_VISIBLE_MILLISECONDS);
   }
 
+  function chosenLists(form) {
+    var defaults = (form.getAttribute("data-ds-default-lists") || "").split(",").filter(Boolean);
+    var ticked = new FormData(form).getAll("lists");
+    return defaults.concat(ticked.filter(function (list) { return defaults.indexOf(list) < 0; }));
+  }
+
   function signupPayload(form) {
     var formData = new FormData(form);
     return {
+      formId: form.hasAttribute("data-ds-subscribe-page") ? "subscribe-page" : "signup",
       email: formData.get("email"),
-      lists: formData.getAll("lists"),
-      topics: formData.getAll("topics"),
-      page: window.location.pathname
+      lists: chosenLists(form),
+      page: window.location.pathname,
+      website: formData.get("website") || "",
+      renderedAt: Number(form.getAttribute("data-ds-rendered-at")),
+      consent: form.getAttribute("data-ds-consent") || ""
     };
   }
 
@@ -161,6 +173,7 @@
   function setUpSignupForms() {
     var requestedEmail = new URLSearchParams(window.location.search).get("email");
     document.querySelectorAll("[data-ds-signup]").forEach(function (form) {
+      form.setAttribute("data-ds-rendered-at", String(Date.now()));
       var isSubscribePage = form.hasAttribute("data-ds-subscribe-page");
       if (isSubscribePage && requestedEmail) {
         var emailInput = form.querySelector('input[name="email"]');
@@ -184,12 +197,21 @@
         }
         event.preventDefault();
         setFormStatus(form, "");
+        var payload = signupPayload(form);
+        if (!payload.lists.length) {
+          setFormStatus(form, "Choose at least one email to get.");
+          return;
+        }
         fetch(form.action, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(signupPayload(form))
+          body: JSON.stringify(payload)
         })
           .then(function (response) {
+            if (response.status === 400) {
+              setFormStatus(form, "That email address doesn’t look right. Please check it and try again.");
+              return;
+            }
             if (!response.ok) throw new Error("Signup failed with status " + response.status);
             storeFlag(SUBSCRIBED_KEY);
             if (!showSubscribePageSuccess(form)) {
@@ -201,6 +223,42 @@
             setFormStatus(form, "Something went wrong. Please try again in a moment.");
           });
       });
+    });
+  }
+
+  function setUpContactForm() {
+    var form = document.querySelector("[data-ds-contact]");
+    if (!form) return;
+    var parameters = new URLSearchParams(window.location.search);
+    var topicSelect = form.querySelector('select[name="topic"]');
+    if (topicSelect && parameters.get("topic")) topicSelect.value = parameters.get("topic");
+    var pageInput = form.querySelector('input[name="page"]');
+    if (pageInput && parameters.get("page")) pageInput.value = parameters.get("page");
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (form.hasAttribute("data-ds-contact-closed")) {
+        setFormStatus(form, "The contact form opens soon. Your message was not sent.");
+        return;
+      }
+      setFormStatus(form, "");
+      var payload = { form: "contact" };
+      ["topic", "name", "email", "message", "page", "website"].forEach(function (name) {
+        var field = form.elements[name];
+        payload[name] = field ? field.value : "";
+      });
+      fetch(form.action, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Message failed with status " + response.status);
+          form.reset();
+          setFormStatus(form, "Thank you. Your message reached the editors.");
+        })
+        .catch(function () {
+          setFormStatus(form, "Something went wrong and your message was not sent. Please try again in a moment.");
+        });
     });
   }
 
@@ -246,6 +304,7 @@
     setUpRulingFilters();
     setUpWireFilters();
     setUpSignupForms();
+    setUpContactForm();
     setUpStickySignupBar();
     setUpExitIntentSlideIn();
   }

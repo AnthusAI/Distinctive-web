@@ -1,10 +1,10 @@
-"""Render a content folder through the Distinctive projector into a local directory.
+"""Render a content folder through the standard Papyrus front end into a local directory.
 
 The content folder is laid out the way the CMS stores items: ``<section>/<slug>.md`` for
 commentary, rulings and Wire items, and ``<slug>.md`` at the top level for standing pages.
 Each file is YAML front matter plus a Markus body, exactly what an editor writes.
 
-    python3 bin/build_local_site.py                      # sample-content -> web/dist-local
+    python3 bin/build_local_site.py                      # tests/fixtures/sample-content -> web/dist-local
     python3 bin/build_local_site.py --content DIR --out DIR
     python3 -m http.server --directory web/dist-local 8080
 
@@ -20,12 +20,13 @@ import sys
 from pathlib import Path
 
 REPOSITORY = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(REPOSITORY / "web"))
+WEB_DIRECTORY = REPOSITORY / "web"
+PREVIEW_ORIGIN = "https://distinctive-mark.com"
 
 from papyrus_content.projection.model import ItemSummary, ProjectedItem, SiteIndex  # noqa: E402
 from papyrus_content.projection.stored import projection_metadata  # noqa: E402
 
-import projector as distinctive_projector  # noqa: E402
+from papyrus_content.projection.standard.projector import StandardMarkusProjector  # noqa: E402
 
 FRONT_MATTER_PATTERN = re.compile(r"\A---\n(.*?)\n---\n?(.*)\Z", re.S)
 
@@ -43,7 +44,7 @@ def projected_item_from_file(content_directory: Path, path: Path) -> ProjectedIt
     stored = projection_metadata(front_matter_yaml)
     summary = ItemSummary(
         item_id=relative.with_suffix("").as_posix(),
-        type="article" if section else "page",
+        type=str(stored["frontMatter"].get("type") or ("article" if section else "page")),
         section=section,
         slug=relative.stem,
         output_path=relative.as_posix(),
@@ -65,7 +66,8 @@ def site_index_from_directory(content_directory: Path) -> tuple[SiteIndex, dict[
 
 
 def render_site(content_directory: Path) -> dict[str, bytes]:
-    projector = distinctive_projector.create_projector()
+    """Every file the standard Papyrus front end writes for the content folder, keyed by site path."""
+    projector = StandardMarkusProjector.from_static_directory(WEB_DIRECTORY, environ={"PAPYRUS_SITE_PUBLIC_URL": PREVIEW_ORIGIN})
     site, items_by_id = site_index_from_directory(content_directory)
     files = dict(projector.static_files())
     for item in items_by_id.values():
@@ -85,7 +87,7 @@ def write_site(files: dict[str, bytes], output_directory: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--content", type=Path, default=REPOSITORY / "sample-content")
+    parser.add_argument("--content", type=Path, default=REPOSITORY / "tests" / "fixtures" / "sample-content")
     parser.add_argument("--out", type=Path, default=REPOSITORY / "web" / "dist-local")
     arguments = parser.parse_args()
     files = render_site(arguments.content)

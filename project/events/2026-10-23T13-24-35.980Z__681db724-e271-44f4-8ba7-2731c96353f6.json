@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "681db724-e271-44f4-8ba7-2731c96353f6",
+  "issue_id": "dist-22eb9344-7ca9-45bb-840a-05320de1a180",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-23T13:24:35.980Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Test Papyrus automations slice 2 on Distinctive (PPY-9ff95b)",
+    "description": "Distinctive is the test site for the Papyrus automation epic PPY-9ff95b. Slice 1 (5.32.0) is deployed and tested: record distinctive.ttab exists, router link matches, maxConcurrent kept at 1 on purpose. Slice 2 is Papyrus 5.33.0 (enabled real, limits enforced, cost recorded, run now, Notification Center, review requests).",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "dist-91471a86-d6f4-48b2-a58b-e2d8553927f0",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "Distinctive Mark implementation"
+    }
+  }
+}

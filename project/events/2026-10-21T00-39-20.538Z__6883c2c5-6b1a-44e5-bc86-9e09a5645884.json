@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "6883c2c5-6b1a-44e5-bc86-9e09a5645884",
+  "issue_id": "dist-49d01c33-affa-4c1d-90e6-5eb5f7fac725",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T00:39:20.538Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "M4 Office action corpus and examination consistency",
+    "description": "Ingest Office actions from TSDR (API key, rate-limited, long-running) to analyze refusal language and outcomes by refusal type and, in aggregate, variation across examining attorneys. Basis for data-driven Office action response guides.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "dist-e86b3649-b3cf-4f1b-a434-9791bad0eeaa",
+    "labels": []
+  }
+}

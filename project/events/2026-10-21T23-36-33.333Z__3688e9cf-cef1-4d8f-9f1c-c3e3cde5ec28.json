@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "3688e9cf-cef1-4d8f-9f1c-c3e3cde5ec28",
+  "issue_id": "dist-e70efd20-9d16-4e21-bd47-2a90f41b4fff",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T23:36:33.333Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Notability rating through Distinctive's own Cyclotron",
+    "description": "Rate each incoming decision for notability using the site's own Cyclotron. Not started.",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "dist-91471a86-d6f4-48b2-a58b-e2d8553927f0",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "Distinctive Mark implementation"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "dist-e86b3649-b3cf-4f1b-a434-9791bad0eeaa",
+  "title": "Trademark knowledge base: public legal data, corpus and data-driven analysis",
+  "description": "Build a serious knowledge base of US trademark law on Papyrus from public-domain sources, starting with TTAB decisions and extending to Federal Circuit and federal court opinions, USPTO Office actions and expungement/reexamination records. Shelves in S3, catalog in DynamoDB; text extraction; a self-improving taxonomy and ontology; and data-driven investigations published as stories and live data pages. Wiki: [data sources](project/wiki/data-sources.md), [analysis ideas](project/wiki/analysis-ideas.md), [first research pass](project/wiki/ai-at-the-uspto-2026-10.md).",
+  "type": "initiative",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T00:38:50.054981Z",
+  "updated_at": "2026-10-21T00:38:50.055014Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

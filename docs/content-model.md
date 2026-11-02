@@ -16,10 +16,12 @@ Page: `/commentary/<slug>/`.
 | `readMinutes` | Reading time |
 | `tags` | Topics; drive "Filed under" and "More on …" |
 | `lead` | `true` to lead the front page |
+| `ownerTakeaway` | Plain-language takeaway for brand owners, shown in a box above the body |
+| `guide` | Slug of the Before You File guide the takeaway links to |
 
 ## TTAB rulings (section `rulings`)
 
-Page: `/rulings/<slug>/`. Every ruling appears in the tracker; rulings with `notability` 4 or 5 are "notable" and get the analysis treatment.
+Page: `/rulings/<slug>/`. The tracker at `/rulings/` groups the latest eight weeks by week, precedential decisions first; older weeks are on monthly archive pages at `/rulings/archive/<YYYY-MM>/`. Rulings with `notability` 4 or 5 are "notable" and get the analysis treatment.
 
 | Field | Meaning |
 | --- | --- |
@@ -32,15 +34,31 @@ Page: `/rulings/<slug>/`. Every ruling appears in the tracker; rulings with `not
 | `issueLabel` | Long form, e.g. `Likelihood of confusion, §2(d)` |
 | `outcome` | e.g. `Refusal affirmed`, `Opposition sustained` |
 | `precedential` | `true` or `false` |
+| `precedent` | For a precedential decision: the rule it sets, stated generally in one or two sentences without party names. When present it leads the ruling page, the tracker row (whose headline is then the `title`, which should state the rule) and the front-page cards |
 | `notability` | 1 to 5 |
+| `tier` | Optional override of how the tracker shows the ruling: `precedential`, `analysis`, `brief` or `line`. By default precedential decisions are `precedential`, notability 4–5 `analysis`, 3 `brief` (shows the `dek` as a paragraph) and 1–2 `line` (one compact line) |
 | `date` | Decision date |
 | `panel` | Judges and author of the opinion |
 | `opinionUrl` | Link to the opinion on TTABVUE |
 | `whyNotable` | List of reasons, shown on the tracker's lead card |
 | `marks` | `applicant` and `cited`, each with `mark`, `number`, `goods` and optional `label` |
-| `author`, `readMinutes`, `tags`, `lead` | As for commentary |
+| `author`, `readMinutes`, `tags`, `lead`, `ownerTakeaway`, `guide` | As for commentary |
 
 The newsletter signup box is placed before the body's second `##` section.
+
+## Before You File guides (section `guides`)
+
+Page: `/guides/<slug>/`, listed at `/guides/` grouped by series. Guides are evergreen: update and redate them rather than publishing a new one.
+
+| Field | Meaning |
+| --- | --- |
+| `title` | Guide title |
+| `dek` | One-sentence standfirst |
+| `series` | Series heading the guide is listed under |
+| `seriesRank` | Order of the series on the index (lower first) |
+| `seriesOrder` | Order of the guide within its series |
+| `lastReviewed` | Date the guide was last checked against its sources |
+| `readMinutes`, `tags` | As for commentary; shared tags link guides to rulings and commentary |
 
 ## The Wire (section `wire`)
 

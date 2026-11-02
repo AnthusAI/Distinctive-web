@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "c0f1d2ea-0000-4048-935d-d405e62e55d9",
+  "issue_id": "dist-2c5b517c-35bf-46e0-8c1f-092b9dfda209",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T00:39:20.514Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "M2 First data feature: precedential TTAB decisions over time",
+    "description": "A live chart on a /data/ page: TTAB decisions and precedential designations per year (first count: about 50 precedential a year through 2023, 33 in 2024, 15 in 2025, 10 in 2026 to about Oct. 8). De-duplicate and reconcile counts before publishing. Needs a reusable data-feature component in the Papyrus standard front end (a JSON file refreshed by the backend, rendered by a chart component), plus an accompanying story.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-e86b3649-b3cf-4f1b-a434-9791bad0eeaa",
+    "labels": []
+  }
+}
