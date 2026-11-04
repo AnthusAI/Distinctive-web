@@ -28,12 +28,14 @@ The newsroom app needs a backend's `amplify_outputs.json` (gitignored):
 
 ```bash
 npm ci
-npm run dev
+npm run dev          # http://localhost:3001
 ```
+
+Develop and verify locally; do not deploy to see whether something works. The development policy is in [`AGENTS.md`](AGENTS.md).
 
 ## How a change ships
 
-Branch from `main`, open a pull request into `main`, merge. The "CI and deploy" workflow (`.github/workflows/deploy.yml`) runs the TypeScript check and the Python tests on every pull request. On a push to `main` it then deploys to Amplify over GitHub OIDC; no AWS keys are stored. Papyrus releases are cut in the Papyrus repository by semantic-release; this repository picks one up by editing the pin (see `AGENTS.md`).
+Branch from `develop`, open a pull request into `develop`, merge (nothing builds in Amplify). A release, `develop` merged into `main` once or twice a day, deploys. The "CI and deploy" workflow (`.github/workflows/deploy.yml`) runs the TypeScript check and the Python tests on every pull request. On a push to `main` it then deploys to Amplify over GitHub OIDC; no AWS keys are stored. Papyrus releases are cut in the Papyrus repository by semantic-release; this repository picks one up by editing the pin (see `AGENTS.md`).
 
 ## Where to look next
 

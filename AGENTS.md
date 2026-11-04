@@ -44,6 +44,14 @@ Procedures run on Tactus. Relevance classification for other monitors comes from
 - Monitoring and router, procedure runner, automations: Papyrus infrastructure, not in this repository (see The TTAB flow and Automations).
 - Reader-steering plugin (votes, flags, Proposals), GA4 and consent, the shared relevance Cyclotron, the knowledge run, review requests: not configured here. This repository has no GA4 and no reader-steering plugin. Do not document or add them without a Kanbus issue.
 
+## Development policy (Ryan, 2026-11-04)
+
+- Develop and verify on a local dev server: `npm run dev` (runs `papyrus-app sync`, then `next dev` on port 3001; it needs a backend's `amplify_outputs.json`, gitignored), or `npm run preview` for the public site built from sample content, served on port 8080 with no backend. For the seeded console with no AWS, run `npm run dev:preview` in a Papyrus checkout. Do not deploy to see whether something works.
+- **Merge** means merging a pull request into `develop`; that is where things are reviewed. `develop` builds nothing in Amplify.
+- **Release** means merging `develop` into `main`, which deploys. Aim for once or twice a day, batching what is ready. An extra release needs Ryan's say-so.
+- Papyrus version bumps go to this site's `develop` and ship in this site's release. A Papyrus release can add a GSI and a deploy can add only one per table, so a site cannot skip a release that adds one.
+- Say "merged to develop" or "released" precisely.
+
 ## Common tasks
 
 ### Run tests
@@ -76,15 +84,15 @@ Papyrus releases come from the Papyrus repository through semantic-release.
 
 1. Edit the exact version in `package.json`, `infra/package.json`, `infra/site.json` (`papyrusVersion`) and `requirements-publication.txt` together.
 2. Refresh both lock files: `npm install --package-lock-only --ignore-scripts` in the repository root, then again in `infra/`.
-3. Run the tests, open a pull request into `main`.
+3. Run the tests, open a pull request into `develop`. It deploys nothing; it ships in the site's next release.
 
 ### Deploy
 
-Merging a pull request into `main` is the deploy. The "CI and deploy" workflow runs the TypeScript check and the Python tests, then calls the reusable workflow `AnthusAI/Papyrus/.github/workflows/amplify-deploy.yml@main`, which starts the Amplify job for that commit with GitHub OIDC (role `distinctive-github-deploy`, app `d2xke8ygmrzqpp`). Amplify's own auto-build is off on `main`. The deploy re-projects the site (`reprojectOnDeploy`).
+The deploy is the release: merging a pull request into `develop` builds nothing, and merging `develop` into `main` deploys. The "CI and deploy" workflow runs the TypeScript check and the Python tests on pull requests to `develop` and `main`, and on a push to `main` it calls the reusable workflow `AnthusAI/Papyrus/.github/workflows/amplify-deploy.yml@main`, which starts the Amplify job for that commit with GitHub OIDC (role `distinctive-github-deploy`, app `d2xke8ygmrzqpp`). Amplify's own auto-build is off on `main`. The deploy re-projects the site (`reprojectOnDeploy`).
 
 ### Change the app-shell stack
 
-The stack `amplify-app-shell-distinctive-cms` changes separately from the merge deploy:
+The stack `amplify-app-shell-distinctive-cms` changes separately from the release deploy:
 
 1. Edit `infra/site.json`.
 2. `cd infra && npx papyrus-infra synth --site site.json --account 712236451410`
@@ -173,7 +181,7 @@ The distribution has no CustomErrorResponses. An origin-response Lambda@Edge fun
 - The sponsor in `web/site-config.json` is a placeholder (`isPlaceholder: true`) until a real sponsor is signed. Its units show on the live site anyway (`showWhilePlaceholder: true`), labeled as a placeholder, because driving readers to the sponsor is the site's purpose.
 - Never commit secrets, real email addresses, `amplify_outputs.json` or build output. Secrets go in SSM SecureString, never in the repository. Examples use `success@simulator.amazonses.com`.
 - Shared checkouts: never switch branches and never `git stash`. Use `git worktree add` for a new branch.
-- Main-only flow: branch from `origin/main`, open a pull request into `main`. Merging deploys to production.
+- Git Flow: branch from `origin/develop`, open a pull request into `develop` (a merge). Releasing `develop` into `main` deploys to production; see the development policy above.
 - The `.claude/skills/ttab-ruling-analysis` skill and the procedure save drafts only. Human review is never a story state; an editor approves and publishes in the newsroom.
 - Kanbus is the record of work (project key `dist`). Use the `kbs` CLI (`pip install kanbus`); never read or edit the `project/` directory directly. Without a realtime broker, run it with `KANBUS_NO_DAEMON=1 KANBUS_REALTIME_TRANSPORT=none KANBUS_REALTIME_BROKER=off KANBUS_REALTIME_AUTOSTART=false`. Issues move open → in_progress → blocked or done. The launch epic lists what is built and what remains.
 
@@ -189,7 +197,7 @@ The distribution has no CustomErrorResponses. An origin-response Lambda@Edge fun
 
 Live:
 
-- Public site and newsroom at distinctive-mark.com, deployed on merge to `main`.
+- Public site and newsroom at distinctive-mark.com, deployed on release to `main`.
 - Newsletter: The Docket weekly and ruling alerts.
 - TTAB monitor, router delivery and the `distinctive.ttab` automation drafting ruling stories for editors.
 - NotFoundPage edge function.
