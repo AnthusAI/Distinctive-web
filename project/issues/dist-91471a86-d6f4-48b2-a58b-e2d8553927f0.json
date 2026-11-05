@@ -77,10 +77,22 @@
         "model": "claude-opus-5-5",
         "name": "Distinctive Mark implementation"
       }
+    },
+    {
+      "id": "e283b892-1609-484d-910d-aba6bbdf9412",
+      "author": "home",
+      "text": "Owner decision (2026-11-05): the web-distinctive monitor's story drafts (Papyrus #851) were approved by the owner and stay running. Open question closed.",
+      "created_at": "2026-11-05T19:04:16.636978Z",
+      "comment_type": "default",
+      "agent": {
+        "platform": "claude_code",
+        "model": "claude-opus-5-5",
+        "name": "Distinctive Mark implementation"
+      }
     }
   ],
   "created_at": "2026-10-21T00:39:42.142903Z",
-  "updated_at": "2026-11-05T16:42:51.502178Z",
+  "updated_at": "2026-11-05T19:04:16.638034Z",
   "closed_at": null,
   "right_now_summary": null,
   "right_now_updated_at": null,
