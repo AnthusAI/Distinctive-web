@@ -65,10 +65,22 @@
         "model": "claude-opus-5-5",
         "name": "Distinctive Mark implementation"
       }
+    },
+    {
+      "id": "32a41c06-1ae1-4617-bc6f-50c2d3c9ae76",
+      "author": "home",
+      "text": "TTAB backlog drafted (2026-11-05), at the owner's request: 21 decisions run through distinctive.ttab, fact check and copy edit, one every 4 minutes; all 63 runs completed, no holds, about $0.26. All 21 are drafts at typesetting for an editor. Left out on purpose: International First Committee (98849414-EXA_14, already published) and Ad-IP and eyeo v. Crypto (91290857-OPP_8, 91290989-OPP_8), which are the same consolidated opinion as the Adblock draft. Leftovers needing an editor's decision: Overland Sheepskin at reporting (predates the stage bots), draft-rulings-486a818024ddcd60 at reporting (stub duplicate of the Broad building-glass story), novel-brands-usa-v-zerodensity-yazilim at copywriting (untitled, from 10-21). Open question for the owner: the web-distinctive monitor (Papyrus #851) files monitor-story drafts built on trade-press and law-firm articles, which conflicts with the rule against competing publications as sources.",
+      "created_at": "2026-11-05T16:42:51.501393Z",
+      "comment_type": "default",
+      "agent": {
+        "platform": "claude_code",
+        "model": "claude-opus-5-5",
+        "name": "Distinctive Mark implementation"
+      }
     }
   ],
   "created_at": "2026-10-21T00:39:42.142903Z",
-  "updated_at": "2026-10-24T19:00:54.738894Z",
+  "updated_at": "2026-11-05T16:42:51.502178Z",
   "closed_at": null,
   "right_now_summary": null,
   "right_now_updated_at": null,
