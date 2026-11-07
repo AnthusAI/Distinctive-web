@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "5ff8514c-3c1a-4b13-bdf7-1b0f24ffa580",
+  "issue_id": "dist-0c135b9b-6c37-47a0-9bc8-53d660b801dd",
+  "event_type": "issue_created",
+  "occurred_at": "2026-11-07T21:45:08.179Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Staged upgrade from Papyrus 5.73.0 to current, one index per deploy",
+    "description": "Planning draft (2026-11-07). Coordinate with the Distinctive Mark implementation session: this repository's session owns its config, content model, front end and this board; nothing here is dispatched until that session agrees the order and timing, and no stage deploys while a monitor or knowledge run is mid-flight.\n\nWhy: Distinctive pins @anthusai/papyrus and papyrus-newsroom at 5.73.0 (package.json, infra/package.json, infra/site.json papyrusVersion, requirements-publication.txt). Since then Papyrus added indexes that DynamoDB (through Amplify) can create only one per table per deploy. Found by diffing amplify/data/resource.ts (schema.ts mirrors it) between Papyrus tags:\n- v5.79.0: Reference starFeedKey (listReferencesByStarFeedAndArrival)\n- v5.86.0: Reference mediumFeedKey (listReferencesByMediumFeedAndArrival)\n- v5.87.0: Reference contentNeededKey (listReferencesByContentNeededAndArrival)\n- v5.89.0: new CurationDelegationRecord table with its own grantorSub index (a new table, not an added index on an existing one)\n- v5.92.0: Item parentLineageId (listItemsByParentAndOrder)\nAll three Reference indexes are on the same table, so they must be three separate deploys, in order. No other index was added between v5.73.0 and v5.92.0, so the versions between index releases carry no index risk, but each stage still reads the release notes for other schema changes.\n\nStaged versions (each is a pull request into main, and merging deploys):\n1. 5.79.0 (starFeedKey)\n2. 5.86.0 (mediumFeedKey)\n3. 5.87.0 (contentNeededKey)\n4. 5.89.0 (new table), optional to pause here\n5. 5.92.0, the current stable tag (Item index), then newer stable tags once released\n\nVerification at every stage: the CI and deploy workflow is green; the new index is ACTIVE before the next stage starts; the public site sitemap and a sample of pages match the previous stage; the CMS signs in and lists References; a monitor delivery and a knowledge run still complete; no AppSync error rate increase in CloudWatch.\n\nRollback: revert the pin pull request; indexes stay (they are additive), so a revert does not need another index change.\nNot included: backfilling the new feed keys on existing References beyond what the Papyrus release notes require, and adopting the standard front end (separate story).",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": null,
+    "labels": [
+      "standard-frontend-plan"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "239f0c98-3262-4081-8b6c-aba37044276d",
+  "issue_id": "dist-1698f059-26a9-4414-8f86-c40772c7207d",
+  "event_type": "issue_created",
+  "occurred_at": "2026-11-07T21:45:08.239Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Stage 4 and 5: 5.89.0 (new table) and 5.92.0 (current stable, Item index)",
+    "description": "What: two further single-index deploys, 5.89.0 then 5.92.0 (v5.92.0 adds the Item parentLineageId index; confirm the newest stable tag at the time). Same verification as the earlier stages; also check any Papyrus 5.9x release-note requirement for the app-shell stack (infra/site.json, `papyrus-infra synth`, reviewed change set) before merging.\nAcceptance:\nScenario: Distinctive reaches the current stable release\n  Given the earlier stages passed\n  When 5.89.0 and then 5.92.0 are each deployed alone\n  Then the final pin equals the newest stable Papyrus tag and verification passes at both",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-0c135b9b-6c37-47a0-9bc8-53d660b801dd",
+    "labels": [
+      "standard-frontend-plan"
+    ]
+  }
+}

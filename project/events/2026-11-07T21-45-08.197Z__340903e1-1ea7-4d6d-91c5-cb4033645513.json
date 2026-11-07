@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "340903e1-1ea7-4d6d-91c5-cb4033645513",
+  "issue_id": "dist-3fd3ccb7-1777-456e-95ad-6b158b978925",
+  "event_type": "issue_created",
+  "occurred_at": "2026-11-07T21:45:08.197Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Stage 1: upgrade to Papyrus 5.79.0 and verify the starFeedKey index",
+    "description": "What: bump the four pins to 5.79.0 together (package.json, infra/package.json, infra/site.json papyrusVersion, requirements-publication.txt), refresh both lock files, open a pull request into main. Deploy alone: nothing else ships in this merge. Wait for the starFeedKey index to be ACTIVE on the Reference table, then run the verification list on the epic and (for the feed keys) any backfill the Papyrus 5.79.0 release notes require. Papyrus's own upgrade-planner story (PPY-3daa6c) may automate this later.\nAcceptance:\nScenario: The stage deploys alone and the index becomes active\n  Given Distinctive is on the previous stage\n  When the pin pull request for 5.79.0 is merged\n  Then the deploy is green and the starFeedKey index is ACTIVE\nScenario: The public site is unchanged\n  Given the sitemap and sample pages from the previous stage\n  Then they match after the deploy",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-0c135b9b-6c37-47a0-9bc8-53d660b801dd",
+    "labels": [
+      "standard-frontend-plan"
+    ]
+  }
+}

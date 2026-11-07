@@ -1,0 +1,22 @@
+{
+  "id": "dist-926d3ea7-b0fe-458a-973f-88ba5d0fea1d",
+  "title": "Adopt the standard publication front end after the upgrade",
+  "description": "What: once Distinctive is current and Papyrus has the standard layout (Papyrus initiative PPY-25ffa3), move Distinctive to the core preset plus a brand pack, retiring web/hooks.py page_body where the preset fits. Note: Distinctive is a dedicated deployment; any remaining hook is a tracked gap for promotion. Not started before the epic's stages finish and the Distinctive session agrees.\nAcceptance:\nScenario: Distinctive builds on the preset\n  Given the upgrade epic is finished\n  When the site is built with the brand pack\n  Then URLs and sitemap are unchanged and only gap hooks remain",
+  "type": "story",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "dist-0c135b9b-6c37-47a0-9bc8-53d660b801dd",
+  "labels": [
+    "standard-frontend-plan"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-11-07T21:45:08.254768Z",
+  "updated_at": "2026-11-07T21:45:08.254785Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}
