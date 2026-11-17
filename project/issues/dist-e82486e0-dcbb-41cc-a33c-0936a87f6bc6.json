@@ -1,0 +1,22 @@
+{
+  "id": "dist-e82486e0-dcbb-41cc-a33c-0936a87f6bc6",
+  "title": "Bring Distinctive from Papyrus 5.73.0 to 5.130.2 in seven stages, then lift the monitoring hold",
+  "description": "Plan (2026-11-17, planning only; nothing bumped, merged, deployed or written to a live site). Full text: docs/distinctive-bump-plan.md in the Papyrus repository (PR AnthusAI/Papyrus#1667). Supersedes the 2026-11-07 draft epic dist-0c135b9b, which stopped at 5.92.0.\n\nWhy now: the shared procedure runner is on Papyrus 5.130 and refuses a start that has no wake key. The monitoring router still starts procedures directly, so the next new TTAB decision (collection once a day at 02:58 UTC, router at minute 41 of every hour) is refused. The papyrus-monitoring stack is held (PPY-e713eb); lifting it moves the router onto per-site wake queues for every site, and a site has its queue only once it is on 5.130. Distinctive is the first thing the hold waits for.\n\nStages, derived by running the real GSI ledger and release-budget code between stable tags (one index change per table per stage): S1 5.85.2, S2 5.86.0, S3 5.102.0, S4 5.107.2, S5 5.109.0, S6 5.112.1, S7 5.130.2. Each stage is a pin pull request into develop and its own release (develop into main, merge commit). S6 creates 23 indexes (about 54 minutes by the Machines on Machines measurement); the app has no _BUILD_TIMEOUT so Amplify stops it at 30 minutes, hence the app-shell task before it. S7 carries the 5.130 contract: generated build spec, procedure kind headers and papyrus-site-procedures.json, agents stack and wake queue.\n\nVerification after every stage: CI and deploy green, Amplify job SUCCEED, root stack UPDATE_COMPLETE, each new index ACTIVE, sitemap still 42 URLs and five sample pages with the same text, newsroom sign-in and lists load, router and collector still clean.\nStop rule: a job not SUCCEED, a stack rolling back or in progress past twice its estimate, an index not ACTIVE past twice its estimate, a lost URL or an unloadable newsroom stops everything and goes to Ryan; no retry loop. Rollback is a pull request restoring the pins; indexes and tables stay.\nTiming: nothing between 02:50 and 03:50 UTC; S7 and the hold lift finish in one UTC day before 02:58 UTC.\n\nAcceptance:\nScenario: Distinctive is current\n  Given the stage tasks are done in order\n  When the last stage is deployed\n  Then the pins, both lock files and requirements-publication.txt say 5.130.2 and every stage check passed\nScenario: The hold can be lifted\n  Given Distinctive is on 5.130.2, its automations are adopted, and its router config names tenantId and siteBucket\n  When the papyrus-monitoring hold is lifted\n  Then a new TTAB decision starts the ruling analysis through the wake queue",
+  "type": "epic",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [
+    "papyrus-bump-plan"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-11-17T19:15:09.924390Z",
+  "updated_at": "2026-11-17T19:15:09.924469Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

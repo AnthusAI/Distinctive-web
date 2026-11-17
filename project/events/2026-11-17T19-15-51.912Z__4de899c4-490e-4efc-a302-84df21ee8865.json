@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "4de899c4-490e-4efc-a302-84df21ee8865",
+  "issue_id": "dist-54b8037f-ac82-4cec-ac6a-1a8a29fded02",
+  "event_type": "issue_created",
+  "occurred_at": "2026-11-17T19:15:51.912Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "12. Adopt the three automations and set the rung (Ryan decides)",
+    "description": "Dry run first, then real, as the signed-in admin: papyrus --site distinctive-mark.com automations adopt --id distinctive.ttab --responsibility improve --dry-run (then without --dry-run); the same for distinctive.ruling.fact-check with fact_check and distinctive.ruling.copy-edit with improve. Adopting sets no rung. Then papyrus agents set-rung --id <id> --rung observe --reason '<Ryan's reason>' (a dry run that prints before and after), then --apply. Responsibility and rung are RYAN'S DECISION, never an engineer's; the options and the recommendation (improve, fact_check, improve at observe) are in the plan, section 5. Note for Ryan: at observe the run gate still starts every run and records the rung; the three procedures write through their own tools and never ask the gate, so observe changes nothing about what they do today. The policy entry is keyed by responsibility, so ttab and copy-edit on improve share one rung.\nAcceptance:\nScenario: Adopted and at a rung\n  Given the definitions are applied and Ryan has chosen\n  When adopt and set-rung --apply have run\n  Then papyrus automations runs shows the next run with a policy version and rung, not Nothing to do (not_adopted)",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-e82486e0-dcbb-41cc-a33c-0936a87f6bc6",
+    "labels": [
+      "papyrus-bump-plan"
+    ]
+  }
+}

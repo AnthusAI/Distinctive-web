@@ -1,0 +1,27 @@
+{
+  "id": "dist-ab1c3aa2-c7fe-4079-93bf-dfbdc5d66ad3",
+  "title": "13. Papyrus: bring the ttab router config under Git with tenantId and siteBucket",
+  "description": "In the Papyrus repository, a pull request adding infra/monitoring/router-config/ttab.json: the stored MONITOR#ttab CONFIG#router item without its key (decisions direct, enabled, feedback false, maxItemsPerRun 25, mode live, one publication distinctive with appsyncEndpoint ${AppSyncEndpoint:Distinctive}, the openaiKeyParameter, the procedureTriggers for distinctive.ttab.ruling-analysis, publicationId, site) plus siteBucket (the site's media bucket: the storage.bucket_name of its amplify_outputs.json, the bucket named papyrusmediabucket, not the public site bucket) and tenantId (task 1). The file replaces the stored item whole, so no stored field may be dropped. Read the live item again just before the pull request (read-only). The router applies the file only when the papyrus-monitoring stack is released, so it ships with the hold lift. web-distinctive stays as it is.\nAcceptance:\nScenario: The file equals the live item plus the two fields\n  Given the live CONFIG#router item for ttab\n  Then ttab.json has every stored field and adds only siteBucket and tenantId",
+  "type": "task",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "dist-e82486e0-dcbb-41cc-a33c-0936a87f6bc6",
+  "labels": [
+    "papyrus-bump-plan"
+  ],
+  "dependencies": [
+    {
+      "target": "dist-54b8037f-ac82-4cec-ac6a-1a8a29fded02",
+      "type": "blocked-by"
+    }
+  ],
+  "comments": [],
+  "created_at": "2026-11-17T19:15:51.948812Z",
+  "updated_at": "2026-11-17T19:16:05.830273Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "26a4c97b-bb36-466e-aa97-18f6f9c738c1",
+  "issue_id": "dist-c6edc932-05d0-4611-a396-68b346c8aa86",
+  "event_type": "issue_created",
+  "occurred_at": "2026-11-17T19:15:51.722Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "8. Stage S6: Papyrus 5.112.1 (22 indexes plus one: tenant and language indexes)",
+    "description": "Pin checklist (every stage): set the exact version in package.json, infra/package.json, infra/site.json (papyrusVersion) and requirements-publication.txt; run npm install --package-lock-only --ignore-scripts in the root and in infra/; run npm ci && echo {} > amplify_outputs.json && npx papyrus-app sync && npx tsc --noEmit, the Python unit tests with the new papyrus-newsroom, and bin/build_local_site.py; open a pull request into develop; the stage ships in its own release (develop into main, merge commit) that carries nothing else. Read the stage commit list in Papyrus for site.json, papyrus.config.ts or projection.json changes before merging. Releases beyond two a day need Ryan's say-so.\nAfter the deploy, verify (read-only): CI and deploy jobs green; Amplify job SUCCEED; root stack UPDATE_COMPLETE; the stage's index ACTIVE (aws dynamodb describe-table, IndexStatus); sitemap.xml still lists 42 URLs and the five sample pages have the same visible text; /newsroom loads and sign-in works; router and collector logs show no new error. Stop rule: see the epic. Do not start the next stage until all of this holds. Not between 02:50 and 03:50 UTC.\nIndexes created: Item.listItemsByLanguageGroupAndLanguage (5.110.0) and 21 listXByTenant indexes (5.111.0) on Distinctive's existing tables, plus CurationDelegationRecord's tenant index: 23 creations on 23 tables, about 54 minutes by the Machines on Machines measurement. New tables LocalizationRequest, SiteDocument, SiteDocumentVersion, TenantSelection. Needs task 7 done first; at the 30 minute default the ledger itself fails this stage (only 6 creations fit). Keep the current amplify.yml. Do not start another build while the root stack is UPDATE_IN_PROGRESS. After it: the new CLI can read the backend (before S6 the 5.130 CLI fails with 'Field tenantId in type EditorialCheckSettings is undefined'); run papyrus content adopt-tenant-data --tenant <id> as a dry run only (it lists counts and conflicts and re-keys NewsroomSection rows when applied) and attach the output to task 1's tenant decision.\nAcceptance:\nScenario: S6 deploys alone within the timeout\n  Given task 7 is done and S5 is verified\n  When the 5.112.1 pin pull request is released\n  Then the deploy is green, all 23 indexes are ACTIVE and the public site matches the baseline",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-e82486e0-dcbb-41cc-a33c-0936a87f6bc6",
+    "labels": [
+      "papyrus-bump-plan"
+    ]
+  }
+}

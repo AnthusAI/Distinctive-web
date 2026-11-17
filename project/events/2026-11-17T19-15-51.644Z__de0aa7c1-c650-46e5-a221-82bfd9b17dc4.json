@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "de0aa7c1-c650-46e5-a221-82bfd9b17dc4",
+  "issue_id": "dist-d6aad91d-7951-4010-b54a-5ed45bd56fbc",
+  "event_type": "issue_created",
+  "occurred_at": "2026-11-17T19:15:51.644Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "5. Stage S4: Papyrus 5.107.2 (Item head stage index, tenancy tables)",
+    "description": "Pin checklist (every stage): set the exact version in package.json, infra/package.json, infra/site.json (papyrusVersion) and requirements-publication.txt; run npm install --package-lock-only --ignore-scripts in the root and in infra/; run npm ci && echo {} > amplify_outputs.json && npx papyrus-app sync && npx tsc --noEmit, the Python unit tests with the new papyrus-newsroom, and bin/build_local_site.py; open a pull request into develop; the stage ships in its own release (develop into main, merge commit) that carries nothing else. Read the stage commit list in Papyrus for site.json, papyrus.config.ts or projection.json changes before merging. Releases beyond two a day need Ryan's say-so.\nAfter the deploy, verify (read-only): CI and deploy jobs green; Amplify job SUCCEED; root stack UPDATE_COMPLETE; the stage's index ACTIVE (aws dynamodb describe-table, IndexStatus); sitemap.xml still lists 42 URLs and the five sample pages have the same visible text; /newsroom loads and sign-in works; router and collector logs show no new error. Stop rule: see the epic. Do not start the next stage until all of this holds. Not between 02:50 and 03:50 UTC.\nIndex created: Item.listItemsByHeadStageAndUpdatedAt (5.103.0), about 3 minutes. New tables Tenant, TenantMembership, TenantDomain (5.105.0). Afterwards: papyrus --site distinctive-mark.com stories head-index (dry run, then --apply if it lists keys to set; Machines on Machines had 26). Anth.us and Machines on Machines both deployed 5.105.0 to 5.107.2.\nAcceptance:\nScenario: S4 deploys alone\n  Given S3 is verified\n  When the 5.107.2 pin pull request is released\n  Then the deploy is green, the head stage index is ACTIVE and the head-index dry run lists nothing to set after apply",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-e82486e0-dcbb-41cc-a33c-0936a87f6bc6",
+    "labels": [
+      "papyrus-bump-plan"
+    ]
+  }
+}

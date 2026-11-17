@@ -12,9 +12,17 @@
     "standard-frontend-plan"
   ],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "6215c2a4-373b-488b-b784-5b6e23c8f653",
+      "author": "home",
+      "text": "Superseded 2026-11-17 by dist-e82486 (seven stages to 5.130.2, derived from the real GSI ledger tooling). This draft stopped at 5.92.0 and predates the head stage index, schedule index, multilingual and tenant indexes. Its stage tasks are left for the owner to close.",
+      "created_at": "2026-11-17T19:16:09.709452Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-11-07T21:45:08.179456Z",
-  "updated_at": "2026-11-07T21:45:08.179531Z",
+  "updated_at": "2026-11-17T19:16:09.709691Z",
   "closed_at": null,
   "right_now_summary": null,
   "right_now_updated_at": null,

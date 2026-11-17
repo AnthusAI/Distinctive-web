@@ -1,0 +1,27 @@
+{
+  "id": "dist-f2facb8e-887c-4d12-906d-a0196846a98d",
+  "title": "11. Write Distinctive's three agent definitions (own release)",
+  "description": "papyrus agents set-rung accepts only an agent that has a definition file, and Distinctive has none. Add papyrus-site-agents/ with distinctive.ttab.yaml, distinctive.ruling.fact-check.yaml and distinctive.ruling.copy-edit.yaml: schemaVersion 1, id equal to the automation id, a responsibility from the catalog (recommended: improve, fact_check, improve), procedure equal to the procedure kind, wakes (the monitor delivery; story.stage_entered at reporting and copywriting), serialBy, paid, safeToRepeat, operations with the lowest rung each needs, tier, and the 11 template lines (docs/automated-processes.md). Check offline: papyrus agents validate --dir papyrus-site-agents. NOT YET CHECKED: which operations the three procedures use and whether the operation table has any that fit saving a ruling draft; if none fits, the engine needs an operation first and this task stops there and reports. agents apply then writes only the registered copy on the existing automation, never enabled and never a rung. Its own release after S7 so a definition error cannot fail the 5.130 build.\nAcceptance:\nScenario: Definitions validate and apply\n  Given S7 is verified\n  When the definitions are released\n  Then agents validate passes offline and the build's agents apply leaves the three automations enabled with a registered copy",
+  "type": "task",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "dist-e82486e0-dcbb-41cc-a33c-0936a87f6bc6",
+  "labels": [
+    "papyrus-bump-plan"
+  ],
+  "dependencies": [
+    {
+      "target": "dist-ab753939-4662-4188-84c0-744244ff04be",
+      "type": "blocked-by"
+    }
+  ],
+  "comments": [],
+  "created_at": "2026-11-17T19:15:51.840368Z",
+  "updated_at": "2026-11-17T19:16:05.779684Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

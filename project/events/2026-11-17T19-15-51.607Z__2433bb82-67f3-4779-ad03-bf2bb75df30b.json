@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "2433bb82-67f3-4779-ad03-bf2bb75df30b",
+  "issue_id": "dist-5c8f353e-518e-4272-949e-6a562541765b",
+  "event_type": "issue_created",
+  "occurred_at": "2026-11-17T19:15:51.607Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "4. Stage S3: Papyrus 5.102.0 (Reference contentNeededKey and Item parent indexes, one new table)",
+    "description": "Pin checklist (every stage): set the exact version in package.json, infra/package.json, infra/site.json (papyrusVersion) and requirements-publication.txt; run npm install --package-lock-only --ignore-scripts in the root and in infra/; run npm ci && echo {} > amplify_outputs.json && npx papyrus-app sync && npx tsc --noEmit, the Python unit tests with the new papyrus-newsroom, and bin/build_local_site.py; open a pull request into develop; the stage ships in its own release (develop into main, merge commit) that carries nothing else. Read the stage commit list in Papyrus for site.json, papyrus.config.ts or projection.json changes before merging. Releases beyond two a day need Ryan's say-so.\nAfter the deploy, verify (read-only): CI and deploy jobs green; Amplify job SUCCEED; root stack UPDATE_COMPLETE; the stage's index ACTIVE (aws dynamodb describe-table, IndexStatus); sitemap.xml still lists 42 URLs and the five sample pages have the same visible text; /newsroom loads and sign-in works; router and collector logs show no new error. Stop rule: see the epic. Do not start the next stage until all of this holds. Not between 02:50 and 03:50 UTC.\nIndexes created: Reference.listReferencesByContentNeededAndArrival (5.87.0) and Item.listItemsByParentAndOrder (5.92.0): two tables, one index each, about 5 minutes. New table CurationDelegationRecord (5.89.0). Papyrus 5.101.0 changes the generated build spec to papyrus-infra backend-deploy with cost tags; Distinctive keeps its current amplify.yml until S7, so this stage has no tagging. Afterwards: papyrus relations migrate-concept-tags (dry run; apply only if it finds legacy related_to tags) and papyrus references backfill-medium (the contentNeededKey).\nAcceptance:\nScenario: S3 deploys alone\n  Given S2 is verified\n  When the 5.102.0 pin pull request is released\n  Then the deploy is green, both new indexes are ACTIVE and the public site matches the baseline",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-e82486e0-dcbb-41cc-a33c-0936a87f6bc6",
+    "labels": [
+      "papyrus-bump-plan"
+    ]
+  }
+}

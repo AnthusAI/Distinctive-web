@@ -1,0 +1,27 @@
+{
+  "id": "dist-9c691a4a-0184-4cc9-bc20-489e1fc6d407",
+  "title": "14. Papyrus: lift the papyrus-monitoring hold and prove the ruling analysis end to end",
+  "description": "Preconditions, read before Ryan's go: S7 deployed and verified (queue and dead-letter queue exist, alarm quiet); tasks 10 to 13 done; the model key works (Distinctive's key was last modified 2026-11-01 and was not tested; Machines on Machines' expired 2026-11-14); read the papyrus-monitoring pull request dry run for every other change the release carries; other sites: only ttab has procedureTriggers among the 14 router configs, but other sites' own automations start through the queue too, so confirm which sites bump in the window or accept startFailed on the rest. Do: a pull request removing the hold line for papyrus-monitoring in infra/pipeline/stacks.json (it carries ttab.json), released (Ryan's go). Then: papyrus --site distinctive-mark.com automations runs --id distinctive.ttab shows a run with policy version and rung; for each TRIGGER row not completed since the runner moved to 5.130, start it again with papyrus automations run --id distinctive.ttab --input <the row's input>; run papyrus procedures check-wake-guard on Distinctive if the once-only check is still unrecorded on PPY-a5513c and PPY-567bf9. Finish in the same UTC day as S7, before 02:58 UTC.\nAcceptance:\nScenario: The ruling analysis runs through the queue\n  Given the hold is lifted\n  When the next TTAB decision is delivered, or a refused one is started again\n  Then the run record shows an outcome word, the policy version and the rung, and the dead-letter queue stays empty",
+  "type": "task",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "dist-e82486e0-dcbb-41cc-a33c-0936a87f6bc6",
+  "labels": [
+    "papyrus-bump-plan"
+  ],
+  "dependencies": [
+    {
+      "target": "dist-ab1c3aa2-c7fe-4079-93bf-dfbdc5d66ad3",
+      "type": "blocked-by"
+    }
+  ],
+  "comments": [],
+  "created_at": "2026-11-17T19:15:51.978818Z",
+  "updated_at": "2026-11-17T19:16:05.877671Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

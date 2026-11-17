@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "82e4b39c-71bf-4eff-9d52-04ec3679063b",
+  "issue_id": "dist-2ef879cd-f2d4-4190-81a7-828e99ea7116",
+  "event_type": "issue_created",
+  "occurred_at": "2026-11-17T19:15:51.509Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "1. Decide the open questions and record the baseline",
+    "description": "Before any stage. (a) Ryan answers the questions at the end of docs/distinctive-bump-plan.md: more than two releases in a day; how the app-shell stack is applied and the right email values for infra/site.json; the tenant for Distinctive (PAPYRUS_TENANT_ID with adopt-tenant-data, or untenanted plus --tenant); responsibilities and the rung; who merges stage pull requests; other sites in the hold-lift window; whether the model key is valid; Gherkin for the build-spec check. (b) Record the baseline read-only: sitemap.xml (42 URLs on 2026-11-17), a text hash of five sample pages (home, a ruling, the docket archive, a section page, the newsletter sign-up), index status of every table, the 14 completed TRIGGER rows, the CloudFormation root stack status.\nAcceptance:\nScenario: The plan can start\n  Given the baseline is recorded on this task and the questions are answered\n  Then task 2 can start",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-e82486e0-dcbb-41cc-a33c-0936a87f6bc6",
+    "labels": [
+      "papyrus-bump-plan"
+    ]
+  }
+}

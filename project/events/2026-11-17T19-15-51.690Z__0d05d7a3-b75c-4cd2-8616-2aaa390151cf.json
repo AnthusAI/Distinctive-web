@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "event_id": "0d05d7a3-b75c-4cd2-8616-2aaa390151cf",
+  "issue_id": "dist-2e694c4f-3564-46d2-9439-7f0f5a1ea302",
+  "event_type": "issue_created",
+  "occurred_at": "2026-11-17T19:15:51.690Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "7. Make the app-shell stack current: email block and the 120 minute build timeout (before S6)",
+    "description": "Not a pin change. The Amplify app has no _BUILD_TIMEOUT, so Amplify stops a job at 30 minutes; S6 creates 23 indexes (about 54 minutes by Machines on Machines job 107, which Amplify stopped at 30 while CloudFormation kept running). The app-shell stack amplify-app-shell-distinctive-cms was last updated 2026-10-22 and infra/site.json does not validate against current Papyrus: papyrus-infra synth fails with 'email is required for cloud sites' (required since 5.34.0).\nDo: (1) add the email block to infra/site.json: mode existing, the newsletter sending domain, configurationSet papyrus-distinctive, and the newsletter event topic (take the real values from the newsletter plugin's resources; they were not checked); leave cms.buildTimeoutMinutes at its default 120. (2) With the 5.112.1 papyrus-infra (infra/package.json may move to 5.112.1 alone for this), run papyrus-infra synth, create a CloudFormation change set against the live stack, and have a person read it: expect Modify actions only; no replacement of the Amplify app or branch is acceptable (the branch holds the backend). (3) Apply it the way Ryan decides in task 1 (a reviewed person-run deploy, or the app-shell deploy workflow; Machines on Machines' ci/app-shell-deploy PR is open and unmerged). Nothing by hand in the console.\nAcceptance:\nScenario: The timeout is set and nothing else moved\n  Given the reviewed change set has no replacement\n  When it is applied\n  Then aws amplify get-app shows _BUILD_TIMEOUT 120 and the app id, branch and domain are unchanged",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "dist-e82486e0-dcbb-41cc-a33c-0936a87f6bc6",
+    "labels": [
+      "papyrus-bump-plan"
+    ]
+  }
+}

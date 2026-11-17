@@ -1,0 +1,27 @@
+{
+  "id": "dist-ab753939-4662-4188-84c0-744244ff04be",
+  "title": "10. Backfills and guideline conversion after S7",
+  "description": "Signed in as an admin who is a person, with the 5.130.2 CLI (uvx --from papyrus-newsroom==5.130.2 papyrus ...; the installed CLI is 5.126.0). (1) papyrus --site distinctive-mark.com stories head-index and references backfill-medium: dry run, then apply where they list work. (2) papyrus --site distinctive-mark.com guidelines convert (dry run, reports applied false and each lineage ready or refused), then --apply, then guidelines resolve for the publication, one section and one language, then guidelines export, then convert again: every lineage must show already_files. No one saves guidelines between S7 and convert --apply (guidelines read legacy_version in that gap). Machines on Machines: dry run 64 read requests, three lineages converted.\nAcceptance:\nScenario: Guidelines are files\n  Given S7 is verified\n  When convert --apply has run\n  Then convert shows already_files for every lineage and resolve and export work",
+  "type": "task",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "dist-e82486e0-dcbb-41cc-a33c-0936a87f6bc6",
+  "labels": [
+    "papyrus-bump-plan"
+  ],
+  "dependencies": [
+    {
+      "target": "dist-cd6ddad4-ea99-4d0b-9fc7-b736dbbc27ba",
+      "type": "blocked-by"
+    }
+  ],
+  "comments": [],
+  "created_at": "2026-11-17T19:15:51.800140Z",
+  "updated_at": "2026-11-17T19:16:05.721301Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}
